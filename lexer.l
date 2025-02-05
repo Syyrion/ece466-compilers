@@ -29,7 +29,7 @@
     int yylval_len;
     int yylval_size;
 
-    // but-packed number type stuff
+    // bit-packed number type stuff
     #define NT_UNSIGNED        0b1000
     #define NT_INT             0b0000
     #define NT_LONG            0b0001

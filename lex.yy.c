@@ -682,18 +682,18 @@ char *yytext;
     int line_num = -1;
 
     enum yylval_type {
-        YY_NONE,
-        YY_STRING,
-        YY_NUMBER,
+        LV_NONE,
+        LV_STRING,
+        LV_NUMBER,
     };
 
-    enum yylval_type yylval_type = YY_NONE;
+    enum yylval_type yylval_type = LV_NONE;
 
     // string attributes
     int yylval_len;
     int yylval_size;
 
-    // number type stuff
+    // bit-packed number type stuff
     #define NT_UNSIGNED        0b1000
     #define NT_INT             0b0000
     #define NT_LONG            0b0001
@@ -714,7 +714,7 @@ char *yytext;
     // string lvalue stuff
     void begin_str()
     {
-        yylval_type = YY_STRING;
+        yylval_type = LV_STRING;
         yylval_size = INITIAL_SIZE;
         yylval_len = 0;
         yylval.string_literal = malloc(yylval_size);
@@ -798,7 +798,8 @@ char *yytext;
     
 #line 799 "lex.yy.c"
 
-#line 801 "lex.yy.c"
+/* number suffix stuff */
+#line 802 "lex.yy.c"
 
 #define INITIAL 0
 #define strlit 1
@@ -1020,7 +1021,7 @@ YY_DECL
 #line 146 "lexer.l"
 
 
-#line 1023 "lex.yy.c"
+#line 1024 "lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -1523,7 +1524,7 @@ case 87:
 YY_RULE_SETUP
 #line 263 "lexer.l"
 {
-                                yylval_type = YY_STRING;
+                                yylval_type = LV_STRING;
                                 yylval.string_literal = strdup(yytext);
                                 yylval_len = strlen(yylval.string_literal);
                                 return IDENT;
@@ -1532,124 +1533,125 @@ YY_RULE_SETUP
 /* 
         huge pain in the ass
         (this seems to work but probably will mess up in some random corner case)
+        TODO It's functional for now but probably should make better later.
     */
 case 88:
-#line 276 "lexer.l"
-case 89:
 #line 277 "lexer.l"
+case 89:
+#line 278 "lexer.l"
 case 90:
 YY_RULE_SETUP
-#line 277 "lexer.l"
+#line 278 "lexer.l"
 {
-                                                                                yylval_num_type.whole = get_float_type(yytext);
-                                                                                yylval.real = strtold(yytext, NULL);
-                                                                                yylval_type = YY_NUMBER;
-                                                                                return NUMBER;
-                                                                            }
+                                                                    yylval_num_type.whole = get_float_type(yytext);
+                                                                    yylval.real = strtold(yytext, NULL);
+                                                                    yylval_type = LV_NUMBER;
+                                                                    return NUMBER;
+                                                                }
 	YY_BREAK
 case 91:
 YY_RULE_SETUP
-#line 284 "lexer.l"
+#line 285 "lexer.l"
 {
-                                                                                yylval_num_type.whole = get_int_type(yytext);
-                                                                                yylval.integer = strtoll(yytext + 2, NULL, 16);
-                                                                                yylval_type = YY_NUMBER;
-                                                                                return NUMBER;
-                                                                            }
+                                                                    yylval_num_type.whole = get_int_type(yytext);
+                                                                    yylval.integer = strtoll(yytext + 2, NULL, 16);
+                                                                    yylval_type = LV_NUMBER;
+                                                                    return NUMBER;
+                                                                }
 	YY_BREAK
 case 92:
 YY_RULE_SETUP
-#line 290 "lexer.l"
-{
-                                                                                yylval_num_type.whole = get_int_type(yytext);
-                                                                                yylval.integer = strtoll(yytext + 2, NULL, 2);
-                                                                                yylval_type = YY_NUMBER;
-                                                                                return NUMBER;
-                                                                            }
+#line 291 "lexer.l"
+{   // binary too
+                                                                    yylval_num_type.whole = get_int_type(yytext);
+                                                                    yylval.integer = strtoll(yytext + 2, NULL, 2);
+                                                                    yylval_type = LV_NUMBER;
+                                                                    return NUMBER;
+                                                                }
 	YY_BREAK
 case 93:
 YY_RULE_SETUP
-#line 296 "lexer.l"
+#line 297 "lexer.l"
 {
-                                                                                yylval_num_type.whole = get_int_type(yytext);
-                                                                                yylval.integer = strtoll(yytext, NULL, yytext[0] == '0' ? 8 : 10);
-                                                                                yylval_type = YY_NUMBER;
-                                                                                return NUMBER;
-                                                                            }
+                                                                    yylval_num_type.whole = get_int_type(yytext);
+                                                                    yylval.integer = strtoll(yytext, NULL, yytext[0] == '0' ? 8 : 10);
+                                                                    yylval_type = LV_NUMBER;
+                                                                    return NUMBER;
+                                                                }
 	YY_BREAK
 case 94:
 YY_RULE_SETUP
-#line 303 "lexer.l"
+#line 304 "lexer.l"
 BEGIN strlit; begin_str();
 	YY_BREAK
 case 95:
 YY_RULE_SETUP
-#line 304 "lexer.l"
+#line 305 "lexer.l"
 BEGIN charlit; begin_str();
 	YY_BREAK
 case 96:
 YY_RULE_SETUP
-#line 305 "lexer.l"
+#line 306 "lexer.l"
 append_char('\x07');
 	YY_BREAK
 case 97:
 YY_RULE_SETUP
-#line 306 "lexer.l"
+#line 307 "lexer.l"
 append_char('\x08');
 	YY_BREAK
 case 98:
 YY_RULE_SETUP
-#line 307 "lexer.l"
+#line 308 "lexer.l"
 append_char('\x0c');
 	YY_BREAK
 case 99:
 YY_RULE_SETUP
-#line 308 "lexer.l"
+#line 309 "lexer.l"
 append_char('\x0a');
 	YY_BREAK
 case 100:
 YY_RULE_SETUP
-#line 309 "lexer.l"
+#line 310 "lexer.l"
 append_char('\x0d');
 	YY_BREAK
 case 101:
 YY_RULE_SETUP
-#line 310 "lexer.l"
+#line 311 "lexer.l"
 append_char('\x09');
 	YY_BREAK
 case 102:
 YY_RULE_SETUP
-#line 311 "lexer.l"
+#line 312 "lexer.l"
 append_char('\x0b');
 	YY_BREAK
 case 103:
 YY_RULE_SETUP
-#line 312 "lexer.l"
+#line 313 "lexer.l"
 append_char('\\');
 	YY_BREAK
 case 104:
 YY_RULE_SETUP
-#line 313 "lexer.l"
+#line 314 "lexer.l"
 append_char('\'');
 	YY_BREAK
 case 105:
 YY_RULE_SETUP
-#line 314 "lexer.l"
+#line 315 "lexer.l"
 append_char('"');
 	YY_BREAK
 case 106:
 YY_RULE_SETUP
-#line 315 "lexer.l"
+#line 316 "lexer.l"
 append_char('?');
 	YY_BREAK
 case 107:
 YY_RULE_SETUP
-#line 316 "lexer.l"
-append_char((char) strtol(yytext + 1, NULL, 8));
+#line 317 "lexer.l"
+append_char((char) strtol(yytext + 1, NULL, 8)); // this covers \n too
 	YY_BREAK
 case 108:
 YY_RULE_SETUP
-#line 317 "lexer.l"
+#line 318 "lexer.l"
 {
                                         if (yyleng == 2)
                                         {
@@ -1675,7 +1677,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 109:
 YY_RULE_SETUP
-#line 339 "lexer.l"
+#line 340 "lexer.l"
 {
                                         fprintf(stderr, "%s:%d: Warning: unknown escape sequence %s\n", filename, line_num, yytext);
                                         append_char(yytext[1]);
@@ -1683,12 +1685,12 @@ YY_RULE_SETUP
 	YY_BREAK
 case 110:
 YY_RULE_SETUP
-#line 343 "lexer.l"
+#line 344 "lexer.l"
 BEGIN INITIAL; return STRING;
 	YY_BREAK
 case 111:
 YY_RULE_SETUP
-#line 344 "lexer.l"
+#line 345 "lexer.l"
 {
                                         BEGIN INITIAL;
                                         if (yylval_len == 0)
@@ -1710,20 +1712,20 @@ YY_RULE_SETUP
 	YY_BREAK
 case 112:
 YY_RULE_SETUP
-#line 362 "lexer.l"
+#line 363 "lexer.l"
 append_char(yytext[0]);
 	YY_BREAK
 case 113:
 YY_RULE_SETUP
-#line 364 "lexer.l"
+#line 365 "lexer.l"
 fprintf(stderr, "%s:%d: Error: unknown token %s\n", filename, line_num, yytext);
 	YY_BREAK
 case 114:
 YY_RULE_SETUP
-#line 365 "lexer.l"
+#line 366 "lexer.l"
 ECHO;
 	YY_BREAK
-#line 1726 "lex.yy.c"
+#line 1728 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 case YY_STATE_EOF(strlit):
 case YY_STATE_EOF(charlit):
@@ -2730,7 +2732,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 365 "lexer.l"
+#line 366 "lexer.l"
 
 
 
@@ -2749,7 +2751,7 @@ int main()
 
         switch(yylval_type)
         {
-            case YY_NUMBER:
+            case LV_NUMBER:
                 printf("\t");
                 if (yylval_num_type.bit.is_real)
                 {
@@ -2773,19 +2775,19 @@ int main()
                     );
                 }
                 break;
-            case YY_STRING:
+            case LV_STRING:
                 printf("\t");
                 uniform_print(yylval.string_literal, yylval_len);
                 free(yylval.string_literal);
                 break;
 
-            case YY_NONE:
+            case LV_NONE:
             default:
                 break;
         }
 
         printf("\n");
-        yylval_type = YY_NONE;
+        yylval_type = LV_NONE;
     }
     free(filename);
     return 0;
