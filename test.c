@@ -22,7 +22,7 @@ int main()
     yylval_num_type.bit.is_unsigned = 1;
     yylval_num_type.bit.type = 3;
 
-    printf("%x\n", yylval_num_type.whole, 1Ul);
+    printf("%x\n", yylval_num_type.whole, 1Ul, sizeof(long double));
     // realloc()
     return 0;
 }
