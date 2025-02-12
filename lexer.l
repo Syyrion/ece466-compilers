@@ -7,101 +7,43 @@
     #include <stdlib.h>
     #include <ctype.h>
     #include "tokens-manual.h"
-    #include "yyglobal.h"
-    #include <ctype.h>
-
-    #define INITIAL_SIZE 256
-
-    YYSTYPE yylval;
+    #include "lexer.h"
 
     char *filename;
     int line_num = -1;
 
-    enum yylval_type {
-        LV_NONE,
-        LV_STRING,
-        LV_NUMBER,
-    };
-
-    enum yylval_type yylval_type = LV_NONE;
+    YYSTYPE yylval;
+    yylval_t yylval_type = LV_NONE;
 
     // string attributes
-    int yylval_len;
-    int yylval_size;
+    int yylval_strlen;
+    int yylval_strsize;
 
-    // bit-packed number type stuff
-    #define NT_UNSIGNED        0b1000
-    #define NT_INT             0b0000
-    #define NT_LONG            0b0001
-    #define NT_LONG_LONG       0b0010
-    #define NT_FLOAT           0b0100
-    #define NT_DOUBLE          0b0101
-    #define NT_LONG_DOUBLE     0b0110
+    yylval_num_t yylval_num_type;
 
-    union {
-        char whole;
-        struct {
-            char type:2;
-            char is_real:1;
-            char is_unsigned:1;
-        } bit;
-    } yylval_num_type;
+    #define INITIAL_SIZE 256
 
     // string lvalue stuff
     void begin_str()
     {
         yylval_type = LV_STRING;
-        yylval_size = INITIAL_SIZE;
-        yylval_len = 0;
-        yylval.string_literal = malloc(yylval_size);
+        yylval_strsize = INITIAL_SIZE;
+        yylval_strlen = 0;
+        yylval.string_literal = malloc(yylval_strsize);
     }
 
     void append_char(const char c)
     {
-        yylval.string_literal[yylval_len] = c;
-        yylval.string_literal[yylval_len + 1] = 0;
-        if (++yylval_len == yylval_size - 1) // size - 1 because of null byte
-            yylval.string_literal = realloc(yylval.string_literal, yylval_size *= 2);
-    }
-
-    void uniform_print(const char *s, const int amount)
-    {
-        for (int i = 0; i < amount; i++)
-        {
-
-            if (s[i] == '\x07')
-                printf("\\a");
-            else if (s[i] == '\x08')
-                printf("\\b");
-            else if (s[i] == '\x0c')
-                printf("\\f");
-            else if (s[i] == '\x0a')
-                printf("\\n");
-            else if (s[i] == '\x0d')
-                printf("\\r");
-            else if (s[i] == '\x09')
-                printf("\\t");
-            else if (s[i] == '\x0b')
-                printf("\\v");
-            else if (s[i] == '\\')
-                printf("\\\\");
-            else if (s[i] == '\'')
-                printf("\\\'");
-            else if (s[i] == '"')
-                printf("\\\"");
-            else if (s[i] == 0)
-                printf("\\0");
-            else if (isprint(s[i]))
-                fputc(s[i], stdout);
-            else
-                printf("\\%03o", (unsigned char) s[i]);
-        }
+        yylval.string_literal[yylval_strlen] = c;
+        yylval.string_literal[yylval_strlen + 1] = 0;
+        if (++yylval_strlen == yylval_strsize - 1) // size - 1 because of null byte
+            yylval.string_literal = realloc(yylval.string_literal, yylval_strsize *= 2);
     }
 
     char get_float_type(char *n)
     {
         int i = strlen(n) - 1;
-        char t = n[i] | 0b100000;
+        char t = tolower(n[i]);
         if (t == 'f')
         {
             n[i] = 0;
@@ -120,7 +62,7 @@
         char type = 0;
         int i = strlen(n) - 1;
         char c;
-        while ((c = n[i] | 0b100000) == 'l' || c == 'u')
+        while ((c = tolower(n[i])) == 'l' || c == 'u')
         {
             if (c == 'u')
                 type |= NT_UNSIGNED;
@@ -131,7 +73,6 @@
         n[i + 1] = 0;
         return type;
     }
-    
 %}
 
 %x strlit
@@ -263,7 +204,7 @@ _Imaginary      {return _IMAGINARY;}
 [A-Za-z_][A-Za-z0-9_]*      {
                                 yylval_type = LV_STRING;
                                 yylval.string_literal = strdup(yytext);
-                                yylval_len = strlen(yylval.string_literal);
+                                yylval_strlen = strlen(yylval.string_literal);
                                 return IDENT;
                             }
 
@@ -276,27 +217,27 @@ _Imaginary      {return _IMAGINARY;}
 0[xX][0-9A-Fa-f]+p[\+\-]?[0-9]+{FLOAT_SUFFIX}                   |
 [0-9]+e[\+\-]?[0-9]+{FLOAT_SUFFIX}                              |
 (([0-9]*\.[0-9]+)|([0-9]+\.))(e[\+\-]?[0-9]+)?{FLOAT_SUFFIX}    {
-                                                                    yylval_num_type.whole = get_float_type(yytext);
+                                                                    yylval_num_type.all = get_float_type(yytext);
                                                                     yylval.real = strtold(yytext, NULL);
                                                                     yylval_type = LV_NUMBER;
                                                                     return NUMBER;
                                                                 }
 
 0[xX][0-9A-Fa-f]+{INT_SUFFIX}                                   {
-                                                                    yylval_num_type.whole = get_int_type(yytext);
-                                                                    yylval.integer = strtoll(yytext + 2, NULL, 16);
+                                                                    yylval_num_type.all = get_int_type(yytext);
+                                                                    yylval.integer = strtoull(yytext + 2, NULL, 16);
                                                                     yylval_type = LV_NUMBER;
                                                                     return NUMBER;
                                                                 }
 0[bB][01]+{INT_SUFFIX}                                          {   // binary too
-                                                                    yylval_num_type.whole = get_int_type(yytext);
-                                                                    yylval.integer = strtoll(yytext + 2, NULL, 2);
+                                                                    yylval_num_type.all = get_int_type(yytext);
+                                                                    yylval.integer = strtoull(yytext + 2, NULL, 2);
                                                                     yylval_type = LV_NUMBER;
                                                                     return NUMBER;
                                                                 }
 [0-9]+{INT_SUFFIX}                                              {
-                                                                    yylval_num_type.whole = get_int_type(yytext);
-                                                                    yylval.integer = strtoll(yytext, NULL, yytext[0] == '0' ? 8 : 10);
+                                                                    yylval_num_type.all = get_int_type(yytext);
+                                                                    yylval.integer = strtoull(yytext, NULL, yytext[0] == '0' ? 8 : 10);
                                                                     yylval_type = LV_NUMBER;
                                                                     return NUMBER;
                                                                 }
@@ -334,8 +275,6 @@ L?\'                                BEGIN charlit; begin_str();
                                             }
                                             append_char((char) strtol(conv, NULL, 16));
                                         }
-
-                                        
                                     }
 <charlit,strlit>\\.                 {
                                         fprintf(stderr, "%s:%d: Warning: unknown escape sequence %s\n", filename, line_num, yytext);
@@ -344,15 +283,15 @@ L?\'                                BEGIN charlit; begin_str();
 <strlit>\"                          BEGIN INITIAL; return STRING;
 <charlit>\'                         {
                                         BEGIN INITIAL;
-                                        if (yylval_len == 0)
+                                        if (yylval_strlen == 0)
                                         {
                                             fprintf(stderr, "%s:%d: Error: empty character constant\n", filename, line_num);
                                         }
-                                        else if (yylval_len > 1)
+                                        else if (yylval_strlen > 1)
                                         {
                                             fprintf(stderr, "%s:%d: Warning: Unsupported multibyte character literal truncated to first byte\n", filename, line_num);
                                             yylval.string_literal[1] = 0;
-                                            yylval_len = 1;
+                                            yylval_strlen = 1;
                                             return CHARLIT;
                                         }
                                         else
@@ -364,267 +303,3 @@ L?\'                                BEGIN charlit; begin_str();
 
 .                                   fprintf(stderr, "%s:%d: Error: unknown token %s\n", filename, line_num, yytext);
 %%
-
-
-void print_token_name(int);
-
-int main()
-{
-    int t;
-    filename = (char *)malloc(8);
-    strcpy(filename, "<stdin>");
-
-    while (t=yylex())
-    {
-        printf("%s\t%d\t", filename, line_num);
-        print_token_name(t);
-
-        switch(yylval_type)
-        {
-            case LV_NUMBER:
-                printf("\t");
-                if (yylval_num_type.bit.is_real)
-                {
-                    printf(
-                        "REAL\t%Lg\t%s",
-                        yylval.real,
-                        yylval_num_type.bit.type == 0 ? "FLOAT"
-                        : yylval_num_type.bit.type == 1 ? "DOUBLE"
-                        : "LONG DOUBLE"
-                    );
-                }
-                else
-                {
-                    printf(
-                        "INTEGER\t%lld\t%s%s",
-                        yylval.integer,
-                        yylval_num_type.bit.is_unsigned ? "UNSIGNED " : "",
-                        yylval_num_type.bit.type == 0 ? "INT"
-                        : yylval_num_type.bit.type == 1 ? "LONG"
-                        : "LONG LONG"
-                    );
-                }
-                break;
-            case LV_STRING:
-                printf("\t");
-                uniform_print(yylval.string_literal, yylval_len);
-                free(yylval.string_literal);
-                break;
-
-            case LV_NONE:
-            default:
-                break;
-        }
-
-        printf("\n");
-        yylval_type = LV_NONE;
-    }
-    free(filename);
-    return 0;
-}
-
-
-void print_token_name(int t)
-{
-    if (t <= 255)
-    {
-        printf("%c", (char)t);
-        return;
-    }
-
-    switch (t)
-    {
-    case TOKEOF:
-        printf("TOKEOF");
-        break;
-    case IDENT:
-        printf("IDENT");
-        break;
-    case CHARLIT:
-        printf("CHARLIT");
-        break;
-    case STRING:
-        printf("STRING");
-        break;
-    case NUMBER:
-        printf("NUMBER");
-        break;
-    case INDSEL:
-        printf("INDSEL");
-        break;
-    case PLUSPLUS:
-        printf("PLUSPLUS");
-        break;
-    case MINUSMINUS:
-        printf("MINUSMINUS");
-        break;
-    case SHL:
-        printf("SHL");
-        break;
-    case SHR:
-        printf("SHR");
-        break;
-    case LTEQ:
-        printf("LTEQ");
-        break;
-    case GTEQ:
-        printf("GTEQ");
-        break;
-    case EQEQ:
-        printf("EQEQ");
-        break;
-    case NOTEQ:
-        printf("NOTEQ");
-        break;
-    case LOGAND:
-        printf("LOGAND");
-        break;
-    case LOGOR:
-        printf("LOGOR");
-        break;
-    case ELLIPSIS:
-        printf("ELLIPSIS");
-        break;
-    case TIMESEQ:
-        printf("TIMESEQ");
-        break;
-    case DIVEQ:
-        printf("DIVEQ");
-        break;
-    case MODEQ:
-        printf("MODEQ");
-        break;
-    case PLUSEQ:
-        printf("PLUSEQ");
-        break;
-    case MINUSEQ:
-        printf("MINUSEQ");
-        break;
-    case SHLEQ:
-        printf("SHLEQ");
-        break;
-    case SHREQ:
-        printf("SHREQ");
-        break;
-    case ANDEQ:
-        printf("ANDEQ");
-        break;
-    case OREQ:
-        printf("OREQ");
-        break;
-    case XOREQ:
-        printf("XOREQ");
-        break;
-    case AUTO:
-        printf("AUTO");
-        break;
-    case BREAK:
-        printf("BREAK");
-        break;
-    case CASE:
-        printf("CASE");
-        break;
-    case CHAR:
-        printf("CHAR");
-        break;
-    case CONST:
-        printf("CONST");
-        break;
-    case CONTINUE:
-        printf("CONTINUE");
-        break;
-    case DEFAULT:
-        printf("DEFAULT");
-        break;
-    case DO:
-        printf("DO");
-        break;
-    case DOUBLE:
-        printf("DOUBLE");
-        break;
-    case ELSE:
-        printf("ELSE");
-        break;
-    case ENUM:
-        printf("ENUM");
-        break;
-    case EXTERN:
-        printf("EXTERN");
-        break;
-    case FLOAT:
-        printf("FLOAT");
-        break;
-    case FOR:
-        printf("FOR");
-        break;
-    case GOTO:
-        printf("GOTO");
-        break;
-    case IF:
-        printf("IF");
-        break;
-    case INLINE:
-        printf("INLINE");
-        break;
-    case INT:
-        printf("INT");
-        break;
-    case LONG:
-        printf("LONG");
-        break;
-    case REGISTER:
-        printf("REGISTER");
-        break;
-    case RESTRICT:
-        printf("RESTRICT");
-        break;
-    case RETURN:
-        printf("RETURN");
-        break;
-    case SHORT:
-        printf("SHORT");
-        break;
-    case SIGNED:
-        printf("SIGNED");
-        break;
-    case SIZEOF:
-        printf("SIZEOF");
-        break;
-    case STATIC:
-        printf("STATIC");
-        break;
-    case STRUCT:
-        printf("STRUCT");
-        break;
-    case SWITCH:
-        printf("SWITCH");
-        break;
-    case TYPEDEF:
-        printf("TYPEDEF");
-        break;
-    case UNION:
-        printf("UNION");
-        break;
-    case UNSIGNED:
-        printf("UNSIGNED");
-        break;
-    case VOID:
-        printf("VOID");
-        break;
-    case VOLATILE:
-        printf("VOLATILE");
-        break;
-    case WHILE:
-        printf("WHILE");
-        break;
-    case _BOOL:
-        printf("_BOOL");
-        break;
-    case _COMPLEX:
-        printf("_COMPLEX");
-        break;
-    case _IMAGINARY:
-        printf("_IMAGINARY");
-        break;
-    }
-}

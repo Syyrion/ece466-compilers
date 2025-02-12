@@ -1,7 +1,7 @@
 typedef union
 {
     char *string_literal;
-    long long integer;
+    unsigned long long integer;
     long double real;
 } YYSTYPE;
 
