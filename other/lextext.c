@@ -63,7 +63,7 @@ int main()
                     yylval.real,
                     yylval_num_type.type == 0   ? "FLOAT"
                     : yylval_num_type.type == 1 ? "DOUBLE"
-                                                    : "LONG DOUBLE");
+                                                : "LONG DOUBLE");
             }
             else
             {
@@ -73,7 +73,7 @@ int main()
                     yylval_num_type.is_unsigned ? "UNSIGNED " : "",
                     yylval_num_type.type == 0   ? "INT"
                     : yylval_num_type.type == 1 ? "LONG"
-                                                    : "LONG LONG");
+                                                : "LONG LONG");
             }
             break;
         case LV_STRING:

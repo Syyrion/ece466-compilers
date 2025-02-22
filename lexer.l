@@ -6,41 +6,30 @@
     #include <string.h>
     #include <stdlib.h>
     #include <ctype.h>
-    #include "tokens-manual.h"
-    #include "lexer.h"
+    #include "parser.tab.h"
 
     char *filename;
     int line_num = -1;
-
-    YYSTYPE yylval;
-    yylval_t yylval_type = LV_NONE;
-
-    // string attributes
-    int yylval_strlen;
-    int yylval_strsize;
-
-    yylval_num_t yylval_num_type;
 
     #define INITIAL_SIZE 256
 
     // string lvalue stuff
     void begin_str()
     {
-        yylval_type = LV_STRING;
-        yylval_strsize = INITIAL_SIZE;
-        yylval_strlen = 0;
-        yylval.string_literal = malloc(yylval_strsize);
+        yylval.strsize = INITIAL_SIZE;
+        yylval.strlen = 0;
+        yylval.string = malloc(yylval.strsize);
     }
 
     void append_char(const char c)
     {
-        yylval.string_literal[yylval_strlen] = c;
-        yylval.string_literal[yylval_strlen + 1] = 0;
-        if (++yylval_strlen == yylval_strsize - 1) // size - 1 because of null byte
-            yylval.string_literal = realloc(yylval.string_literal, yylval_strsize *= 2);
+        yylval.string[yylval.strlen] = c;
+        yylval.string[yylval.strlen + 1] = 0;
+        if (++yylval.strlen == yylval.strsize - 1) // size - 1 because of null byte
+            yylval.string = realloc(yylval.string, yylval.strsize *= 2);
     }
 
-    char get_float_type(char *n)
+    char get_real_type(char *n)
     {
         int i = strlen(n) - 1;
         char t = tolower(n[i]);
@@ -202,9 +191,8 @@ _Imaginary      {return _IMAGINARY;}
 \.{3}           {return ELLIPSIS;}
 
 [A-Za-z_][A-Za-z0-9_]*      {
-                                yylval_type = LV_STRING;
-                                yylval.string_literal = strdup(yytext);
-                                yylval_strlen = strlen(yylval.string_literal);
+                                yylval.string = strdup(yytext);
+                                yylval.strlen = strlen(yylval.string);
                                 return IDENT;
                             }
 
@@ -217,29 +205,25 @@ _Imaginary      {return _IMAGINARY;}
 0[xX][0-9A-Fa-f]+p[\+\-]?[0-9]+{FLOAT_SUFFIX}                   |
 [0-9]+e[\+\-]?[0-9]+{FLOAT_SUFFIX}                              |
 (([0-9]*\.[0-9]+)|([0-9]+\.))(e[\+\-]?[0-9]+)?{FLOAT_SUFFIX}    {
-                                                                    yylval_num_type.all = get_float_type(yytext);
+                                                                    yylval.nt_full = get_real_type(yytext);
                                                                     yylval.real = strtold(yytext, NULL);
-                                                                    yylval_type = LV_NUMBER;
-                                                                    return NUMBER;
+                                                                    return NUMBERLIT;
                                                                 }
 
 0[xX][0-9A-Fa-f]+{INT_SUFFIX}                                   {
-                                                                    yylval_num_type.all = get_int_type(yytext);
+                                                                    yylval.nt_full = get_int_type(yytext);
                                                                     yylval.integer = strtoull(yytext + 2, NULL, 16);
-                                                                    yylval_type = LV_NUMBER;
-                                                                    return NUMBER;
+                                                                    return NUMBERLIT;
                                                                 }
 0[bB][01]+{INT_SUFFIX}                                          {   // binary too
-                                                                    yylval_num_type.all = get_int_type(yytext);
+                                                                    yylval.nt_full = get_int_type(yytext);
                                                                     yylval.integer = strtoull(yytext + 2, NULL, 2);
-                                                                    yylval_type = LV_NUMBER;
-                                                                    return NUMBER;
+                                                                    return NUMBERLIT;
                                                                 }
 [0-9]+{INT_SUFFIX}                                              {
-                                                                    yylval_num_type.all = get_int_type(yytext);
+                                                                    yylval.nt_full = get_int_type(yytext);
                                                                     yylval.integer = strtoull(yytext, NULL, yytext[0] == '0' ? 8 : 10);
-                                                                    yylval_type = LV_NUMBER;
-                                                                    return NUMBER;
+                                                                    return NUMBERLIT;
                                                                 }
 
 L?\"                                BEGIN strlit; begin_str();
@@ -280,18 +264,18 @@ L?\'                                BEGIN charlit; begin_str();
                                         fprintf(stderr, "%s:%d: Warning: unknown escape sequence %s\n", filename, line_num, yytext);
                                         append_char(yytext[1]);
                                     }
-<strlit>\"                          BEGIN INITIAL; return STRING;
+<strlit>\"                          BEGIN INITIAL; return STRINGLIT;
 <charlit>\'                         {
                                         BEGIN INITIAL;
-                                        if (yylval_strlen == 0)
+                                        if (yylval.strlen == 0)
                                         {
                                             fprintf(stderr, "%s:%d: Error: empty character constant\n", filename, line_num);
                                         }
-                                        else if (yylval_strlen > 1)
+                                        else if (yylval.strlen > 1)
                                         {
                                             fprintf(stderr, "%s:%d: Warning: Unsupported multibyte character literal truncated to first byte\n", filename, line_num);
-                                            yylval.string_literal[1] = 0;
-                                            yylval_strlen = 1;
+                                            yylval.string[1] = 0;
+                                            yylval.strlen = 1;
                                             return CHARLIT;
                                         }
                                         else

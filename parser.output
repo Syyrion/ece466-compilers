@@ -1,0 +1,4540 @@
+Terminals unused in grammar
+
+    "->"
+    "++"
+    "--"
+    "..."
+    AUTO
+    BREAK
+    CASE
+    CHAR
+    CONST
+    CONTINUE
+    DEFAULT
+    DO
+    DOUBLE
+    ELSE
+    ENUM
+    EXTERN
+    FLOAT
+    FOR
+    GOTO
+    IF
+    INLINE
+    INT
+    LONG
+    REGISTER
+    RESTRICT
+    RETURN
+    SHORT
+    SIGNED
+    SIZEOF
+    STATIC
+    STRUCT
+    SWITCH
+    TYPEDEF
+    UNION
+    UNSIGNED
+    VOID
+    VOLATILE
+    WHILE
+    _BOOL
+    _COMPLEX
+    _IMAGINARY
+    '?'
+    ':'
+
+
+Grammar
+
+    0 $accept: statement_sequence $end
+
+    1 statement_sequence: statement
+    2                   | statement_sequence statement
+
+    3 statement: expr ';'
+
+    4 expr: IDENT
+    5     | CHARLIT
+    6     | STRINGLIT
+    7     | NUMBERLIT
+    8     | '(' expr ')'
+    9     | expr '*' expr
+   10     | expr '/' expr
+   11     | expr '%' expr
+   12     | expr '+' expr
+   13     | expr '-' expr
+   14     | expr ">>" expr
+   15     | expr "<<" expr
+   16     | expr '<' expr
+   17     | expr "<=" expr
+   18     | expr '>' expr
+   19     | expr ">=" expr
+   20     | expr "==" expr
+   21     | expr "!=" expr
+   22     | expr '&' expr
+   23     | expr '^' expr
+   24     | expr '|' expr
+   25     | expr "&&" expr
+   26     | expr "||" expr
+   27     | expr '=' expr
+   28     | expr "+=" expr
+   29     | expr "-=" expr
+   30     | expr "*=" expr
+   31     | expr "/=" expr
+   32     | expr "%=" expr
+   33     | expr "<<=" expr
+   34     | expr ">>=" expr
+   35     | expr "&=" expr
+   36     | expr "^=" expr
+   37     | expr "|=" expr
+   38     | expr ',' expr
+
+
+Terminals, with rules where they appear
+
+    $end (0) 0
+    '%' (37) 11
+    '&' (38) 22
+    '(' (40) 8
+    ')' (41) 8
+    '*' (42) 9
+    '+' (43) 12
+    ',' (44) 38
+    '-' (45) 13
+    '/' (47) 10
+    ':' (58)
+    ';' (59) 3
+    '<' (60) 16
+    '=' (61) 27
+    '>' (62) 18
+    '?' (63)
+    '^' (94) 23
+    '|' (124) 24
+    error (256)
+    IDENT <string> (258) 4
+    CHARLIT (259) 5
+    STRINGLIT (260) 6
+    NUMBERLIT (261) 7
+    "->" (262)
+    "++" (263)
+    "--" (264)
+    "<<" (265) 15
+    ">>" (266) 14
+    "<=" (267) 17
+    ">=" (268) 19
+    "==" (269) 20
+    "!=" (270) 21
+    "&&" (271) 25
+    "||" (272) 26
+    "..." (273)
+    "*=" (274) 30
+    "/=" (275) 31
+    "%=" (276) 32
+    "+=" (277) 28
+    "-=" (278) 29
+    "<<=" (279) 33
+    ">>=" (280) 34
+    "&=" (281) 35
+    "|=" (282) 37
+    "^=" (283) 36
+    AUTO (284)
+    BREAK (285)
+    CASE (286)
+    CHAR (287)
+    CONST (288)
+    CONTINUE (289)
+    DEFAULT (290)
+    DO (291)
+    DOUBLE (292)
+    ELSE (293)
+    ENUM (294)
+    EXTERN (295)
+    FLOAT (296)
+    FOR (297)
+    GOTO (298)
+    IF (299)
+    INLINE (300)
+    INT (301)
+    LONG (302)
+    REGISTER (303)
+    RESTRICT (304)
+    RETURN (305)
+    SHORT (306)
+    SIGNED (307)
+    SIZEOF (308)
+    STATIC (309)
+    STRUCT (310)
+    SWITCH (311)
+    TYPEDEF (312)
+    UNION (313)
+    UNSIGNED (314)
+    VOID (315)
+    VOLATILE (316)
+    WHILE (317)
+    _BOOL (318)
+    _COMPLEX (319)
+    _IMAGINARY (320)
+
+
+Nonterminals, with rules where they appear
+
+    $accept (83)
+        on left: 0
+    statement_sequence (84)
+        on left: 1 2
+        on right: 0 2
+    statement (85)
+        on left: 3
+        on right: 1 2
+    expr (86)
+        on left: 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38
+        on right: 3 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38
+
+
+State 0
+
+    0 $accept: • statement_sequence $end
+    1 statement_sequence: • statement
+    2                   | • statement_sequence statement
+    3 statement: • expr ';'
+    4 expr: • IDENT
+    5     | • CHARLIT
+    6     | • STRINGLIT
+    7     | • NUMBERLIT
+    8     | • '(' expr ')'
+    9     | • expr '*' expr
+   10     | • expr '/' expr
+   11     | • expr '%' expr
+   12     | • expr '+' expr
+   13     | • expr '-' expr
+   14     | • expr ">>" expr
+   15     | • expr "<<" expr
+   16     | • expr '<' expr
+   17     | • expr "<=" expr
+   18     | • expr '>' expr
+   19     | • expr ">=" expr
+   20     | • expr "==" expr
+   21     | • expr "!=" expr
+   22     | • expr '&' expr
+   23     | • expr '^' expr
+   24     | • expr '|' expr
+   25     | • expr "&&" expr
+   26     | • expr "||" expr
+   27     | • expr '=' expr
+   28     | • expr "+=" expr
+   29     | • expr "-=" expr
+   30     | • expr "*=" expr
+   31     | • expr "/=" expr
+   32     | • expr "%=" expr
+   33     | • expr "<<=" expr
+   34     | • expr ">>=" expr
+   35     | • expr "&=" expr
+   36     | • expr "^=" expr
+   37     | • expr "|=" expr
+   38     | • expr ',' expr
+
+    IDENT      shift, and go to state 1
+    CHARLIT    shift, and go to state 2
+    STRINGLIT  shift, and go to state 3
+    NUMBERLIT  shift, and go to state 4
+    '('        shift, and go to state 5
+
+    statement_sequence  go to state 6
+    statement           go to state 7
+    expr                go to state 8
+
+
+State 1
+
+    4 expr: IDENT •
+
+    $default  reduce using rule 4 (expr)
+
+
+State 2
+
+    5 expr: CHARLIT •
+
+    $default  reduce using rule 5 (expr)
+
+
+State 3
+
+    6 expr: STRINGLIT •
+
+    $default  reduce using rule 6 (expr)
+
+
+State 4
+
+    7 expr: NUMBERLIT •
+
+    $default  reduce using rule 7 (expr)
+
+
+State 5
+
+    4 expr: • IDENT
+    5     | • CHARLIT
+    6     | • STRINGLIT
+    7     | • NUMBERLIT
+    8     | • '(' expr ')'
+    8     | '(' • expr ')'
+    9     | • expr '*' expr
+   10     | • expr '/' expr
+   11     | • expr '%' expr
+   12     | • expr '+' expr
+   13     | • expr '-' expr
+   14     | • expr ">>" expr
+   15     | • expr "<<" expr
+   16     | • expr '<' expr
+   17     | • expr "<=" expr
+   18     | • expr '>' expr
+   19     | • expr ">=" expr
+   20     | • expr "==" expr
+   21     | • expr "!=" expr
+   22     | • expr '&' expr
+   23     | • expr '^' expr
+   24     | • expr '|' expr
+   25     | • expr "&&" expr
+   26     | • expr "||" expr
+   27     | • expr '=' expr
+   28     | • expr "+=" expr
+   29     | • expr "-=" expr
+   30     | • expr "*=" expr
+   31     | • expr "/=" expr
+   32     | • expr "%=" expr
+   33     | • expr "<<=" expr
+   34     | • expr ">>=" expr
+   35     | • expr "&=" expr
+   36     | • expr "^=" expr
+   37     | • expr "|=" expr
+   38     | • expr ',' expr
+
+    IDENT      shift, and go to state 1
+    CHARLIT    shift, and go to state 2
+    STRINGLIT  shift, and go to state 3
+    NUMBERLIT  shift, and go to state 4
+    '('        shift, and go to state 5
+
+    expr  go to state 9
+
+
+State 6
+
+    0 $accept: statement_sequence • $end
+    2 statement_sequence: statement_sequence • statement
+    3 statement: • expr ';'
+    4 expr: • IDENT
+    5     | • CHARLIT
+    6     | • STRINGLIT
+    7     | • NUMBERLIT
+    8     | • '(' expr ')'
+    9     | • expr '*' expr
+   10     | • expr '/' expr
+   11     | • expr '%' expr
+   12     | • expr '+' expr
+   13     | • expr '-' expr
+   14     | • expr ">>" expr
+   15     | • expr "<<" expr
+   16     | • expr '<' expr
+   17     | • expr "<=" expr
+   18     | • expr '>' expr
+   19     | • expr ">=" expr
+   20     | • expr "==" expr
+   21     | • expr "!=" expr
+   22     | • expr '&' expr
+   23     | • expr '^' expr
+   24     | • expr '|' expr
+   25     | • expr "&&" expr
+   26     | • expr "||" expr
+   27     | • expr '=' expr
+   28     | • expr "+=" expr
+   29     | • expr "-=" expr
+   30     | • expr "*=" expr
+   31     | • expr "/=" expr
+   32     | • expr "%=" expr
+   33     | • expr "<<=" expr
+   34     | • expr ">>=" expr
+   35     | • expr "&=" expr
+   36     | • expr "^=" expr
+   37     | • expr "|=" expr
+   38     | • expr ',' expr
+
+    $end       shift, and go to state 10
+    IDENT      shift, and go to state 1
+    CHARLIT    shift, and go to state 2
+    STRINGLIT  shift, and go to state 3
+    NUMBERLIT  shift, and go to state 4
+    '('        shift, and go to state 5
+
+    statement  go to state 11
+    expr       go to state 8
+
+
+State 7
+
+    1 statement_sequence: statement •
+
+    $default  reduce using rule 1 (statement_sequence)
+
+
+State 8
+
+    3 statement: expr • ';'
+    9 expr: expr • '*' expr
+   10     | expr • '/' expr
+   11     | expr • '%' expr
+   12     | expr • '+' expr
+   13     | expr • '-' expr
+   14     | expr • ">>" expr
+   15     | expr • "<<" expr
+   16     | expr • '<' expr
+   17     | expr • "<=" expr
+   18     | expr • '>' expr
+   19     | expr • ">=" expr
+   20     | expr • "==" expr
+   21     | expr • "!=" expr
+   22     | expr • '&' expr
+   23     | expr • '^' expr
+   24     | expr • '|' expr
+   25     | expr • "&&" expr
+   26     | expr • "||" expr
+   27     | expr • '=' expr
+   28     | expr • "+=" expr
+   29     | expr • "-=" expr
+   30     | expr • "*=" expr
+   31     | expr • "/=" expr
+   32     | expr • "%=" expr
+   33     | expr • "<<=" expr
+   34     | expr • ">>=" expr
+   35     | expr • "&=" expr
+   36     | expr • "^=" expr
+   37     | expr • "|=" expr
+   38     | expr • ',' expr
+
+    "<<"   shift, and go to state 12
+    ">>"   shift, and go to state 13
+    "<="   shift, and go to state 14
+    ">="   shift, and go to state 15
+    "=="   shift, and go to state 16
+    "!="   shift, and go to state 17
+    "&&"   shift, and go to state 18
+    "||"   shift, and go to state 19
+    "*="   shift, and go to state 20
+    "/="   shift, and go to state 21
+    "%="   shift, and go to state 22
+    "+="   shift, and go to state 23
+    "-="   shift, and go to state 24
+    "<<="  shift, and go to state 25
+    ">>="  shift, and go to state 26
+    "&="   shift, and go to state 27
+    "|="   shift, and go to state 28
+    "^="   shift, and go to state 29
+    ';'    shift, and go to state 30
+    '*'    shift, and go to state 31
+    '/'    shift, and go to state 32
+    '%'    shift, and go to state 33
+    '+'    shift, and go to state 34
+    '-'    shift, and go to state 35
+    '<'    shift, and go to state 36
+    '>'    shift, and go to state 37
+    '&'    shift, and go to state 38
+    '^'    shift, and go to state 39
+    '|'    shift, and go to state 40
+    '='    shift, and go to state 41
+    ','    shift, and go to state 42
+
+
+State 9
+
+    8 expr: '(' expr • ')'
+    9     | expr • '*' expr
+   10     | expr • '/' expr
+   11     | expr • '%' expr
+   12     | expr • '+' expr
+   13     | expr • '-' expr
+   14     | expr • ">>" expr
+   15     | expr • "<<" expr
+   16     | expr • '<' expr
+   17     | expr • "<=" expr
+   18     | expr • '>' expr
+   19     | expr • ">=" expr
+   20     | expr • "==" expr
+   21     | expr • "!=" expr
+   22     | expr • '&' expr
+   23     | expr • '^' expr
+   24     | expr • '|' expr
+   25     | expr • "&&" expr
+   26     | expr • "||" expr
+   27     | expr • '=' expr
+   28     | expr • "+=" expr
+   29     | expr • "-=" expr
+   30     | expr • "*=" expr
+   31     | expr • "/=" expr
+   32     | expr • "%=" expr
+   33     | expr • "<<=" expr
+   34     | expr • ">>=" expr
+   35     | expr • "&=" expr
+   36     | expr • "^=" expr
+   37     | expr • "|=" expr
+   38     | expr • ',' expr
+
+    "<<"   shift, and go to state 12
+    ">>"   shift, and go to state 13
+    "<="   shift, and go to state 14
+    ">="   shift, and go to state 15
+    "=="   shift, and go to state 16
+    "!="   shift, and go to state 17
+    "&&"   shift, and go to state 18
+    "||"   shift, and go to state 19
+    "*="   shift, and go to state 20
+    "/="   shift, and go to state 21
+    "%="   shift, and go to state 22
+    "+="   shift, and go to state 23
+    "-="   shift, and go to state 24
+    "<<="  shift, and go to state 25
+    ">>="  shift, and go to state 26
+    "&="   shift, and go to state 27
+    "|="   shift, and go to state 28
+    "^="   shift, and go to state 29
+    '*'    shift, and go to state 31
+    '/'    shift, and go to state 32
+    '%'    shift, and go to state 33
+    '+'    shift, and go to state 34
+    '-'    shift, and go to state 35
+    '<'    shift, and go to state 36
+    '>'    shift, and go to state 37
+    '&'    shift, and go to state 38
+    '^'    shift, and go to state 39
+    '|'    shift, and go to state 40
+    '='    shift, and go to state 41
+    ','    shift, and go to state 42
+    ')'    shift, and go to state 43
+
+
+State 10
+
+    0 $accept: statement_sequence $end •
+
+    $default  accept
+
+
+State 11
+
+    2 statement_sequence: statement_sequence statement •
+
+    $default  reduce using rule 2 (statement_sequence)
+
+
+State 12
+
+    4 expr: • IDENT
+    5     | • CHARLIT
+    6     | • STRINGLIT
+    7     | • NUMBERLIT
+    8     | • '(' expr ')'
+    9     | • expr '*' expr
+   10     | • expr '/' expr
+   11     | • expr '%' expr
+   12     | • expr '+' expr
+   13     | • expr '-' expr
+   14     | • expr ">>" expr
+   15     | • expr "<<" expr
+   15     | expr "<<" • expr
+   16     | • expr '<' expr
+   17     | • expr "<=" expr
+   18     | • expr '>' expr
+   19     | • expr ">=" expr
+   20     | • expr "==" expr
+   21     | • expr "!=" expr
+   22     | • expr '&' expr
+   23     | • expr '^' expr
+   24     | • expr '|' expr
+   25     | • expr "&&" expr
+   26     | • expr "||" expr
+   27     | • expr '=' expr
+   28     | • expr "+=" expr
+   29     | • expr "-=" expr
+   30     | • expr "*=" expr
+   31     | • expr "/=" expr
+   32     | • expr "%=" expr
+   33     | • expr "<<=" expr
+   34     | • expr ">>=" expr
+   35     | • expr "&=" expr
+   36     | • expr "^=" expr
+   37     | • expr "|=" expr
+   38     | • expr ',' expr
+
+    IDENT      shift, and go to state 1
+    CHARLIT    shift, and go to state 2
+    STRINGLIT  shift, and go to state 3
+    NUMBERLIT  shift, and go to state 4
+    '('        shift, and go to state 5
+
+    expr  go to state 44
+
+
+State 13
+
+    4 expr: • IDENT
+    5     | • CHARLIT
+    6     | • STRINGLIT
+    7     | • NUMBERLIT
+    8     | • '(' expr ')'
+    9     | • expr '*' expr
+   10     | • expr '/' expr
+   11     | • expr '%' expr
+   12     | • expr '+' expr
+   13     | • expr '-' expr
+   14     | • expr ">>" expr
+   14     | expr ">>" • expr
+   15     | • expr "<<" expr
+   16     | • expr '<' expr
+   17     | • expr "<=" expr
+   18     | • expr '>' expr
+   19     | • expr ">=" expr
+   20     | • expr "==" expr
+   21     | • expr "!=" expr
+   22     | • expr '&' expr
+   23     | • expr '^' expr
+   24     | • expr '|' expr
+   25     | • expr "&&" expr
+   26     | • expr "||" expr
+   27     | • expr '=' expr
+   28     | • expr "+=" expr
+   29     | • expr "-=" expr
+   30     | • expr "*=" expr
+   31     | • expr "/=" expr
+   32     | • expr "%=" expr
+   33     | • expr "<<=" expr
+   34     | • expr ">>=" expr
+   35     | • expr "&=" expr
+   36     | • expr "^=" expr
+   37     | • expr "|=" expr
+   38     | • expr ',' expr
+
+    IDENT      shift, and go to state 1
+    CHARLIT    shift, and go to state 2
+    STRINGLIT  shift, and go to state 3
+    NUMBERLIT  shift, and go to state 4
+    '('        shift, and go to state 5
+
+    expr  go to state 45
+
+
+State 14
+
+    4 expr: • IDENT
+    5     | • CHARLIT
+    6     | • STRINGLIT
+    7     | • NUMBERLIT
+    8     | • '(' expr ')'
+    9     | • expr '*' expr
+   10     | • expr '/' expr
+   11     | • expr '%' expr
+   12     | • expr '+' expr
+   13     | • expr '-' expr
+   14     | • expr ">>" expr
+   15     | • expr "<<" expr
+   16     | • expr '<' expr
+   17     | • expr "<=" expr
+   17     | expr "<=" • expr
+   18     | • expr '>' expr
+   19     | • expr ">=" expr
+   20     | • expr "==" expr
+   21     | • expr "!=" expr
+   22     | • expr '&' expr
+   23     | • expr '^' expr
+   24     | • expr '|' expr
+   25     | • expr "&&" expr
+   26     | • expr "||" expr
+   27     | • expr '=' expr
+   28     | • expr "+=" expr
+   29     | • expr "-=" expr
+   30     | • expr "*=" expr
+   31     | • expr "/=" expr
+   32     | • expr "%=" expr
+   33     | • expr "<<=" expr
+   34     | • expr ">>=" expr
+   35     | • expr "&=" expr
+   36     | • expr "^=" expr
+   37     | • expr "|=" expr
+   38     | • expr ',' expr
+
+    IDENT      shift, and go to state 1
+    CHARLIT    shift, and go to state 2
+    STRINGLIT  shift, and go to state 3
+    NUMBERLIT  shift, and go to state 4
+    '('        shift, and go to state 5
+
+    expr  go to state 46
+
+
+State 15
+
+    4 expr: • IDENT
+    5     | • CHARLIT
+    6     | • STRINGLIT
+    7     | • NUMBERLIT
+    8     | • '(' expr ')'
+    9     | • expr '*' expr
+   10     | • expr '/' expr
+   11     | • expr '%' expr
+   12     | • expr '+' expr
+   13     | • expr '-' expr
+   14     | • expr ">>" expr
+   15     | • expr "<<" expr
+   16     | • expr '<' expr
+   17     | • expr "<=" expr
+   18     | • expr '>' expr
+   19     | • expr ">=" expr
+   19     | expr ">=" • expr
+   20     | • expr "==" expr
+   21     | • expr "!=" expr
+   22     | • expr '&' expr
+   23     | • expr '^' expr
+   24     | • expr '|' expr
+   25     | • expr "&&" expr
+   26     | • expr "||" expr
+   27     | • expr '=' expr
+   28     | • expr "+=" expr
+   29     | • expr "-=" expr
+   30     | • expr "*=" expr
+   31     | • expr "/=" expr
+   32     | • expr "%=" expr
+   33     | • expr "<<=" expr
+   34     | • expr ">>=" expr
+   35     | • expr "&=" expr
+   36     | • expr "^=" expr
+   37     | • expr "|=" expr
+   38     | • expr ',' expr
+
+    IDENT      shift, and go to state 1
+    CHARLIT    shift, and go to state 2
+    STRINGLIT  shift, and go to state 3
+    NUMBERLIT  shift, and go to state 4
+    '('        shift, and go to state 5
+
+    expr  go to state 47
+
+
+State 16
+
+    4 expr: • IDENT
+    5     | • CHARLIT
+    6     | • STRINGLIT
+    7     | • NUMBERLIT
+    8     | • '(' expr ')'
+    9     | • expr '*' expr
+   10     | • expr '/' expr
+   11     | • expr '%' expr
+   12     | • expr '+' expr
+   13     | • expr '-' expr
+   14     | • expr ">>" expr
+   15     | • expr "<<" expr
+   16     | • expr '<' expr
+   17     | • expr "<=" expr
+   18     | • expr '>' expr
+   19     | • expr ">=" expr
+   20     | • expr "==" expr
+   20     | expr "==" • expr
+   21     | • expr "!=" expr
+   22     | • expr '&' expr
+   23     | • expr '^' expr
+   24     | • expr '|' expr
+   25     | • expr "&&" expr
+   26     | • expr "||" expr
+   27     | • expr '=' expr
+   28     | • expr "+=" expr
+   29     | • expr "-=" expr
+   30     | • expr "*=" expr
+   31     | • expr "/=" expr
+   32     | • expr "%=" expr
+   33     | • expr "<<=" expr
+   34     | • expr ">>=" expr
+   35     | • expr "&=" expr
+   36     | • expr "^=" expr
+   37     | • expr "|=" expr
+   38     | • expr ',' expr
+
+    IDENT      shift, and go to state 1
+    CHARLIT    shift, and go to state 2
+    STRINGLIT  shift, and go to state 3
+    NUMBERLIT  shift, and go to state 4
+    '('        shift, and go to state 5
+
+    expr  go to state 48
+
+
+State 17
+
+    4 expr: • IDENT
+    5     | • CHARLIT
+    6     | • STRINGLIT
+    7     | • NUMBERLIT
+    8     | • '(' expr ')'
+    9     | • expr '*' expr
+   10     | • expr '/' expr
+   11     | • expr '%' expr
+   12     | • expr '+' expr
+   13     | • expr '-' expr
+   14     | • expr ">>" expr
+   15     | • expr "<<" expr
+   16     | • expr '<' expr
+   17     | • expr "<=" expr
+   18     | • expr '>' expr
+   19     | • expr ">=" expr
+   20     | • expr "==" expr
+   21     | • expr "!=" expr
+   21     | expr "!=" • expr
+   22     | • expr '&' expr
+   23     | • expr '^' expr
+   24     | • expr '|' expr
+   25     | • expr "&&" expr
+   26     | • expr "||" expr
+   27     | • expr '=' expr
+   28     | • expr "+=" expr
+   29     | • expr "-=" expr
+   30     | • expr "*=" expr
+   31     | • expr "/=" expr
+   32     | • expr "%=" expr
+   33     | • expr "<<=" expr
+   34     | • expr ">>=" expr
+   35     | • expr "&=" expr
+   36     | • expr "^=" expr
+   37     | • expr "|=" expr
+   38     | • expr ',' expr
+
+    IDENT      shift, and go to state 1
+    CHARLIT    shift, and go to state 2
+    STRINGLIT  shift, and go to state 3
+    NUMBERLIT  shift, and go to state 4
+    '('        shift, and go to state 5
+
+    expr  go to state 49
+
+
+State 18
+
+    4 expr: • IDENT
+    5     | • CHARLIT
+    6     | • STRINGLIT
+    7     | • NUMBERLIT
+    8     | • '(' expr ')'
+    9     | • expr '*' expr
+   10     | • expr '/' expr
+   11     | • expr '%' expr
+   12     | • expr '+' expr
+   13     | • expr '-' expr
+   14     | • expr ">>" expr
+   15     | • expr "<<" expr
+   16     | • expr '<' expr
+   17     | • expr "<=" expr
+   18     | • expr '>' expr
+   19     | • expr ">=" expr
+   20     | • expr "==" expr
+   21     | • expr "!=" expr
+   22     | • expr '&' expr
+   23     | • expr '^' expr
+   24     | • expr '|' expr
+   25     | • expr "&&" expr
+   25     | expr "&&" • expr
+   26     | • expr "||" expr
+   27     | • expr '=' expr
+   28     | • expr "+=" expr
+   29     | • expr "-=" expr
+   30     | • expr "*=" expr
+   31     | • expr "/=" expr
+   32     | • expr "%=" expr
+   33     | • expr "<<=" expr
+   34     | • expr ">>=" expr
+   35     | • expr "&=" expr
+   36     | • expr "^=" expr
+   37     | • expr "|=" expr
+   38     | • expr ',' expr
+
+    IDENT      shift, and go to state 1
+    CHARLIT    shift, and go to state 2
+    STRINGLIT  shift, and go to state 3
+    NUMBERLIT  shift, and go to state 4
+    '('        shift, and go to state 5
+
+    expr  go to state 50
+
+
+State 19
+
+    4 expr: • IDENT
+    5     | • CHARLIT
+    6     | • STRINGLIT
+    7     | • NUMBERLIT
+    8     | • '(' expr ')'
+    9     | • expr '*' expr
+   10     | • expr '/' expr
+   11     | • expr '%' expr
+   12     | • expr '+' expr
+   13     | • expr '-' expr
+   14     | • expr ">>" expr
+   15     | • expr "<<" expr
+   16     | • expr '<' expr
+   17     | • expr "<=" expr
+   18     | • expr '>' expr
+   19     | • expr ">=" expr
+   20     | • expr "==" expr
+   21     | • expr "!=" expr
+   22     | • expr '&' expr
+   23     | • expr '^' expr
+   24     | • expr '|' expr
+   25     | • expr "&&" expr
+   26     | • expr "||" expr
+   26     | expr "||" • expr
+   27     | • expr '=' expr
+   28     | • expr "+=" expr
+   29     | • expr "-=" expr
+   30     | • expr "*=" expr
+   31     | • expr "/=" expr
+   32     | • expr "%=" expr
+   33     | • expr "<<=" expr
+   34     | • expr ">>=" expr
+   35     | • expr "&=" expr
+   36     | • expr "^=" expr
+   37     | • expr "|=" expr
+   38     | • expr ',' expr
+
+    IDENT      shift, and go to state 1
+    CHARLIT    shift, and go to state 2
+    STRINGLIT  shift, and go to state 3
+    NUMBERLIT  shift, and go to state 4
+    '('        shift, and go to state 5
+
+    expr  go to state 51
+
+
+State 20
+
+    4 expr: • IDENT
+    5     | • CHARLIT
+    6     | • STRINGLIT
+    7     | • NUMBERLIT
+    8     | • '(' expr ')'
+    9     | • expr '*' expr
+   10     | • expr '/' expr
+   11     | • expr '%' expr
+   12     | • expr '+' expr
+   13     | • expr '-' expr
+   14     | • expr ">>" expr
+   15     | • expr "<<" expr
+   16     | • expr '<' expr
+   17     | • expr "<=" expr
+   18     | • expr '>' expr
+   19     | • expr ">=" expr
+   20     | • expr "==" expr
+   21     | • expr "!=" expr
+   22     | • expr '&' expr
+   23     | • expr '^' expr
+   24     | • expr '|' expr
+   25     | • expr "&&" expr
+   26     | • expr "||" expr
+   27     | • expr '=' expr
+   28     | • expr "+=" expr
+   29     | • expr "-=" expr
+   30     | • expr "*=" expr
+   30     | expr "*=" • expr
+   31     | • expr "/=" expr
+   32     | • expr "%=" expr
+   33     | • expr "<<=" expr
+   34     | • expr ">>=" expr
+   35     | • expr "&=" expr
+   36     | • expr "^=" expr
+   37     | • expr "|=" expr
+   38     | • expr ',' expr
+
+    IDENT      shift, and go to state 1
+    CHARLIT    shift, and go to state 2
+    STRINGLIT  shift, and go to state 3
+    NUMBERLIT  shift, and go to state 4
+    '('        shift, and go to state 5
+
+    expr  go to state 52
+
+
+State 21
+
+    4 expr: • IDENT
+    5     | • CHARLIT
+    6     | • STRINGLIT
+    7     | • NUMBERLIT
+    8     | • '(' expr ')'
+    9     | • expr '*' expr
+   10     | • expr '/' expr
+   11     | • expr '%' expr
+   12     | • expr '+' expr
+   13     | • expr '-' expr
+   14     | • expr ">>" expr
+   15     | • expr "<<" expr
+   16     | • expr '<' expr
+   17     | • expr "<=" expr
+   18     | • expr '>' expr
+   19     | • expr ">=" expr
+   20     | • expr "==" expr
+   21     | • expr "!=" expr
+   22     | • expr '&' expr
+   23     | • expr '^' expr
+   24     | • expr '|' expr
+   25     | • expr "&&" expr
+   26     | • expr "||" expr
+   27     | • expr '=' expr
+   28     | • expr "+=" expr
+   29     | • expr "-=" expr
+   30     | • expr "*=" expr
+   31     | • expr "/=" expr
+   31     | expr "/=" • expr
+   32     | • expr "%=" expr
+   33     | • expr "<<=" expr
+   34     | • expr ">>=" expr
+   35     | • expr "&=" expr
+   36     | • expr "^=" expr
+   37     | • expr "|=" expr
+   38     | • expr ',' expr
+
+    IDENT      shift, and go to state 1
+    CHARLIT    shift, and go to state 2
+    STRINGLIT  shift, and go to state 3
+    NUMBERLIT  shift, and go to state 4
+    '('        shift, and go to state 5
+
+    expr  go to state 53
+
+
+State 22
+
+    4 expr: • IDENT
+    5     | • CHARLIT
+    6     | • STRINGLIT
+    7     | • NUMBERLIT
+    8     | • '(' expr ')'
+    9     | • expr '*' expr
+   10     | • expr '/' expr
+   11     | • expr '%' expr
+   12     | • expr '+' expr
+   13     | • expr '-' expr
+   14     | • expr ">>" expr
+   15     | • expr "<<" expr
+   16     | • expr '<' expr
+   17     | • expr "<=" expr
+   18     | • expr '>' expr
+   19     | • expr ">=" expr
+   20     | • expr "==" expr
+   21     | • expr "!=" expr
+   22     | • expr '&' expr
+   23     | • expr '^' expr
+   24     | • expr '|' expr
+   25     | • expr "&&" expr
+   26     | • expr "||" expr
+   27     | • expr '=' expr
+   28     | • expr "+=" expr
+   29     | • expr "-=" expr
+   30     | • expr "*=" expr
+   31     | • expr "/=" expr
+   32     | • expr "%=" expr
+   32     | expr "%=" • expr
+   33     | • expr "<<=" expr
+   34     | • expr ">>=" expr
+   35     | • expr "&=" expr
+   36     | • expr "^=" expr
+   37     | • expr "|=" expr
+   38     | • expr ',' expr
+
+    IDENT      shift, and go to state 1
+    CHARLIT    shift, and go to state 2
+    STRINGLIT  shift, and go to state 3
+    NUMBERLIT  shift, and go to state 4
+    '('        shift, and go to state 5
+
+    expr  go to state 54
+
+
+State 23
+
+    4 expr: • IDENT
+    5     | • CHARLIT
+    6     | • STRINGLIT
+    7     | • NUMBERLIT
+    8     | • '(' expr ')'
+    9     | • expr '*' expr
+   10     | • expr '/' expr
+   11     | • expr '%' expr
+   12     | • expr '+' expr
+   13     | • expr '-' expr
+   14     | • expr ">>" expr
+   15     | • expr "<<" expr
+   16     | • expr '<' expr
+   17     | • expr "<=" expr
+   18     | • expr '>' expr
+   19     | • expr ">=" expr
+   20     | • expr "==" expr
+   21     | • expr "!=" expr
+   22     | • expr '&' expr
+   23     | • expr '^' expr
+   24     | • expr '|' expr
+   25     | • expr "&&" expr
+   26     | • expr "||" expr
+   27     | • expr '=' expr
+   28     | • expr "+=" expr
+   28     | expr "+=" • expr
+   29     | • expr "-=" expr
+   30     | • expr "*=" expr
+   31     | • expr "/=" expr
+   32     | • expr "%=" expr
+   33     | • expr "<<=" expr
+   34     | • expr ">>=" expr
+   35     | • expr "&=" expr
+   36     | • expr "^=" expr
+   37     | • expr "|=" expr
+   38     | • expr ',' expr
+
+    IDENT      shift, and go to state 1
+    CHARLIT    shift, and go to state 2
+    STRINGLIT  shift, and go to state 3
+    NUMBERLIT  shift, and go to state 4
+    '('        shift, and go to state 5
+
+    expr  go to state 55
+
+
+State 24
+
+    4 expr: • IDENT
+    5     | • CHARLIT
+    6     | • STRINGLIT
+    7     | • NUMBERLIT
+    8     | • '(' expr ')'
+    9     | • expr '*' expr
+   10     | • expr '/' expr
+   11     | • expr '%' expr
+   12     | • expr '+' expr
+   13     | • expr '-' expr
+   14     | • expr ">>" expr
+   15     | • expr "<<" expr
+   16     | • expr '<' expr
+   17     | • expr "<=" expr
+   18     | • expr '>' expr
+   19     | • expr ">=" expr
+   20     | • expr "==" expr
+   21     | • expr "!=" expr
+   22     | • expr '&' expr
+   23     | • expr '^' expr
+   24     | • expr '|' expr
+   25     | • expr "&&" expr
+   26     | • expr "||" expr
+   27     | • expr '=' expr
+   28     | • expr "+=" expr
+   29     | • expr "-=" expr
+   29     | expr "-=" • expr
+   30     | • expr "*=" expr
+   31     | • expr "/=" expr
+   32     | • expr "%=" expr
+   33     | • expr "<<=" expr
+   34     | • expr ">>=" expr
+   35     | • expr "&=" expr
+   36     | • expr "^=" expr
+   37     | • expr "|=" expr
+   38     | • expr ',' expr
+
+    IDENT      shift, and go to state 1
+    CHARLIT    shift, and go to state 2
+    STRINGLIT  shift, and go to state 3
+    NUMBERLIT  shift, and go to state 4
+    '('        shift, and go to state 5
+
+    expr  go to state 56
+
+
+State 25
+
+    4 expr: • IDENT
+    5     | • CHARLIT
+    6     | • STRINGLIT
+    7     | • NUMBERLIT
+    8     | • '(' expr ')'
+    9     | • expr '*' expr
+   10     | • expr '/' expr
+   11     | • expr '%' expr
+   12     | • expr '+' expr
+   13     | • expr '-' expr
+   14     | • expr ">>" expr
+   15     | • expr "<<" expr
+   16     | • expr '<' expr
+   17     | • expr "<=" expr
+   18     | • expr '>' expr
+   19     | • expr ">=" expr
+   20     | • expr "==" expr
+   21     | • expr "!=" expr
+   22     | • expr '&' expr
+   23     | • expr '^' expr
+   24     | • expr '|' expr
+   25     | • expr "&&" expr
+   26     | • expr "||" expr
+   27     | • expr '=' expr
+   28     | • expr "+=" expr
+   29     | • expr "-=" expr
+   30     | • expr "*=" expr
+   31     | • expr "/=" expr
+   32     | • expr "%=" expr
+   33     | • expr "<<=" expr
+   33     | expr "<<=" • expr
+   34     | • expr ">>=" expr
+   35     | • expr "&=" expr
+   36     | • expr "^=" expr
+   37     | • expr "|=" expr
+   38     | • expr ',' expr
+
+    IDENT      shift, and go to state 1
+    CHARLIT    shift, and go to state 2
+    STRINGLIT  shift, and go to state 3
+    NUMBERLIT  shift, and go to state 4
+    '('        shift, and go to state 5
+
+    expr  go to state 57
+
+
+State 26
+
+    4 expr: • IDENT
+    5     | • CHARLIT
+    6     | • STRINGLIT
+    7     | • NUMBERLIT
+    8     | • '(' expr ')'
+    9     | • expr '*' expr
+   10     | • expr '/' expr
+   11     | • expr '%' expr
+   12     | • expr '+' expr
+   13     | • expr '-' expr
+   14     | • expr ">>" expr
+   15     | • expr "<<" expr
+   16     | • expr '<' expr
+   17     | • expr "<=" expr
+   18     | • expr '>' expr
+   19     | • expr ">=" expr
+   20     | • expr "==" expr
+   21     | • expr "!=" expr
+   22     | • expr '&' expr
+   23     | • expr '^' expr
+   24     | • expr '|' expr
+   25     | • expr "&&" expr
+   26     | • expr "||" expr
+   27     | • expr '=' expr
+   28     | • expr "+=" expr
+   29     | • expr "-=" expr
+   30     | • expr "*=" expr
+   31     | • expr "/=" expr
+   32     | • expr "%=" expr
+   33     | • expr "<<=" expr
+   34     | • expr ">>=" expr
+   34     | expr ">>=" • expr
+   35     | • expr "&=" expr
+   36     | • expr "^=" expr
+   37     | • expr "|=" expr
+   38     | • expr ',' expr
+
+    IDENT      shift, and go to state 1
+    CHARLIT    shift, and go to state 2
+    STRINGLIT  shift, and go to state 3
+    NUMBERLIT  shift, and go to state 4
+    '('        shift, and go to state 5
+
+    expr  go to state 58
+
+
+State 27
+
+    4 expr: • IDENT
+    5     | • CHARLIT
+    6     | • STRINGLIT
+    7     | • NUMBERLIT
+    8     | • '(' expr ')'
+    9     | • expr '*' expr
+   10     | • expr '/' expr
+   11     | • expr '%' expr
+   12     | • expr '+' expr
+   13     | • expr '-' expr
+   14     | • expr ">>" expr
+   15     | • expr "<<" expr
+   16     | • expr '<' expr
+   17     | • expr "<=" expr
+   18     | • expr '>' expr
+   19     | • expr ">=" expr
+   20     | • expr "==" expr
+   21     | • expr "!=" expr
+   22     | • expr '&' expr
+   23     | • expr '^' expr
+   24     | • expr '|' expr
+   25     | • expr "&&" expr
+   26     | • expr "||" expr
+   27     | • expr '=' expr
+   28     | • expr "+=" expr
+   29     | • expr "-=" expr
+   30     | • expr "*=" expr
+   31     | • expr "/=" expr
+   32     | • expr "%=" expr
+   33     | • expr "<<=" expr
+   34     | • expr ">>=" expr
+   35     | • expr "&=" expr
+   35     | expr "&=" • expr
+   36     | • expr "^=" expr
+   37     | • expr "|=" expr
+   38     | • expr ',' expr
+
+    IDENT      shift, and go to state 1
+    CHARLIT    shift, and go to state 2
+    STRINGLIT  shift, and go to state 3
+    NUMBERLIT  shift, and go to state 4
+    '('        shift, and go to state 5
+
+    expr  go to state 59
+
+
+State 28
+
+    4 expr: • IDENT
+    5     | • CHARLIT
+    6     | • STRINGLIT
+    7     | • NUMBERLIT
+    8     | • '(' expr ')'
+    9     | • expr '*' expr
+   10     | • expr '/' expr
+   11     | • expr '%' expr
+   12     | • expr '+' expr
+   13     | • expr '-' expr
+   14     | • expr ">>" expr
+   15     | • expr "<<" expr
+   16     | • expr '<' expr
+   17     | • expr "<=" expr
+   18     | • expr '>' expr
+   19     | • expr ">=" expr
+   20     | • expr "==" expr
+   21     | • expr "!=" expr
+   22     | • expr '&' expr
+   23     | • expr '^' expr
+   24     | • expr '|' expr
+   25     | • expr "&&" expr
+   26     | • expr "||" expr
+   27     | • expr '=' expr
+   28     | • expr "+=" expr
+   29     | • expr "-=" expr
+   30     | • expr "*=" expr
+   31     | • expr "/=" expr
+   32     | • expr "%=" expr
+   33     | • expr "<<=" expr
+   34     | • expr ">>=" expr
+   35     | • expr "&=" expr
+   36     | • expr "^=" expr
+   37     | • expr "|=" expr
+   37     | expr "|=" • expr
+   38     | • expr ',' expr
+
+    IDENT      shift, and go to state 1
+    CHARLIT    shift, and go to state 2
+    STRINGLIT  shift, and go to state 3
+    NUMBERLIT  shift, and go to state 4
+    '('        shift, and go to state 5
+
+    expr  go to state 60
+
+
+State 29
+
+    4 expr: • IDENT
+    5     | • CHARLIT
+    6     | • STRINGLIT
+    7     | • NUMBERLIT
+    8     | • '(' expr ')'
+    9     | • expr '*' expr
+   10     | • expr '/' expr
+   11     | • expr '%' expr
+   12     | • expr '+' expr
+   13     | • expr '-' expr
+   14     | • expr ">>" expr
+   15     | • expr "<<" expr
+   16     | • expr '<' expr
+   17     | • expr "<=" expr
+   18     | • expr '>' expr
+   19     | • expr ">=" expr
+   20     | • expr "==" expr
+   21     | • expr "!=" expr
+   22     | • expr '&' expr
+   23     | • expr '^' expr
+   24     | • expr '|' expr
+   25     | • expr "&&" expr
+   26     | • expr "||" expr
+   27     | • expr '=' expr
+   28     | • expr "+=" expr
+   29     | • expr "-=" expr
+   30     | • expr "*=" expr
+   31     | • expr "/=" expr
+   32     | • expr "%=" expr
+   33     | • expr "<<=" expr
+   34     | • expr ">>=" expr
+   35     | • expr "&=" expr
+   36     | • expr "^=" expr
+   36     | expr "^=" • expr
+   37     | • expr "|=" expr
+   38     | • expr ',' expr
+
+    IDENT      shift, and go to state 1
+    CHARLIT    shift, and go to state 2
+    STRINGLIT  shift, and go to state 3
+    NUMBERLIT  shift, and go to state 4
+    '('        shift, and go to state 5
+
+    expr  go to state 61
+
+
+State 30
+
+    3 statement: expr ';' •
+
+    $default  reduce using rule 3 (statement)
+
+
+State 31
+
+    4 expr: • IDENT
+    5     | • CHARLIT
+    6     | • STRINGLIT
+    7     | • NUMBERLIT
+    8     | • '(' expr ')'
+    9     | • expr '*' expr
+    9     | expr '*' • expr
+   10     | • expr '/' expr
+   11     | • expr '%' expr
+   12     | • expr '+' expr
+   13     | • expr '-' expr
+   14     | • expr ">>" expr
+   15     | • expr "<<" expr
+   16     | • expr '<' expr
+   17     | • expr "<=" expr
+   18     | • expr '>' expr
+   19     | • expr ">=" expr
+   20     | • expr "==" expr
+   21     | • expr "!=" expr
+   22     | • expr '&' expr
+   23     | • expr '^' expr
+   24     | • expr '|' expr
+   25     | • expr "&&" expr
+   26     | • expr "||" expr
+   27     | • expr '=' expr
+   28     | • expr "+=" expr
+   29     | • expr "-=" expr
+   30     | • expr "*=" expr
+   31     | • expr "/=" expr
+   32     | • expr "%=" expr
+   33     | • expr "<<=" expr
+   34     | • expr ">>=" expr
+   35     | • expr "&=" expr
+   36     | • expr "^=" expr
+   37     | • expr "|=" expr
+   38     | • expr ',' expr
+
+    IDENT      shift, and go to state 1
+    CHARLIT    shift, and go to state 2
+    STRINGLIT  shift, and go to state 3
+    NUMBERLIT  shift, and go to state 4
+    '('        shift, and go to state 5
+
+    expr  go to state 62
+
+
+State 32
+
+    4 expr: • IDENT
+    5     | • CHARLIT
+    6     | • STRINGLIT
+    7     | • NUMBERLIT
+    8     | • '(' expr ')'
+    9     | • expr '*' expr
+   10     | • expr '/' expr
+   10     | expr '/' • expr
+   11     | • expr '%' expr
+   12     | • expr '+' expr
+   13     | • expr '-' expr
+   14     | • expr ">>" expr
+   15     | • expr "<<" expr
+   16     | • expr '<' expr
+   17     | • expr "<=" expr
+   18     | • expr '>' expr
+   19     | • expr ">=" expr
+   20     | • expr "==" expr
+   21     | • expr "!=" expr
+   22     | • expr '&' expr
+   23     | • expr '^' expr
+   24     | • expr '|' expr
+   25     | • expr "&&" expr
+   26     | • expr "||" expr
+   27     | • expr '=' expr
+   28     | • expr "+=" expr
+   29     | • expr "-=" expr
+   30     | • expr "*=" expr
+   31     | • expr "/=" expr
+   32     | • expr "%=" expr
+   33     | • expr "<<=" expr
+   34     | • expr ">>=" expr
+   35     | • expr "&=" expr
+   36     | • expr "^=" expr
+   37     | • expr "|=" expr
+   38     | • expr ',' expr
+
+    IDENT      shift, and go to state 1
+    CHARLIT    shift, and go to state 2
+    STRINGLIT  shift, and go to state 3
+    NUMBERLIT  shift, and go to state 4
+    '('        shift, and go to state 5
+
+    expr  go to state 63
+
+
+State 33
+
+    4 expr: • IDENT
+    5     | • CHARLIT
+    6     | • STRINGLIT
+    7     | • NUMBERLIT
+    8     | • '(' expr ')'
+    9     | • expr '*' expr
+   10     | • expr '/' expr
+   11     | • expr '%' expr
+   11     | expr '%' • expr
+   12     | • expr '+' expr
+   13     | • expr '-' expr
+   14     | • expr ">>" expr
+   15     | • expr "<<" expr
+   16     | • expr '<' expr
+   17     | • expr "<=" expr
+   18     | • expr '>' expr
+   19     | • expr ">=" expr
+   20     | • expr "==" expr
+   21     | • expr "!=" expr
+   22     | • expr '&' expr
+   23     | • expr '^' expr
+   24     | • expr '|' expr
+   25     | • expr "&&" expr
+   26     | • expr "||" expr
+   27     | • expr '=' expr
+   28     | • expr "+=" expr
+   29     | • expr "-=" expr
+   30     | • expr "*=" expr
+   31     | • expr "/=" expr
+   32     | • expr "%=" expr
+   33     | • expr "<<=" expr
+   34     | • expr ">>=" expr
+   35     | • expr "&=" expr
+   36     | • expr "^=" expr
+   37     | • expr "|=" expr
+   38     | • expr ',' expr
+
+    IDENT      shift, and go to state 1
+    CHARLIT    shift, and go to state 2
+    STRINGLIT  shift, and go to state 3
+    NUMBERLIT  shift, and go to state 4
+    '('        shift, and go to state 5
+
+    expr  go to state 64
+
+
+State 34
+
+    4 expr: • IDENT
+    5     | • CHARLIT
+    6     | • STRINGLIT
+    7     | • NUMBERLIT
+    8     | • '(' expr ')'
+    9     | • expr '*' expr
+   10     | • expr '/' expr
+   11     | • expr '%' expr
+   12     | • expr '+' expr
+   12     | expr '+' • expr
+   13     | • expr '-' expr
+   14     | • expr ">>" expr
+   15     | • expr "<<" expr
+   16     | • expr '<' expr
+   17     | • expr "<=" expr
+   18     | • expr '>' expr
+   19     | • expr ">=" expr
+   20     | • expr "==" expr
+   21     | • expr "!=" expr
+   22     | • expr '&' expr
+   23     | • expr '^' expr
+   24     | • expr '|' expr
+   25     | • expr "&&" expr
+   26     | • expr "||" expr
+   27     | • expr '=' expr
+   28     | • expr "+=" expr
+   29     | • expr "-=" expr
+   30     | • expr "*=" expr
+   31     | • expr "/=" expr
+   32     | • expr "%=" expr
+   33     | • expr "<<=" expr
+   34     | • expr ">>=" expr
+   35     | • expr "&=" expr
+   36     | • expr "^=" expr
+   37     | • expr "|=" expr
+   38     | • expr ',' expr
+
+    IDENT      shift, and go to state 1
+    CHARLIT    shift, and go to state 2
+    STRINGLIT  shift, and go to state 3
+    NUMBERLIT  shift, and go to state 4
+    '('        shift, and go to state 5
+
+    expr  go to state 65
+
+
+State 35
+
+    4 expr: • IDENT
+    5     | • CHARLIT
+    6     | • STRINGLIT
+    7     | • NUMBERLIT
+    8     | • '(' expr ')'
+    9     | • expr '*' expr
+   10     | • expr '/' expr
+   11     | • expr '%' expr
+   12     | • expr '+' expr
+   13     | • expr '-' expr
+   13     | expr '-' • expr
+   14     | • expr ">>" expr
+   15     | • expr "<<" expr
+   16     | • expr '<' expr
+   17     | • expr "<=" expr
+   18     | • expr '>' expr
+   19     | • expr ">=" expr
+   20     | • expr "==" expr
+   21     | • expr "!=" expr
+   22     | • expr '&' expr
+   23     | • expr '^' expr
+   24     | • expr '|' expr
+   25     | • expr "&&" expr
+   26     | • expr "||" expr
+   27     | • expr '=' expr
+   28     | • expr "+=" expr
+   29     | • expr "-=" expr
+   30     | • expr "*=" expr
+   31     | • expr "/=" expr
+   32     | • expr "%=" expr
+   33     | • expr "<<=" expr
+   34     | • expr ">>=" expr
+   35     | • expr "&=" expr
+   36     | • expr "^=" expr
+   37     | • expr "|=" expr
+   38     | • expr ',' expr
+
+    IDENT      shift, and go to state 1
+    CHARLIT    shift, and go to state 2
+    STRINGLIT  shift, and go to state 3
+    NUMBERLIT  shift, and go to state 4
+    '('        shift, and go to state 5
+
+    expr  go to state 66
+
+
+State 36
+
+    4 expr: • IDENT
+    5     | • CHARLIT
+    6     | • STRINGLIT
+    7     | • NUMBERLIT
+    8     | • '(' expr ')'
+    9     | • expr '*' expr
+   10     | • expr '/' expr
+   11     | • expr '%' expr
+   12     | • expr '+' expr
+   13     | • expr '-' expr
+   14     | • expr ">>" expr
+   15     | • expr "<<" expr
+   16     | • expr '<' expr
+   16     | expr '<' • expr
+   17     | • expr "<=" expr
+   18     | • expr '>' expr
+   19     | • expr ">=" expr
+   20     | • expr "==" expr
+   21     | • expr "!=" expr
+   22     | • expr '&' expr
+   23     | • expr '^' expr
+   24     | • expr '|' expr
+   25     | • expr "&&" expr
+   26     | • expr "||" expr
+   27     | • expr '=' expr
+   28     | • expr "+=" expr
+   29     | • expr "-=" expr
+   30     | • expr "*=" expr
+   31     | • expr "/=" expr
+   32     | • expr "%=" expr
+   33     | • expr "<<=" expr
+   34     | • expr ">>=" expr
+   35     | • expr "&=" expr
+   36     | • expr "^=" expr
+   37     | • expr "|=" expr
+   38     | • expr ',' expr
+
+    IDENT      shift, and go to state 1
+    CHARLIT    shift, and go to state 2
+    STRINGLIT  shift, and go to state 3
+    NUMBERLIT  shift, and go to state 4
+    '('        shift, and go to state 5
+
+    expr  go to state 67
+
+
+State 37
+
+    4 expr: • IDENT
+    5     | • CHARLIT
+    6     | • STRINGLIT
+    7     | • NUMBERLIT
+    8     | • '(' expr ')'
+    9     | • expr '*' expr
+   10     | • expr '/' expr
+   11     | • expr '%' expr
+   12     | • expr '+' expr
+   13     | • expr '-' expr
+   14     | • expr ">>" expr
+   15     | • expr "<<" expr
+   16     | • expr '<' expr
+   17     | • expr "<=" expr
+   18     | • expr '>' expr
+   18     | expr '>' • expr
+   19     | • expr ">=" expr
+   20     | • expr "==" expr
+   21     | • expr "!=" expr
+   22     | • expr '&' expr
+   23     | • expr '^' expr
+   24     | • expr '|' expr
+   25     | • expr "&&" expr
+   26     | • expr "||" expr
+   27     | • expr '=' expr
+   28     | • expr "+=" expr
+   29     | • expr "-=" expr
+   30     | • expr "*=" expr
+   31     | • expr "/=" expr
+   32     | • expr "%=" expr
+   33     | • expr "<<=" expr
+   34     | • expr ">>=" expr
+   35     | • expr "&=" expr
+   36     | • expr "^=" expr
+   37     | • expr "|=" expr
+   38     | • expr ',' expr
+
+    IDENT      shift, and go to state 1
+    CHARLIT    shift, and go to state 2
+    STRINGLIT  shift, and go to state 3
+    NUMBERLIT  shift, and go to state 4
+    '('        shift, and go to state 5
+
+    expr  go to state 68
+
+
+State 38
+
+    4 expr: • IDENT
+    5     | • CHARLIT
+    6     | • STRINGLIT
+    7     | • NUMBERLIT
+    8     | • '(' expr ')'
+    9     | • expr '*' expr
+   10     | • expr '/' expr
+   11     | • expr '%' expr
+   12     | • expr '+' expr
+   13     | • expr '-' expr
+   14     | • expr ">>" expr
+   15     | • expr "<<" expr
+   16     | • expr '<' expr
+   17     | • expr "<=" expr
+   18     | • expr '>' expr
+   19     | • expr ">=" expr
+   20     | • expr "==" expr
+   21     | • expr "!=" expr
+   22     | • expr '&' expr
+   22     | expr '&' • expr
+   23     | • expr '^' expr
+   24     | • expr '|' expr
+   25     | • expr "&&" expr
+   26     | • expr "||" expr
+   27     | • expr '=' expr
+   28     | • expr "+=" expr
+   29     | • expr "-=" expr
+   30     | • expr "*=" expr
+   31     | • expr "/=" expr
+   32     | • expr "%=" expr
+   33     | • expr "<<=" expr
+   34     | • expr ">>=" expr
+   35     | • expr "&=" expr
+   36     | • expr "^=" expr
+   37     | • expr "|=" expr
+   38     | • expr ',' expr
+
+    IDENT      shift, and go to state 1
+    CHARLIT    shift, and go to state 2
+    STRINGLIT  shift, and go to state 3
+    NUMBERLIT  shift, and go to state 4
+    '('        shift, and go to state 5
+
+    expr  go to state 69
+
+
+State 39
+
+    4 expr: • IDENT
+    5     | • CHARLIT
+    6     | • STRINGLIT
+    7     | • NUMBERLIT
+    8     | • '(' expr ')'
+    9     | • expr '*' expr
+   10     | • expr '/' expr
+   11     | • expr '%' expr
+   12     | • expr '+' expr
+   13     | • expr '-' expr
+   14     | • expr ">>" expr
+   15     | • expr "<<" expr
+   16     | • expr '<' expr
+   17     | • expr "<=" expr
+   18     | • expr '>' expr
+   19     | • expr ">=" expr
+   20     | • expr "==" expr
+   21     | • expr "!=" expr
+   22     | • expr '&' expr
+   23     | • expr '^' expr
+   23     | expr '^' • expr
+   24     | • expr '|' expr
+   25     | • expr "&&" expr
+   26     | • expr "||" expr
+   27     | • expr '=' expr
+   28     | • expr "+=" expr
+   29     | • expr "-=" expr
+   30     | • expr "*=" expr
+   31     | • expr "/=" expr
+   32     | • expr "%=" expr
+   33     | • expr "<<=" expr
+   34     | • expr ">>=" expr
+   35     | • expr "&=" expr
+   36     | • expr "^=" expr
+   37     | • expr "|=" expr
+   38     | • expr ',' expr
+
+    IDENT      shift, and go to state 1
+    CHARLIT    shift, and go to state 2
+    STRINGLIT  shift, and go to state 3
+    NUMBERLIT  shift, and go to state 4
+    '('        shift, and go to state 5
+
+    expr  go to state 70
+
+
+State 40
+
+    4 expr: • IDENT
+    5     | • CHARLIT
+    6     | • STRINGLIT
+    7     | • NUMBERLIT
+    8     | • '(' expr ')'
+    9     | • expr '*' expr
+   10     | • expr '/' expr
+   11     | • expr '%' expr
+   12     | • expr '+' expr
+   13     | • expr '-' expr
+   14     | • expr ">>" expr
+   15     | • expr "<<" expr
+   16     | • expr '<' expr
+   17     | • expr "<=" expr
+   18     | • expr '>' expr
+   19     | • expr ">=" expr
+   20     | • expr "==" expr
+   21     | • expr "!=" expr
+   22     | • expr '&' expr
+   23     | • expr '^' expr
+   24     | • expr '|' expr
+   24     | expr '|' • expr
+   25     | • expr "&&" expr
+   26     | • expr "||" expr
+   27     | • expr '=' expr
+   28     | • expr "+=" expr
+   29     | • expr "-=" expr
+   30     | • expr "*=" expr
+   31     | • expr "/=" expr
+   32     | • expr "%=" expr
+   33     | • expr "<<=" expr
+   34     | • expr ">>=" expr
+   35     | • expr "&=" expr
+   36     | • expr "^=" expr
+   37     | • expr "|=" expr
+   38     | • expr ',' expr
+
+    IDENT      shift, and go to state 1
+    CHARLIT    shift, and go to state 2
+    STRINGLIT  shift, and go to state 3
+    NUMBERLIT  shift, and go to state 4
+    '('        shift, and go to state 5
+
+    expr  go to state 71
+
+
+State 41
+
+    4 expr: • IDENT
+    5     | • CHARLIT
+    6     | • STRINGLIT
+    7     | • NUMBERLIT
+    8     | • '(' expr ')'
+    9     | • expr '*' expr
+   10     | • expr '/' expr
+   11     | • expr '%' expr
+   12     | • expr '+' expr
+   13     | • expr '-' expr
+   14     | • expr ">>" expr
+   15     | • expr "<<" expr
+   16     | • expr '<' expr
+   17     | • expr "<=" expr
+   18     | • expr '>' expr
+   19     | • expr ">=" expr
+   20     | • expr "==" expr
+   21     | • expr "!=" expr
+   22     | • expr '&' expr
+   23     | • expr '^' expr
+   24     | • expr '|' expr
+   25     | • expr "&&" expr
+   26     | • expr "||" expr
+   27     | • expr '=' expr
+   27     | expr '=' • expr
+   28     | • expr "+=" expr
+   29     | • expr "-=" expr
+   30     | • expr "*=" expr
+   31     | • expr "/=" expr
+   32     | • expr "%=" expr
+   33     | • expr "<<=" expr
+   34     | • expr ">>=" expr
+   35     | • expr "&=" expr
+   36     | • expr "^=" expr
+   37     | • expr "|=" expr
+   38     | • expr ',' expr
+
+    IDENT      shift, and go to state 1
+    CHARLIT    shift, and go to state 2
+    STRINGLIT  shift, and go to state 3
+    NUMBERLIT  shift, and go to state 4
+    '('        shift, and go to state 5
+
+    expr  go to state 72
+
+
+State 42
+
+    4 expr: • IDENT
+    5     | • CHARLIT
+    6     | • STRINGLIT
+    7     | • NUMBERLIT
+    8     | • '(' expr ')'
+    9     | • expr '*' expr
+   10     | • expr '/' expr
+   11     | • expr '%' expr
+   12     | • expr '+' expr
+   13     | • expr '-' expr
+   14     | • expr ">>" expr
+   15     | • expr "<<" expr
+   16     | • expr '<' expr
+   17     | • expr "<=" expr
+   18     | • expr '>' expr
+   19     | • expr ">=" expr
+   20     | • expr "==" expr
+   21     | • expr "!=" expr
+   22     | • expr '&' expr
+   23     | • expr '^' expr
+   24     | • expr '|' expr
+   25     | • expr "&&" expr
+   26     | • expr "||" expr
+   27     | • expr '=' expr
+   28     | • expr "+=" expr
+   29     | • expr "-=" expr
+   30     | • expr "*=" expr
+   31     | • expr "/=" expr
+   32     | • expr "%=" expr
+   33     | • expr "<<=" expr
+   34     | • expr ">>=" expr
+   35     | • expr "&=" expr
+   36     | • expr "^=" expr
+   37     | • expr "|=" expr
+   38     | • expr ',' expr
+   38     | expr ',' • expr
+
+    IDENT      shift, and go to state 1
+    CHARLIT    shift, and go to state 2
+    STRINGLIT  shift, and go to state 3
+    NUMBERLIT  shift, and go to state 4
+    '('        shift, and go to state 5
+
+    expr  go to state 73
+
+
+State 43
+
+    8 expr: '(' expr ')' •
+
+    $default  reduce using rule 8 (expr)
+
+
+State 44
+
+    9 expr: expr • '*' expr
+   10     | expr • '/' expr
+   11     | expr • '%' expr
+   12     | expr • '+' expr
+   13     | expr • '-' expr
+   14     | expr • ">>" expr
+   15     | expr • "<<" expr
+   15     | expr "<<" expr •  ["<<", ">>", ';', '*', '/', '%', '+', '-', ')']
+   16     | expr • '<' expr
+   17     | expr • "<=" expr
+   18     | expr • '>' expr
+   19     | expr • ">=" expr
+   20     | expr • "==" expr
+   21     | expr • "!=" expr
+   22     | expr • '&' expr
+   23     | expr • '^' expr
+   24     | expr • '|' expr
+   25     | expr • "&&" expr
+   26     | expr • "||" expr
+   27     | expr • '=' expr
+   28     | expr • "+=" expr
+   29     | expr • "-=" expr
+   30     | expr • "*=" expr
+   31     | expr • "/=" expr
+   32     | expr • "%=" expr
+   33     | expr • "<<=" expr
+   34     | expr • ">>=" expr
+   35     | expr • "&=" expr
+   36     | expr • "^=" expr
+   37     | expr • "|=" expr
+   38     | expr • ',' expr
+
+    "<="   shift, and go to state 14
+    ">="   shift, and go to state 15
+    "=="   shift, and go to state 16
+    "!="   shift, and go to state 17
+    "&&"   shift, and go to state 18
+    "||"   shift, and go to state 19
+    "*="   shift, and go to state 20
+    "/="   shift, and go to state 21
+    "%="   shift, and go to state 22
+    "+="   shift, and go to state 23
+    "-="   shift, and go to state 24
+    "<<="  shift, and go to state 25
+    ">>="  shift, and go to state 26
+    "&="   shift, and go to state 27
+    "|="   shift, and go to state 28
+    "^="   shift, and go to state 29
+    '<'    shift, and go to state 36
+    '>'    shift, and go to state 37
+    '&'    shift, and go to state 38
+    '^'    shift, and go to state 39
+    '|'    shift, and go to state 40
+    '='    shift, and go to state 41
+    ','    shift, and go to state 42
+
+    $default  reduce using rule 15 (expr)
+
+    Conflict between rule 15 and token "<<" resolved as reduce (%left "<<").
+    Conflict between rule 15 and token ">>" resolved as reduce (%left ">>").
+    Conflict between rule 15 and token "<=" resolved as shift ("<<" < "<=").
+    Conflict between rule 15 and token ">=" resolved as shift ("<<" < ">=").
+    Conflict between rule 15 and token "==" resolved as shift ("<<" < "==").
+    Conflict between rule 15 and token "!=" resolved as shift ("<<" < "!=").
+    Conflict between rule 15 and token "&&" resolved as shift ("<<" < "&&").
+    Conflict between rule 15 and token "||" resolved as shift ("<<" < "||").
+    Conflict between rule 15 and token "*=" resolved as shift ("<<" < "*=").
+    Conflict between rule 15 and token "/=" resolved as shift ("<<" < "/=").
+    Conflict between rule 15 and token "%=" resolved as shift ("<<" < "%=").
+    Conflict between rule 15 and token "+=" resolved as shift ("<<" < "+=").
+    Conflict between rule 15 and token "-=" resolved as shift ("<<" < "-=").
+    Conflict between rule 15 and token "<<=" resolved as shift ("<<" < "<<=").
+    Conflict between rule 15 and token ">>=" resolved as shift ("<<" < ">>=").
+    Conflict between rule 15 and token "&=" resolved as shift ("<<" < "&=").
+    Conflict between rule 15 and token "|=" resolved as shift ("<<" < "|=").
+    Conflict between rule 15 and token "^=" resolved as shift ("<<" < "^=").
+    Conflict between rule 15 and token '*' resolved as reduce ('*' < "<<").
+    Conflict between rule 15 and token '/' resolved as reduce ('/' < "<<").
+    Conflict between rule 15 and token '%' resolved as reduce ('%' < "<<").
+    Conflict between rule 15 and token '+' resolved as reduce ('+' < "<<").
+    Conflict between rule 15 and token '-' resolved as reduce ('-' < "<<").
+    Conflict between rule 15 and token '<' resolved as shift ("<<" < '<').
+    Conflict between rule 15 and token '>' resolved as shift ("<<" < '>').
+    Conflict between rule 15 and token '&' resolved as shift ("<<" < '&').
+    Conflict between rule 15 and token '^' resolved as shift ("<<" < '^').
+    Conflict between rule 15 and token '|' resolved as shift ("<<" < '|').
+    Conflict between rule 15 and token '=' resolved as shift ("<<" < '=').
+    Conflict between rule 15 and token ',' resolved as shift ("<<" < ',').
+
+
+State 45
+
+    9 expr: expr • '*' expr
+   10     | expr • '/' expr
+   11     | expr • '%' expr
+   12     | expr • '+' expr
+   13     | expr • '-' expr
+   14     | expr • ">>" expr
+   14     | expr ">>" expr •  ["<<", ">>", ';', '*', '/', '%', '+', '-', ')']
+   15     | expr • "<<" expr
+   16     | expr • '<' expr
+   17     | expr • "<=" expr
+   18     | expr • '>' expr
+   19     | expr • ">=" expr
+   20     | expr • "==" expr
+   21     | expr • "!=" expr
+   22     | expr • '&' expr
+   23     | expr • '^' expr
+   24     | expr • '|' expr
+   25     | expr • "&&" expr
+   26     | expr • "||" expr
+   27     | expr • '=' expr
+   28     | expr • "+=" expr
+   29     | expr • "-=" expr
+   30     | expr • "*=" expr
+   31     | expr • "/=" expr
+   32     | expr • "%=" expr
+   33     | expr • "<<=" expr
+   34     | expr • ">>=" expr
+   35     | expr • "&=" expr
+   36     | expr • "^=" expr
+   37     | expr • "|=" expr
+   38     | expr • ',' expr
+
+    "<="   shift, and go to state 14
+    ">="   shift, and go to state 15
+    "=="   shift, and go to state 16
+    "!="   shift, and go to state 17
+    "&&"   shift, and go to state 18
+    "||"   shift, and go to state 19
+    "*="   shift, and go to state 20
+    "/="   shift, and go to state 21
+    "%="   shift, and go to state 22
+    "+="   shift, and go to state 23
+    "-="   shift, and go to state 24
+    "<<="  shift, and go to state 25
+    ">>="  shift, and go to state 26
+    "&="   shift, and go to state 27
+    "|="   shift, and go to state 28
+    "^="   shift, and go to state 29
+    '<'    shift, and go to state 36
+    '>'    shift, and go to state 37
+    '&'    shift, and go to state 38
+    '^'    shift, and go to state 39
+    '|'    shift, and go to state 40
+    '='    shift, and go to state 41
+    ','    shift, and go to state 42
+
+    $default  reduce using rule 14 (expr)
+
+    Conflict between rule 14 and token "<<" resolved as reduce (%left "<<").
+    Conflict between rule 14 and token ">>" resolved as reduce (%left ">>").
+    Conflict between rule 14 and token "<=" resolved as shift (">>" < "<=").
+    Conflict between rule 14 and token ">=" resolved as shift (">>" < ">=").
+    Conflict between rule 14 and token "==" resolved as shift (">>" < "==").
+    Conflict between rule 14 and token "!=" resolved as shift (">>" < "!=").
+    Conflict between rule 14 and token "&&" resolved as shift (">>" < "&&").
+    Conflict between rule 14 and token "||" resolved as shift (">>" < "||").
+    Conflict between rule 14 and token "*=" resolved as shift (">>" < "*=").
+    Conflict between rule 14 and token "/=" resolved as shift (">>" < "/=").
+    Conflict between rule 14 and token "%=" resolved as shift (">>" < "%=").
+    Conflict between rule 14 and token "+=" resolved as shift (">>" < "+=").
+    Conflict between rule 14 and token "-=" resolved as shift (">>" < "-=").
+    Conflict between rule 14 and token "<<=" resolved as shift (">>" < "<<=").
+    Conflict between rule 14 and token ">>=" resolved as shift (">>" < ">>=").
+    Conflict between rule 14 and token "&=" resolved as shift (">>" < "&=").
+    Conflict between rule 14 and token "|=" resolved as shift (">>" < "|=").
+    Conflict between rule 14 and token "^=" resolved as shift (">>" < "^=").
+    Conflict between rule 14 and token '*' resolved as reduce ('*' < ">>").
+    Conflict between rule 14 and token '/' resolved as reduce ('/' < ">>").
+    Conflict between rule 14 and token '%' resolved as reduce ('%' < ">>").
+    Conflict between rule 14 and token '+' resolved as reduce ('+' < ">>").
+    Conflict between rule 14 and token '-' resolved as reduce ('-' < ">>").
+    Conflict between rule 14 and token '<' resolved as shift (">>" < '<').
+    Conflict between rule 14 and token '>' resolved as shift (">>" < '>').
+    Conflict between rule 14 and token '&' resolved as shift (">>" < '&').
+    Conflict between rule 14 and token '^' resolved as shift (">>" < '^').
+    Conflict between rule 14 and token '|' resolved as shift (">>" < '|').
+    Conflict between rule 14 and token '=' resolved as shift (">>" < '=').
+    Conflict between rule 14 and token ',' resolved as shift (">>" < ',').
+
+
+State 46
+
+    9 expr: expr • '*' expr
+   10     | expr • '/' expr
+   11     | expr • '%' expr
+   12     | expr • '+' expr
+   13     | expr • '-' expr
+   14     | expr • ">>" expr
+   15     | expr • "<<" expr
+   16     | expr • '<' expr
+   17     | expr • "<=" expr
+   17     | expr "<=" expr •  ["<<", ">>", "<=", ">=", ';', '*', '/', '%', '+', '-', '<', '>', ')']
+   18     | expr • '>' expr
+   19     | expr • ">=" expr
+   20     | expr • "==" expr
+   21     | expr • "!=" expr
+   22     | expr • '&' expr
+   23     | expr • '^' expr
+   24     | expr • '|' expr
+   25     | expr • "&&" expr
+   26     | expr • "||" expr
+   27     | expr • '=' expr
+   28     | expr • "+=" expr
+   29     | expr • "-=" expr
+   30     | expr • "*=" expr
+   31     | expr • "/=" expr
+   32     | expr • "%=" expr
+   33     | expr • "<<=" expr
+   34     | expr • ">>=" expr
+   35     | expr • "&=" expr
+   36     | expr • "^=" expr
+   37     | expr • "|=" expr
+   38     | expr • ',' expr
+
+    "=="   shift, and go to state 16
+    "!="   shift, and go to state 17
+    "&&"   shift, and go to state 18
+    "||"   shift, and go to state 19
+    "*="   shift, and go to state 20
+    "/="   shift, and go to state 21
+    "%="   shift, and go to state 22
+    "+="   shift, and go to state 23
+    "-="   shift, and go to state 24
+    "<<="  shift, and go to state 25
+    ">>="  shift, and go to state 26
+    "&="   shift, and go to state 27
+    "|="   shift, and go to state 28
+    "^="   shift, and go to state 29
+    '&'    shift, and go to state 38
+    '^'    shift, and go to state 39
+    '|'    shift, and go to state 40
+    '='    shift, and go to state 41
+    ','    shift, and go to state 42
+
+    $default  reduce using rule 17 (expr)
+
+    Conflict between rule 17 and token "<<" resolved as reduce ("<<" < "<=").
+    Conflict between rule 17 and token ">>" resolved as reduce (">>" < "<=").
+    Conflict between rule 17 and token "<=" resolved as reduce (%left "<=").
+    Conflict between rule 17 and token ">=" resolved as reduce (%left ">=").
+    Conflict between rule 17 and token "==" resolved as shift ("<=" < "==").
+    Conflict between rule 17 and token "!=" resolved as shift ("<=" < "!=").
+    Conflict between rule 17 and token "&&" resolved as shift ("<=" < "&&").
+    Conflict between rule 17 and token "||" resolved as shift ("<=" < "||").
+    Conflict between rule 17 and token "*=" resolved as shift ("<=" < "*=").
+    Conflict between rule 17 and token "/=" resolved as shift ("<=" < "/=").
+    Conflict between rule 17 and token "%=" resolved as shift ("<=" < "%=").
+    Conflict between rule 17 and token "+=" resolved as shift ("<=" < "+=").
+    Conflict between rule 17 and token "-=" resolved as shift ("<=" < "-=").
+    Conflict between rule 17 and token "<<=" resolved as shift ("<=" < "<<=").
+    Conflict between rule 17 and token ">>=" resolved as shift ("<=" < ">>=").
+    Conflict between rule 17 and token "&=" resolved as shift ("<=" < "&=").
+    Conflict between rule 17 and token "|=" resolved as shift ("<=" < "|=").
+    Conflict between rule 17 and token "^=" resolved as shift ("<=" < "^=").
+    Conflict between rule 17 and token '*' resolved as reduce ('*' < "<=").
+    Conflict between rule 17 and token '/' resolved as reduce ('/' < "<=").
+    Conflict between rule 17 and token '%' resolved as reduce ('%' < "<=").
+    Conflict between rule 17 and token '+' resolved as reduce ('+' < "<=").
+    Conflict between rule 17 and token '-' resolved as reduce ('-' < "<=").
+    Conflict between rule 17 and token '<' resolved as reduce (%left '<').
+    Conflict between rule 17 and token '>' resolved as reduce (%left '>').
+    Conflict between rule 17 and token '&' resolved as shift ("<=" < '&').
+    Conflict between rule 17 and token '^' resolved as shift ("<=" < '^').
+    Conflict between rule 17 and token '|' resolved as shift ("<=" < '|').
+    Conflict between rule 17 and token '=' resolved as shift ("<=" < '=').
+    Conflict between rule 17 and token ',' resolved as shift ("<=" < ',').
+
+
+State 47
+
+    9 expr: expr • '*' expr
+   10     | expr • '/' expr
+   11     | expr • '%' expr
+   12     | expr • '+' expr
+   13     | expr • '-' expr
+   14     | expr • ">>" expr
+   15     | expr • "<<" expr
+   16     | expr • '<' expr
+   17     | expr • "<=" expr
+   18     | expr • '>' expr
+   19     | expr • ">=" expr
+   19     | expr ">=" expr •  ["<<", ">>", "<=", ">=", ';', '*', '/', '%', '+', '-', '<', '>', ')']
+   20     | expr • "==" expr
+   21     | expr • "!=" expr
+   22     | expr • '&' expr
+   23     | expr • '^' expr
+   24     | expr • '|' expr
+   25     | expr • "&&" expr
+   26     | expr • "||" expr
+   27     | expr • '=' expr
+   28     | expr • "+=" expr
+   29     | expr • "-=" expr
+   30     | expr • "*=" expr
+   31     | expr • "/=" expr
+   32     | expr • "%=" expr
+   33     | expr • "<<=" expr
+   34     | expr • ">>=" expr
+   35     | expr • "&=" expr
+   36     | expr • "^=" expr
+   37     | expr • "|=" expr
+   38     | expr • ',' expr
+
+    "=="   shift, and go to state 16
+    "!="   shift, and go to state 17
+    "&&"   shift, and go to state 18
+    "||"   shift, and go to state 19
+    "*="   shift, and go to state 20
+    "/="   shift, and go to state 21
+    "%="   shift, and go to state 22
+    "+="   shift, and go to state 23
+    "-="   shift, and go to state 24
+    "<<="  shift, and go to state 25
+    ">>="  shift, and go to state 26
+    "&="   shift, and go to state 27
+    "|="   shift, and go to state 28
+    "^="   shift, and go to state 29
+    '&'    shift, and go to state 38
+    '^'    shift, and go to state 39
+    '|'    shift, and go to state 40
+    '='    shift, and go to state 41
+    ','    shift, and go to state 42
+
+    $default  reduce using rule 19 (expr)
+
+    Conflict between rule 19 and token "<<" resolved as reduce ("<<" < ">=").
+    Conflict between rule 19 and token ">>" resolved as reduce (">>" < ">=").
+    Conflict between rule 19 and token "<=" resolved as reduce (%left "<=").
+    Conflict between rule 19 and token ">=" resolved as reduce (%left ">=").
+    Conflict between rule 19 and token "==" resolved as shift (">=" < "==").
+    Conflict between rule 19 and token "!=" resolved as shift (">=" < "!=").
+    Conflict between rule 19 and token "&&" resolved as shift (">=" < "&&").
+    Conflict between rule 19 and token "||" resolved as shift (">=" < "||").
+    Conflict between rule 19 and token "*=" resolved as shift (">=" < "*=").
+    Conflict between rule 19 and token "/=" resolved as shift (">=" < "/=").
+    Conflict between rule 19 and token "%=" resolved as shift (">=" < "%=").
+    Conflict between rule 19 and token "+=" resolved as shift (">=" < "+=").
+    Conflict between rule 19 and token "-=" resolved as shift (">=" < "-=").
+    Conflict between rule 19 and token "<<=" resolved as shift (">=" < "<<=").
+    Conflict between rule 19 and token ">>=" resolved as shift (">=" < ">>=").
+    Conflict between rule 19 and token "&=" resolved as shift (">=" < "&=").
+    Conflict between rule 19 and token "|=" resolved as shift (">=" < "|=").
+    Conflict between rule 19 and token "^=" resolved as shift (">=" < "^=").
+    Conflict between rule 19 and token '*' resolved as reduce ('*' < ">=").
+    Conflict between rule 19 and token '/' resolved as reduce ('/' < ">=").
+    Conflict between rule 19 and token '%' resolved as reduce ('%' < ">=").
+    Conflict between rule 19 and token '+' resolved as reduce ('+' < ">=").
+    Conflict between rule 19 and token '-' resolved as reduce ('-' < ">=").
+    Conflict between rule 19 and token '<' resolved as reduce (%left '<').
+    Conflict between rule 19 and token '>' resolved as reduce (%left '>').
+    Conflict between rule 19 and token '&' resolved as shift (">=" < '&').
+    Conflict between rule 19 and token '^' resolved as shift (">=" < '^').
+    Conflict between rule 19 and token '|' resolved as shift (">=" < '|').
+    Conflict between rule 19 and token '=' resolved as shift (">=" < '=').
+    Conflict between rule 19 and token ',' resolved as shift (">=" < ',').
+
+
+State 48
+
+    9 expr: expr • '*' expr
+   10     | expr • '/' expr
+   11     | expr • '%' expr
+   12     | expr • '+' expr
+   13     | expr • '-' expr
+   14     | expr • ">>" expr
+   15     | expr • "<<" expr
+   16     | expr • '<' expr
+   17     | expr • "<=" expr
+   18     | expr • '>' expr
+   19     | expr • ">=" expr
+   20     | expr • "==" expr
+   20     | expr "==" expr •  ["<<", ">>", "<=", ">=", "==", "!=", ';', '*', '/', '%', '+', '-', '<', '>', ')']
+   21     | expr • "!=" expr
+   22     | expr • '&' expr
+   23     | expr • '^' expr
+   24     | expr • '|' expr
+   25     | expr • "&&" expr
+   26     | expr • "||" expr
+   27     | expr • '=' expr
+   28     | expr • "+=" expr
+   29     | expr • "-=" expr
+   30     | expr • "*=" expr
+   31     | expr • "/=" expr
+   32     | expr • "%=" expr
+   33     | expr • "<<=" expr
+   34     | expr • ">>=" expr
+   35     | expr • "&=" expr
+   36     | expr • "^=" expr
+   37     | expr • "|=" expr
+   38     | expr • ',' expr
+
+    "&&"   shift, and go to state 18
+    "||"   shift, and go to state 19
+    "*="   shift, and go to state 20
+    "/="   shift, and go to state 21
+    "%="   shift, and go to state 22
+    "+="   shift, and go to state 23
+    "-="   shift, and go to state 24
+    "<<="  shift, and go to state 25
+    ">>="  shift, and go to state 26
+    "&="   shift, and go to state 27
+    "|="   shift, and go to state 28
+    "^="   shift, and go to state 29
+    '&'    shift, and go to state 38
+    '^'    shift, and go to state 39
+    '|'    shift, and go to state 40
+    '='    shift, and go to state 41
+    ','    shift, and go to state 42
+
+    $default  reduce using rule 20 (expr)
+
+    Conflict between rule 20 and token "<<" resolved as reduce ("<<" < "==").
+    Conflict between rule 20 and token ">>" resolved as reduce (">>" < "==").
+    Conflict between rule 20 and token "<=" resolved as reduce ("<=" < "==").
+    Conflict between rule 20 and token ">=" resolved as reduce (">=" < "==").
+    Conflict between rule 20 and token "==" resolved as reduce (%left "==").
+    Conflict between rule 20 and token "!=" resolved as reduce (%left "!=").
+    Conflict between rule 20 and token "&&" resolved as shift ("==" < "&&").
+    Conflict between rule 20 and token "||" resolved as shift ("==" < "||").
+    Conflict between rule 20 and token "*=" resolved as shift ("==" < "*=").
+    Conflict between rule 20 and token "/=" resolved as shift ("==" < "/=").
+    Conflict between rule 20 and token "%=" resolved as shift ("==" < "%=").
+    Conflict between rule 20 and token "+=" resolved as shift ("==" < "+=").
+    Conflict between rule 20 and token "-=" resolved as shift ("==" < "-=").
+    Conflict between rule 20 and token "<<=" resolved as shift ("==" < "<<=").
+    Conflict between rule 20 and token ">>=" resolved as shift ("==" < ">>=").
+    Conflict between rule 20 and token "&=" resolved as shift ("==" < "&=").
+    Conflict between rule 20 and token "|=" resolved as shift ("==" < "|=").
+    Conflict between rule 20 and token "^=" resolved as shift ("==" < "^=").
+    Conflict between rule 20 and token '*' resolved as reduce ('*' < "==").
+    Conflict between rule 20 and token '/' resolved as reduce ('/' < "==").
+    Conflict between rule 20 and token '%' resolved as reduce ('%' < "==").
+    Conflict between rule 20 and token '+' resolved as reduce ('+' < "==").
+    Conflict between rule 20 and token '-' resolved as reduce ('-' < "==").
+    Conflict between rule 20 and token '<' resolved as reduce ('<' < "==").
+    Conflict between rule 20 and token '>' resolved as reduce ('>' < "==").
+    Conflict between rule 20 and token '&' resolved as shift ("==" < '&').
+    Conflict between rule 20 and token '^' resolved as shift ("==" < '^').
+    Conflict between rule 20 and token '|' resolved as shift ("==" < '|').
+    Conflict between rule 20 and token '=' resolved as shift ("==" < '=').
+    Conflict between rule 20 and token ',' resolved as shift ("==" < ',').
+
+
+State 49
+
+    9 expr: expr • '*' expr
+   10     | expr • '/' expr
+   11     | expr • '%' expr
+   12     | expr • '+' expr
+   13     | expr • '-' expr
+   14     | expr • ">>" expr
+   15     | expr • "<<" expr
+   16     | expr • '<' expr
+   17     | expr • "<=" expr
+   18     | expr • '>' expr
+   19     | expr • ">=" expr
+   20     | expr • "==" expr
+   21     | expr • "!=" expr
+   21     | expr "!=" expr •  ["<<", ">>", "<=", ">=", "==", "!=", ';', '*', '/', '%', '+', '-', '<', '>', ')']
+   22     | expr • '&' expr
+   23     | expr • '^' expr
+   24     | expr • '|' expr
+   25     | expr • "&&" expr
+   26     | expr • "||" expr
+   27     | expr • '=' expr
+   28     | expr • "+=" expr
+   29     | expr • "-=" expr
+   30     | expr • "*=" expr
+   31     | expr • "/=" expr
+   32     | expr • "%=" expr
+   33     | expr • "<<=" expr
+   34     | expr • ">>=" expr
+   35     | expr • "&=" expr
+   36     | expr • "^=" expr
+   37     | expr • "|=" expr
+   38     | expr • ',' expr
+
+    "&&"   shift, and go to state 18
+    "||"   shift, and go to state 19
+    "*="   shift, and go to state 20
+    "/="   shift, and go to state 21
+    "%="   shift, and go to state 22
+    "+="   shift, and go to state 23
+    "-="   shift, and go to state 24
+    "<<="  shift, and go to state 25
+    ">>="  shift, and go to state 26
+    "&="   shift, and go to state 27
+    "|="   shift, and go to state 28
+    "^="   shift, and go to state 29
+    '&'    shift, and go to state 38
+    '^'    shift, and go to state 39
+    '|'    shift, and go to state 40
+    '='    shift, and go to state 41
+    ','    shift, and go to state 42
+
+    $default  reduce using rule 21 (expr)
+
+    Conflict between rule 21 and token "<<" resolved as reduce ("<<" < "!=").
+    Conflict between rule 21 and token ">>" resolved as reduce (">>" < "!=").
+    Conflict between rule 21 and token "<=" resolved as reduce ("<=" < "!=").
+    Conflict between rule 21 and token ">=" resolved as reduce (">=" < "!=").
+    Conflict between rule 21 and token "==" resolved as reduce (%left "==").
+    Conflict between rule 21 and token "!=" resolved as reduce (%left "!=").
+    Conflict between rule 21 and token "&&" resolved as shift ("!=" < "&&").
+    Conflict between rule 21 and token "||" resolved as shift ("!=" < "||").
+    Conflict between rule 21 and token "*=" resolved as shift ("!=" < "*=").
+    Conflict between rule 21 and token "/=" resolved as shift ("!=" < "/=").
+    Conflict between rule 21 and token "%=" resolved as shift ("!=" < "%=").
+    Conflict between rule 21 and token "+=" resolved as shift ("!=" < "+=").
+    Conflict between rule 21 and token "-=" resolved as shift ("!=" < "-=").
+    Conflict between rule 21 and token "<<=" resolved as shift ("!=" < "<<=").
+    Conflict between rule 21 and token ">>=" resolved as shift ("!=" < ">>=").
+    Conflict between rule 21 and token "&=" resolved as shift ("!=" < "&=").
+    Conflict between rule 21 and token "|=" resolved as shift ("!=" < "|=").
+    Conflict between rule 21 and token "^=" resolved as shift ("!=" < "^=").
+    Conflict between rule 21 and token '*' resolved as reduce ('*' < "!=").
+    Conflict between rule 21 and token '/' resolved as reduce ('/' < "!=").
+    Conflict between rule 21 and token '%' resolved as reduce ('%' < "!=").
+    Conflict between rule 21 and token '+' resolved as reduce ('+' < "!=").
+    Conflict between rule 21 and token '-' resolved as reduce ('-' < "!=").
+    Conflict between rule 21 and token '<' resolved as reduce ('<' < "!=").
+    Conflict between rule 21 and token '>' resolved as reduce ('>' < "!=").
+    Conflict between rule 21 and token '&' resolved as shift ("!=" < '&').
+    Conflict between rule 21 and token '^' resolved as shift ("!=" < '^').
+    Conflict between rule 21 and token '|' resolved as shift ("!=" < '|').
+    Conflict between rule 21 and token '=' resolved as shift ("!=" < '=').
+    Conflict between rule 21 and token ',' resolved as shift ("!=" < ',').
+
+
+State 50
+
+    9 expr: expr • '*' expr
+   10     | expr • '/' expr
+   11     | expr • '%' expr
+   12     | expr • '+' expr
+   13     | expr • '-' expr
+   14     | expr • ">>" expr
+   15     | expr • "<<" expr
+   16     | expr • '<' expr
+   17     | expr • "<=" expr
+   18     | expr • '>' expr
+   19     | expr • ">=" expr
+   20     | expr • "==" expr
+   21     | expr • "!=" expr
+   22     | expr • '&' expr
+   23     | expr • '^' expr
+   24     | expr • '|' expr
+   25     | expr • "&&" expr
+   25     | expr "&&" expr •  ["<<", ">>", "<=", ">=", "==", "!=", "&&", ';', '*', '/', '%', '+', '-', '<', '>', '&', '^', '|', ')']
+   26     | expr • "||" expr
+   27     | expr • '=' expr
+   28     | expr • "+=" expr
+   29     | expr • "-=" expr
+   30     | expr • "*=" expr
+   31     | expr • "/=" expr
+   32     | expr • "%=" expr
+   33     | expr • "<<=" expr
+   34     | expr • ">>=" expr
+   35     | expr • "&=" expr
+   36     | expr • "^=" expr
+   37     | expr • "|=" expr
+   38     | expr • ',' expr
+
+    "||"   shift, and go to state 19
+    "*="   shift, and go to state 20
+    "/="   shift, and go to state 21
+    "%="   shift, and go to state 22
+    "+="   shift, and go to state 23
+    "-="   shift, and go to state 24
+    "<<="  shift, and go to state 25
+    ">>="  shift, and go to state 26
+    "&="   shift, and go to state 27
+    "|="   shift, and go to state 28
+    "^="   shift, and go to state 29
+    '='    shift, and go to state 41
+    ','    shift, and go to state 42
+
+    $default  reduce using rule 25 (expr)
+
+    Conflict between rule 25 and token "<<" resolved as reduce ("<<" < "&&").
+    Conflict between rule 25 and token ">>" resolved as reduce (">>" < "&&").
+    Conflict between rule 25 and token "<=" resolved as reduce ("<=" < "&&").
+    Conflict between rule 25 and token ">=" resolved as reduce (">=" < "&&").
+    Conflict between rule 25 and token "==" resolved as reduce ("==" < "&&").
+    Conflict between rule 25 and token "!=" resolved as reduce ("!=" < "&&").
+    Conflict between rule 25 and token "&&" resolved as reduce (%left "&&").
+    Conflict between rule 25 and token "||" resolved as shift ("&&" < "||").
+    Conflict between rule 25 and token "*=" resolved as shift ("&&" < "*=").
+    Conflict between rule 25 and token "/=" resolved as shift ("&&" < "/=").
+    Conflict between rule 25 and token "%=" resolved as shift ("&&" < "%=").
+    Conflict between rule 25 and token "+=" resolved as shift ("&&" < "+=").
+    Conflict between rule 25 and token "-=" resolved as shift ("&&" < "-=").
+    Conflict between rule 25 and token "<<=" resolved as shift ("&&" < "<<=").
+    Conflict between rule 25 and token ">>=" resolved as shift ("&&" < ">>=").
+    Conflict between rule 25 and token "&=" resolved as shift ("&&" < "&=").
+    Conflict between rule 25 and token "|=" resolved as shift ("&&" < "|=").
+    Conflict between rule 25 and token "^=" resolved as shift ("&&" < "^=").
+    Conflict between rule 25 and token '*' resolved as reduce ('*' < "&&").
+    Conflict between rule 25 and token '/' resolved as reduce ('/' < "&&").
+    Conflict between rule 25 and token '%' resolved as reduce ('%' < "&&").
+    Conflict between rule 25 and token '+' resolved as reduce ('+' < "&&").
+    Conflict between rule 25 and token '-' resolved as reduce ('-' < "&&").
+    Conflict between rule 25 and token '<' resolved as reduce ('<' < "&&").
+    Conflict between rule 25 and token '>' resolved as reduce ('>' < "&&").
+    Conflict between rule 25 and token '&' resolved as reduce ('&' < "&&").
+    Conflict between rule 25 and token '^' resolved as reduce ('^' < "&&").
+    Conflict between rule 25 and token '|' resolved as reduce ('|' < "&&").
+    Conflict between rule 25 and token '=' resolved as shift ("&&" < '=').
+    Conflict between rule 25 and token ',' resolved as shift ("&&" < ',').
+
+
+State 51
+
+    9 expr: expr • '*' expr
+   10     | expr • '/' expr
+   11     | expr • '%' expr
+   12     | expr • '+' expr
+   13     | expr • '-' expr
+   14     | expr • ">>" expr
+   15     | expr • "<<" expr
+   16     | expr • '<' expr
+   17     | expr • "<=" expr
+   18     | expr • '>' expr
+   19     | expr • ">=" expr
+   20     | expr • "==" expr
+   21     | expr • "!=" expr
+   22     | expr • '&' expr
+   23     | expr • '^' expr
+   24     | expr • '|' expr
+   25     | expr • "&&" expr
+   26     | expr • "||" expr
+   26     | expr "||" expr •  ["<<", ">>", "<=", ">=", "==", "!=", "&&", "||", ';', '*', '/', '%', '+', '-', '<', '>', '&', '^', '|', ')']
+   27     | expr • '=' expr
+   28     | expr • "+=" expr
+   29     | expr • "-=" expr
+   30     | expr • "*=" expr
+   31     | expr • "/=" expr
+   32     | expr • "%=" expr
+   33     | expr • "<<=" expr
+   34     | expr • ">>=" expr
+   35     | expr • "&=" expr
+   36     | expr • "^=" expr
+   37     | expr • "|=" expr
+   38     | expr • ',' expr
+
+    "*="   shift, and go to state 20
+    "/="   shift, and go to state 21
+    "%="   shift, and go to state 22
+    "+="   shift, and go to state 23
+    "-="   shift, and go to state 24
+    "<<="  shift, and go to state 25
+    ">>="  shift, and go to state 26
+    "&="   shift, and go to state 27
+    "|="   shift, and go to state 28
+    "^="   shift, and go to state 29
+    '='    shift, and go to state 41
+    ','    shift, and go to state 42
+
+    $default  reduce using rule 26 (expr)
+
+    Conflict between rule 26 and token "<<" resolved as reduce ("<<" < "||").
+    Conflict between rule 26 and token ">>" resolved as reduce (">>" < "||").
+    Conflict between rule 26 and token "<=" resolved as reduce ("<=" < "||").
+    Conflict between rule 26 and token ">=" resolved as reduce (">=" < "||").
+    Conflict between rule 26 and token "==" resolved as reduce ("==" < "||").
+    Conflict between rule 26 and token "!=" resolved as reduce ("!=" < "||").
+    Conflict between rule 26 and token "&&" resolved as reduce ("&&" < "||").
+    Conflict between rule 26 and token "||" resolved as reduce (%left "||").
+    Conflict between rule 26 and token "*=" resolved as shift ("||" < "*=").
+    Conflict between rule 26 and token "/=" resolved as shift ("||" < "/=").
+    Conflict between rule 26 and token "%=" resolved as shift ("||" < "%=").
+    Conflict between rule 26 and token "+=" resolved as shift ("||" < "+=").
+    Conflict between rule 26 and token "-=" resolved as shift ("||" < "-=").
+    Conflict between rule 26 and token "<<=" resolved as shift ("||" < "<<=").
+    Conflict between rule 26 and token ">>=" resolved as shift ("||" < ">>=").
+    Conflict between rule 26 and token "&=" resolved as shift ("||" < "&=").
+    Conflict between rule 26 and token "|=" resolved as shift ("||" < "|=").
+    Conflict between rule 26 and token "^=" resolved as shift ("||" < "^=").
+    Conflict between rule 26 and token '*' resolved as reduce ('*' < "||").
+    Conflict between rule 26 and token '/' resolved as reduce ('/' < "||").
+    Conflict between rule 26 and token '%' resolved as reduce ('%' < "||").
+    Conflict between rule 26 and token '+' resolved as reduce ('+' < "||").
+    Conflict between rule 26 and token '-' resolved as reduce ('-' < "||").
+    Conflict between rule 26 and token '<' resolved as reduce ('<' < "||").
+    Conflict between rule 26 and token '>' resolved as reduce ('>' < "||").
+    Conflict between rule 26 and token '&' resolved as reduce ('&' < "||").
+    Conflict between rule 26 and token '^' resolved as reduce ('^' < "||").
+    Conflict between rule 26 and token '|' resolved as reduce ('|' < "||").
+    Conflict between rule 26 and token '=' resolved as shift ("||" < '=').
+    Conflict between rule 26 and token ',' resolved as shift ("||" < ',').
+
+
+State 52
+
+    9 expr: expr • '*' expr
+   10     | expr • '/' expr
+   11     | expr • '%' expr
+   12     | expr • '+' expr
+   13     | expr • '-' expr
+   14     | expr • ">>" expr
+   15     | expr • "<<" expr
+   16     | expr • '<' expr
+   17     | expr • "<=" expr
+   18     | expr • '>' expr
+   19     | expr • ">=" expr
+   20     | expr • "==" expr
+   21     | expr • "!=" expr
+   22     | expr • '&' expr
+   23     | expr • '^' expr
+   24     | expr • '|' expr
+   25     | expr • "&&" expr
+   26     | expr • "||" expr
+   27     | expr • '=' expr
+   28     | expr • "+=" expr
+   29     | expr • "-=" expr
+   30     | expr • "*=" expr
+   30     | expr "*=" expr •  ["<<", ">>", "<=", ">=", "==", "!=", "&&", "||", ';', '*', '/', '%', '+', '-', '<', '>', '&', '^', '|', ')']
+   31     | expr • "/=" expr
+   32     | expr • "%=" expr
+   33     | expr • "<<=" expr
+   34     | expr • ">>=" expr
+   35     | expr • "&=" expr
+   36     | expr • "^=" expr
+   37     | expr • "|=" expr
+   38     | expr • ',' expr
+
+    "*="   shift, and go to state 20
+    "/="   shift, and go to state 21
+    "%="   shift, and go to state 22
+    "+="   shift, and go to state 23
+    "-="   shift, and go to state 24
+    "<<="  shift, and go to state 25
+    ">>="  shift, and go to state 26
+    "&="   shift, and go to state 27
+    "|="   shift, and go to state 28
+    "^="   shift, and go to state 29
+    '='    shift, and go to state 41
+    ','    shift, and go to state 42
+
+    $default  reduce using rule 30 (expr)
+
+    Conflict between rule 30 and token "<<" resolved as reduce ("<<" < "*=").
+    Conflict between rule 30 and token ">>" resolved as reduce (">>" < "*=").
+    Conflict between rule 30 and token "<=" resolved as reduce ("<=" < "*=").
+    Conflict between rule 30 and token ">=" resolved as reduce (">=" < "*=").
+    Conflict between rule 30 and token "==" resolved as reduce ("==" < "*=").
+    Conflict between rule 30 and token "!=" resolved as reduce ("!=" < "*=").
+    Conflict between rule 30 and token "&&" resolved as reduce ("&&" < "*=").
+    Conflict between rule 30 and token "||" resolved as reduce ("||" < "*=").
+    Conflict between rule 30 and token "*=" resolved as shift (%right "*=").
+    Conflict between rule 30 and token "/=" resolved as shift (%right "/=").
+    Conflict between rule 30 and token "%=" resolved as shift (%right "%=").
+    Conflict between rule 30 and token "+=" resolved as shift (%right "+=").
+    Conflict between rule 30 and token "-=" resolved as shift (%right "-=").
+    Conflict between rule 30 and token "<<=" resolved as shift (%right "<<=").
+    Conflict between rule 30 and token ">>=" resolved as shift (%right ">>=").
+    Conflict between rule 30 and token "&=" resolved as shift (%right "&=").
+    Conflict between rule 30 and token "|=" resolved as shift (%right "|=").
+    Conflict between rule 30 and token "^=" resolved as shift (%right "^=").
+    Conflict between rule 30 and token '*' resolved as reduce ('*' < "*=").
+    Conflict between rule 30 and token '/' resolved as reduce ('/' < "*=").
+    Conflict between rule 30 and token '%' resolved as reduce ('%' < "*=").
+    Conflict between rule 30 and token '+' resolved as reduce ('+' < "*=").
+    Conflict between rule 30 and token '-' resolved as reduce ('-' < "*=").
+    Conflict between rule 30 and token '<' resolved as reduce ('<' < "*=").
+    Conflict between rule 30 and token '>' resolved as reduce ('>' < "*=").
+    Conflict between rule 30 and token '&' resolved as reduce ('&' < "*=").
+    Conflict between rule 30 and token '^' resolved as reduce ('^' < "*=").
+    Conflict between rule 30 and token '|' resolved as reduce ('|' < "*=").
+    Conflict between rule 30 and token '=' resolved as shift (%right '=').
+    Conflict between rule 30 and token ',' resolved as shift ("*=" < ',').
+
+
+State 53
+
+    9 expr: expr • '*' expr
+   10     | expr • '/' expr
+   11     | expr • '%' expr
+   12     | expr • '+' expr
+   13     | expr • '-' expr
+   14     | expr • ">>" expr
+   15     | expr • "<<" expr
+   16     | expr • '<' expr
+   17     | expr • "<=" expr
+   18     | expr • '>' expr
+   19     | expr • ">=" expr
+   20     | expr • "==" expr
+   21     | expr • "!=" expr
+   22     | expr • '&' expr
+   23     | expr • '^' expr
+   24     | expr • '|' expr
+   25     | expr • "&&" expr
+   26     | expr • "||" expr
+   27     | expr • '=' expr
+   28     | expr • "+=" expr
+   29     | expr • "-=" expr
+   30     | expr • "*=" expr
+   31     | expr • "/=" expr
+   31     | expr "/=" expr •  ["<<", ">>", "<=", ">=", "==", "!=", "&&", "||", ';', '*', '/', '%', '+', '-', '<', '>', '&', '^', '|', ')']
+   32     | expr • "%=" expr
+   33     | expr • "<<=" expr
+   34     | expr • ">>=" expr
+   35     | expr • "&=" expr
+   36     | expr • "^=" expr
+   37     | expr • "|=" expr
+   38     | expr • ',' expr
+
+    "*="   shift, and go to state 20
+    "/="   shift, and go to state 21
+    "%="   shift, and go to state 22
+    "+="   shift, and go to state 23
+    "-="   shift, and go to state 24
+    "<<="  shift, and go to state 25
+    ">>="  shift, and go to state 26
+    "&="   shift, and go to state 27
+    "|="   shift, and go to state 28
+    "^="   shift, and go to state 29
+    '='    shift, and go to state 41
+    ','    shift, and go to state 42
+
+    $default  reduce using rule 31 (expr)
+
+    Conflict between rule 31 and token "<<" resolved as reduce ("<<" < "/=").
+    Conflict between rule 31 and token ">>" resolved as reduce (">>" < "/=").
+    Conflict between rule 31 and token "<=" resolved as reduce ("<=" < "/=").
+    Conflict between rule 31 and token ">=" resolved as reduce (">=" < "/=").
+    Conflict between rule 31 and token "==" resolved as reduce ("==" < "/=").
+    Conflict between rule 31 and token "!=" resolved as reduce ("!=" < "/=").
+    Conflict between rule 31 and token "&&" resolved as reduce ("&&" < "/=").
+    Conflict between rule 31 and token "||" resolved as reduce ("||" < "/=").
+    Conflict between rule 31 and token "*=" resolved as shift (%right "*=").
+    Conflict between rule 31 and token "/=" resolved as shift (%right "/=").
+    Conflict between rule 31 and token "%=" resolved as shift (%right "%=").
+    Conflict between rule 31 and token "+=" resolved as shift (%right "+=").
+    Conflict between rule 31 and token "-=" resolved as shift (%right "-=").
+    Conflict between rule 31 and token "<<=" resolved as shift (%right "<<=").
+    Conflict between rule 31 and token ">>=" resolved as shift (%right ">>=").
+    Conflict between rule 31 and token "&=" resolved as shift (%right "&=").
+    Conflict between rule 31 and token "|=" resolved as shift (%right "|=").
+    Conflict between rule 31 and token "^=" resolved as shift (%right "^=").
+    Conflict between rule 31 and token '*' resolved as reduce ('*' < "/=").
+    Conflict between rule 31 and token '/' resolved as reduce ('/' < "/=").
+    Conflict between rule 31 and token '%' resolved as reduce ('%' < "/=").
+    Conflict between rule 31 and token '+' resolved as reduce ('+' < "/=").
+    Conflict between rule 31 and token '-' resolved as reduce ('-' < "/=").
+    Conflict between rule 31 and token '<' resolved as reduce ('<' < "/=").
+    Conflict between rule 31 and token '>' resolved as reduce ('>' < "/=").
+    Conflict between rule 31 and token '&' resolved as reduce ('&' < "/=").
+    Conflict between rule 31 and token '^' resolved as reduce ('^' < "/=").
+    Conflict between rule 31 and token '|' resolved as reduce ('|' < "/=").
+    Conflict between rule 31 and token '=' resolved as shift (%right '=').
+    Conflict between rule 31 and token ',' resolved as shift ("/=" < ',').
+
+
+State 54
+
+    9 expr: expr • '*' expr
+   10     | expr • '/' expr
+   11     | expr • '%' expr
+   12     | expr • '+' expr
+   13     | expr • '-' expr
+   14     | expr • ">>" expr
+   15     | expr • "<<" expr
+   16     | expr • '<' expr
+   17     | expr • "<=" expr
+   18     | expr • '>' expr
+   19     | expr • ">=" expr
+   20     | expr • "==" expr
+   21     | expr • "!=" expr
+   22     | expr • '&' expr
+   23     | expr • '^' expr
+   24     | expr • '|' expr
+   25     | expr • "&&" expr
+   26     | expr • "||" expr
+   27     | expr • '=' expr
+   28     | expr • "+=" expr
+   29     | expr • "-=" expr
+   30     | expr • "*=" expr
+   31     | expr • "/=" expr
+   32     | expr • "%=" expr
+   32     | expr "%=" expr •  ["<<", ">>", "<=", ">=", "==", "!=", "&&", "||", ';', '*', '/', '%', '+', '-', '<', '>', '&', '^', '|', ')']
+   33     | expr • "<<=" expr
+   34     | expr • ">>=" expr
+   35     | expr • "&=" expr
+   36     | expr • "^=" expr
+   37     | expr • "|=" expr
+   38     | expr • ',' expr
+
+    "*="   shift, and go to state 20
+    "/="   shift, and go to state 21
+    "%="   shift, and go to state 22
+    "+="   shift, and go to state 23
+    "-="   shift, and go to state 24
+    "<<="  shift, and go to state 25
+    ">>="  shift, and go to state 26
+    "&="   shift, and go to state 27
+    "|="   shift, and go to state 28
+    "^="   shift, and go to state 29
+    '='    shift, and go to state 41
+    ','    shift, and go to state 42
+
+    $default  reduce using rule 32 (expr)
+
+    Conflict between rule 32 and token "<<" resolved as reduce ("<<" < "%=").
+    Conflict between rule 32 and token ">>" resolved as reduce (">>" < "%=").
+    Conflict between rule 32 and token "<=" resolved as reduce ("<=" < "%=").
+    Conflict between rule 32 and token ">=" resolved as reduce (">=" < "%=").
+    Conflict between rule 32 and token "==" resolved as reduce ("==" < "%=").
+    Conflict between rule 32 and token "!=" resolved as reduce ("!=" < "%=").
+    Conflict between rule 32 and token "&&" resolved as reduce ("&&" < "%=").
+    Conflict between rule 32 and token "||" resolved as reduce ("||" < "%=").
+    Conflict between rule 32 and token "*=" resolved as shift (%right "*=").
+    Conflict between rule 32 and token "/=" resolved as shift (%right "/=").
+    Conflict between rule 32 and token "%=" resolved as shift (%right "%=").
+    Conflict between rule 32 and token "+=" resolved as shift (%right "+=").
+    Conflict between rule 32 and token "-=" resolved as shift (%right "-=").
+    Conflict between rule 32 and token "<<=" resolved as shift (%right "<<=").
+    Conflict between rule 32 and token ">>=" resolved as shift (%right ">>=").
+    Conflict between rule 32 and token "&=" resolved as shift (%right "&=").
+    Conflict between rule 32 and token "|=" resolved as shift (%right "|=").
+    Conflict between rule 32 and token "^=" resolved as shift (%right "^=").
+    Conflict between rule 32 and token '*' resolved as reduce ('*' < "%=").
+    Conflict between rule 32 and token '/' resolved as reduce ('/' < "%=").
+    Conflict between rule 32 and token '%' resolved as reduce ('%' < "%=").
+    Conflict between rule 32 and token '+' resolved as reduce ('+' < "%=").
+    Conflict between rule 32 and token '-' resolved as reduce ('-' < "%=").
+    Conflict between rule 32 and token '<' resolved as reduce ('<' < "%=").
+    Conflict between rule 32 and token '>' resolved as reduce ('>' < "%=").
+    Conflict between rule 32 and token '&' resolved as reduce ('&' < "%=").
+    Conflict between rule 32 and token '^' resolved as reduce ('^' < "%=").
+    Conflict between rule 32 and token '|' resolved as reduce ('|' < "%=").
+    Conflict between rule 32 and token '=' resolved as shift (%right '=').
+    Conflict between rule 32 and token ',' resolved as shift ("%=" < ',').
+
+
+State 55
+
+    9 expr: expr • '*' expr
+   10     | expr • '/' expr
+   11     | expr • '%' expr
+   12     | expr • '+' expr
+   13     | expr • '-' expr
+   14     | expr • ">>" expr
+   15     | expr • "<<" expr
+   16     | expr • '<' expr
+   17     | expr • "<=" expr
+   18     | expr • '>' expr
+   19     | expr • ">=" expr
+   20     | expr • "==" expr
+   21     | expr • "!=" expr
+   22     | expr • '&' expr
+   23     | expr • '^' expr
+   24     | expr • '|' expr
+   25     | expr • "&&" expr
+   26     | expr • "||" expr
+   27     | expr • '=' expr
+   28     | expr • "+=" expr
+   28     | expr "+=" expr •  ["<<", ">>", "<=", ">=", "==", "!=", "&&", "||", ';', '*', '/', '%', '+', '-', '<', '>', '&', '^', '|', ')']
+   29     | expr • "-=" expr
+   30     | expr • "*=" expr
+   31     | expr • "/=" expr
+   32     | expr • "%=" expr
+   33     | expr • "<<=" expr
+   34     | expr • ">>=" expr
+   35     | expr • "&=" expr
+   36     | expr • "^=" expr
+   37     | expr • "|=" expr
+   38     | expr • ',' expr
+
+    "*="   shift, and go to state 20
+    "/="   shift, and go to state 21
+    "%="   shift, and go to state 22
+    "+="   shift, and go to state 23
+    "-="   shift, and go to state 24
+    "<<="  shift, and go to state 25
+    ">>="  shift, and go to state 26
+    "&="   shift, and go to state 27
+    "|="   shift, and go to state 28
+    "^="   shift, and go to state 29
+    '='    shift, and go to state 41
+    ','    shift, and go to state 42
+
+    $default  reduce using rule 28 (expr)
+
+    Conflict between rule 28 and token "<<" resolved as reduce ("<<" < "+=").
+    Conflict between rule 28 and token ">>" resolved as reduce (">>" < "+=").
+    Conflict between rule 28 and token "<=" resolved as reduce ("<=" < "+=").
+    Conflict between rule 28 and token ">=" resolved as reduce (">=" < "+=").
+    Conflict between rule 28 and token "==" resolved as reduce ("==" < "+=").
+    Conflict between rule 28 and token "!=" resolved as reduce ("!=" < "+=").
+    Conflict between rule 28 and token "&&" resolved as reduce ("&&" < "+=").
+    Conflict between rule 28 and token "||" resolved as reduce ("||" < "+=").
+    Conflict between rule 28 and token "*=" resolved as shift (%right "*=").
+    Conflict between rule 28 and token "/=" resolved as shift (%right "/=").
+    Conflict between rule 28 and token "%=" resolved as shift (%right "%=").
+    Conflict between rule 28 and token "+=" resolved as shift (%right "+=").
+    Conflict between rule 28 and token "-=" resolved as shift (%right "-=").
+    Conflict between rule 28 and token "<<=" resolved as shift (%right "<<=").
+    Conflict between rule 28 and token ">>=" resolved as shift (%right ">>=").
+    Conflict between rule 28 and token "&=" resolved as shift (%right "&=").
+    Conflict between rule 28 and token "|=" resolved as shift (%right "|=").
+    Conflict between rule 28 and token "^=" resolved as shift (%right "^=").
+    Conflict between rule 28 and token '*' resolved as reduce ('*' < "+=").
+    Conflict between rule 28 and token '/' resolved as reduce ('/' < "+=").
+    Conflict between rule 28 and token '%' resolved as reduce ('%' < "+=").
+    Conflict between rule 28 and token '+' resolved as reduce ('+' < "+=").
+    Conflict between rule 28 and token '-' resolved as reduce ('-' < "+=").
+    Conflict between rule 28 and token '<' resolved as reduce ('<' < "+=").
+    Conflict between rule 28 and token '>' resolved as reduce ('>' < "+=").
+    Conflict between rule 28 and token '&' resolved as reduce ('&' < "+=").
+    Conflict between rule 28 and token '^' resolved as reduce ('^' < "+=").
+    Conflict between rule 28 and token '|' resolved as reduce ('|' < "+=").
+    Conflict between rule 28 and token '=' resolved as shift (%right '=').
+    Conflict between rule 28 and token ',' resolved as shift ("+=" < ',').
+
+
+State 56
+
+    9 expr: expr • '*' expr
+   10     | expr • '/' expr
+   11     | expr • '%' expr
+   12     | expr • '+' expr
+   13     | expr • '-' expr
+   14     | expr • ">>" expr
+   15     | expr • "<<" expr
+   16     | expr • '<' expr
+   17     | expr • "<=" expr
+   18     | expr • '>' expr
+   19     | expr • ">=" expr
+   20     | expr • "==" expr
+   21     | expr • "!=" expr
+   22     | expr • '&' expr
+   23     | expr • '^' expr
+   24     | expr • '|' expr
+   25     | expr • "&&" expr
+   26     | expr • "||" expr
+   27     | expr • '=' expr
+   28     | expr • "+=" expr
+   29     | expr • "-=" expr
+   29     | expr "-=" expr •  ["<<", ">>", "<=", ">=", "==", "!=", "&&", "||", ';', '*', '/', '%', '+', '-', '<', '>', '&', '^', '|', ')']
+   30     | expr • "*=" expr
+   31     | expr • "/=" expr
+   32     | expr • "%=" expr
+   33     | expr • "<<=" expr
+   34     | expr • ">>=" expr
+   35     | expr • "&=" expr
+   36     | expr • "^=" expr
+   37     | expr • "|=" expr
+   38     | expr • ',' expr
+
+    "*="   shift, and go to state 20
+    "/="   shift, and go to state 21
+    "%="   shift, and go to state 22
+    "+="   shift, and go to state 23
+    "-="   shift, and go to state 24
+    "<<="  shift, and go to state 25
+    ">>="  shift, and go to state 26
+    "&="   shift, and go to state 27
+    "|="   shift, and go to state 28
+    "^="   shift, and go to state 29
+    '='    shift, and go to state 41
+    ','    shift, and go to state 42
+
+    $default  reduce using rule 29 (expr)
+
+    Conflict between rule 29 and token "<<" resolved as reduce ("<<" < "-=").
+    Conflict between rule 29 and token ">>" resolved as reduce (">>" < "-=").
+    Conflict between rule 29 and token "<=" resolved as reduce ("<=" < "-=").
+    Conflict between rule 29 and token ">=" resolved as reduce (">=" < "-=").
+    Conflict between rule 29 and token "==" resolved as reduce ("==" < "-=").
+    Conflict between rule 29 and token "!=" resolved as reduce ("!=" < "-=").
+    Conflict between rule 29 and token "&&" resolved as reduce ("&&" < "-=").
+    Conflict between rule 29 and token "||" resolved as reduce ("||" < "-=").
+    Conflict between rule 29 and token "*=" resolved as shift (%right "*=").
+    Conflict between rule 29 and token "/=" resolved as shift (%right "/=").
+    Conflict between rule 29 and token "%=" resolved as shift (%right "%=").
+    Conflict between rule 29 and token "+=" resolved as shift (%right "+=").
+    Conflict between rule 29 and token "-=" resolved as shift (%right "-=").
+    Conflict between rule 29 and token "<<=" resolved as shift (%right "<<=").
+    Conflict between rule 29 and token ">>=" resolved as shift (%right ">>=").
+    Conflict between rule 29 and token "&=" resolved as shift (%right "&=").
+    Conflict between rule 29 and token "|=" resolved as shift (%right "|=").
+    Conflict between rule 29 and token "^=" resolved as shift (%right "^=").
+    Conflict between rule 29 and token '*' resolved as reduce ('*' < "-=").
+    Conflict between rule 29 and token '/' resolved as reduce ('/' < "-=").
+    Conflict between rule 29 and token '%' resolved as reduce ('%' < "-=").
+    Conflict between rule 29 and token '+' resolved as reduce ('+' < "-=").
+    Conflict between rule 29 and token '-' resolved as reduce ('-' < "-=").
+    Conflict between rule 29 and token '<' resolved as reduce ('<' < "-=").
+    Conflict between rule 29 and token '>' resolved as reduce ('>' < "-=").
+    Conflict between rule 29 and token '&' resolved as reduce ('&' < "-=").
+    Conflict between rule 29 and token '^' resolved as reduce ('^' < "-=").
+    Conflict between rule 29 and token '|' resolved as reduce ('|' < "-=").
+    Conflict between rule 29 and token '=' resolved as shift (%right '=').
+    Conflict between rule 29 and token ',' resolved as shift ("-=" < ',').
+
+
+State 57
+
+    9 expr: expr • '*' expr
+   10     | expr • '/' expr
+   11     | expr • '%' expr
+   12     | expr • '+' expr
+   13     | expr • '-' expr
+   14     | expr • ">>" expr
+   15     | expr • "<<" expr
+   16     | expr • '<' expr
+   17     | expr • "<=" expr
+   18     | expr • '>' expr
+   19     | expr • ">=" expr
+   20     | expr • "==" expr
+   21     | expr • "!=" expr
+   22     | expr • '&' expr
+   23     | expr • '^' expr
+   24     | expr • '|' expr
+   25     | expr • "&&" expr
+   26     | expr • "||" expr
+   27     | expr • '=' expr
+   28     | expr • "+=" expr
+   29     | expr • "-=" expr
+   30     | expr • "*=" expr
+   31     | expr • "/=" expr
+   32     | expr • "%=" expr
+   33     | expr • "<<=" expr
+   33     | expr "<<=" expr •  ["<<", ">>", "<=", ">=", "==", "!=", "&&", "||", ';', '*', '/', '%', '+', '-', '<', '>', '&', '^', '|', ')']
+   34     | expr • ">>=" expr
+   35     | expr • "&=" expr
+   36     | expr • "^=" expr
+   37     | expr • "|=" expr
+   38     | expr • ',' expr
+
+    "*="   shift, and go to state 20
+    "/="   shift, and go to state 21
+    "%="   shift, and go to state 22
+    "+="   shift, and go to state 23
+    "-="   shift, and go to state 24
+    "<<="  shift, and go to state 25
+    ">>="  shift, and go to state 26
+    "&="   shift, and go to state 27
+    "|="   shift, and go to state 28
+    "^="   shift, and go to state 29
+    '='    shift, and go to state 41
+    ','    shift, and go to state 42
+
+    $default  reduce using rule 33 (expr)
+
+    Conflict between rule 33 and token "<<" resolved as reduce ("<<" < "<<=").
+    Conflict between rule 33 and token ">>" resolved as reduce (">>" < "<<=").
+    Conflict between rule 33 and token "<=" resolved as reduce ("<=" < "<<=").
+    Conflict between rule 33 and token ">=" resolved as reduce (">=" < "<<=").
+    Conflict between rule 33 and token "==" resolved as reduce ("==" < "<<=").
+    Conflict between rule 33 and token "!=" resolved as reduce ("!=" < "<<=").
+    Conflict between rule 33 and token "&&" resolved as reduce ("&&" < "<<=").
+    Conflict between rule 33 and token "||" resolved as reduce ("||" < "<<=").
+    Conflict between rule 33 and token "*=" resolved as shift (%right "*=").
+    Conflict between rule 33 and token "/=" resolved as shift (%right "/=").
+    Conflict between rule 33 and token "%=" resolved as shift (%right "%=").
+    Conflict between rule 33 and token "+=" resolved as shift (%right "+=").
+    Conflict between rule 33 and token "-=" resolved as shift (%right "-=").
+    Conflict between rule 33 and token "<<=" resolved as shift (%right "<<=").
+    Conflict between rule 33 and token ">>=" resolved as shift (%right ">>=").
+    Conflict between rule 33 and token "&=" resolved as shift (%right "&=").
+    Conflict between rule 33 and token "|=" resolved as shift (%right "|=").
+    Conflict between rule 33 and token "^=" resolved as shift (%right "^=").
+    Conflict between rule 33 and token '*' resolved as reduce ('*' < "<<=").
+    Conflict between rule 33 and token '/' resolved as reduce ('/' < "<<=").
+    Conflict between rule 33 and token '%' resolved as reduce ('%' < "<<=").
+    Conflict between rule 33 and token '+' resolved as reduce ('+' < "<<=").
+    Conflict between rule 33 and token '-' resolved as reduce ('-' < "<<=").
+    Conflict between rule 33 and token '<' resolved as reduce ('<' < "<<=").
+    Conflict between rule 33 and token '>' resolved as reduce ('>' < "<<=").
+    Conflict between rule 33 and token '&' resolved as reduce ('&' < "<<=").
+    Conflict between rule 33 and token '^' resolved as reduce ('^' < "<<=").
+    Conflict between rule 33 and token '|' resolved as reduce ('|' < "<<=").
+    Conflict between rule 33 and token '=' resolved as shift (%right '=').
+    Conflict between rule 33 and token ',' resolved as shift ("<<=" < ',').
+
+
+State 58
+
+    9 expr: expr • '*' expr
+   10     | expr • '/' expr
+   11     | expr • '%' expr
+   12     | expr • '+' expr
+   13     | expr • '-' expr
+   14     | expr • ">>" expr
+   15     | expr • "<<" expr
+   16     | expr • '<' expr
+   17     | expr • "<=" expr
+   18     | expr • '>' expr
+   19     | expr • ">=" expr
+   20     | expr • "==" expr
+   21     | expr • "!=" expr
+   22     | expr • '&' expr
+   23     | expr • '^' expr
+   24     | expr • '|' expr
+   25     | expr • "&&" expr
+   26     | expr • "||" expr
+   27     | expr • '=' expr
+   28     | expr • "+=" expr
+   29     | expr • "-=" expr
+   30     | expr • "*=" expr
+   31     | expr • "/=" expr
+   32     | expr • "%=" expr
+   33     | expr • "<<=" expr
+   34     | expr • ">>=" expr
+   34     | expr ">>=" expr •  ["<<", ">>", "<=", ">=", "==", "!=", "&&", "||", ';', '*', '/', '%', '+', '-', '<', '>', '&', '^', '|', ')']
+   35     | expr • "&=" expr
+   36     | expr • "^=" expr
+   37     | expr • "|=" expr
+   38     | expr • ',' expr
+
+    "*="   shift, and go to state 20
+    "/="   shift, and go to state 21
+    "%="   shift, and go to state 22
+    "+="   shift, and go to state 23
+    "-="   shift, and go to state 24
+    "<<="  shift, and go to state 25
+    ">>="  shift, and go to state 26
+    "&="   shift, and go to state 27
+    "|="   shift, and go to state 28
+    "^="   shift, and go to state 29
+    '='    shift, and go to state 41
+    ','    shift, and go to state 42
+
+    $default  reduce using rule 34 (expr)
+
+    Conflict between rule 34 and token "<<" resolved as reduce ("<<" < ">>=").
+    Conflict between rule 34 and token ">>" resolved as reduce (">>" < ">>=").
+    Conflict between rule 34 and token "<=" resolved as reduce ("<=" < ">>=").
+    Conflict between rule 34 and token ">=" resolved as reduce (">=" < ">>=").
+    Conflict between rule 34 and token "==" resolved as reduce ("==" < ">>=").
+    Conflict between rule 34 and token "!=" resolved as reduce ("!=" < ">>=").
+    Conflict between rule 34 and token "&&" resolved as reduce ("&&" < ">>=").
+    Conflict between rule 34 and token "||" resolved as reduce ("||" < ">>=").
+    Conflict between rule 34 and token "*=" resolved as shift (%right "*=").
+    Conflict between rule 34 and token "/=" resolved as shift (%right "/=").
+    Conflict between rule 34 and token "%=" resolved as shift (%right "%=").
+    Conflict between rule 34 and token "+=" resolved as shift (%right "+=").
+    Conflict between rule 34 and token "-=" resolved as shift (%right "-=").
+    Conflict between rule 34 and token "<<=" resolved as shift (%right "<<=").
+    Conflict between rule 34 and token ">>=" resolved as shift (%right ">>=").
+    Conflict between rule 34 and token "&=" resolved as shift (%right "&=").
+    Conflict between rule 34 and token "|=" resolved as shift (%right "|=").
+    Conflict between rule 34 and token "^=" resolved as shift (%right "^=").
+    Conflict between rule 34 and token '*' resolved as reduce ('*' < ">>=").
+    Conflict between rule 34 and token '/' resolved as reduce ('/' < ">>=").
+    Conflict between rule 34 and token '%' resolved as reduce ('%' < ">>=").
+    Conflict between rule 34 and token '+' resolved as reduce ('+' < ">>=").
+    Conflict between rule 34 and token '-' resolved as reduce ('-' < ">>=").
+    Conflict between rule 34 and token '<' resolved as reduce ('<' < ">>=").
+    Conflict between rule 34 and token '>' resolved as reduce ('>' < ">>=").
+    Conflict between rule 34 and token '&' resolved as reduce ('&' < ">>=").
+    Conflict between rule 34 and token '^' resolved as reduce ('^' < ">>=").
+    Conflict between rule 34 and token '|' resolved as reduce ('|' < ">>=").
+    Conflict between rule 34 and token '=' resolved as shift (%right '=').
+    Conflict between rule 34 and token ',' resolved as shift (">>=" < ',').
+
+
+State 59
+
+    9 expr: expr • '*' expr
+   10     | expr • '/' expr
+   11     | expr • '%' expr
+   12     | expr • '+' expr
+   13     | expr • '-' expr
+   14     | expr • ">>" expr
+   15     | expr • "<<" expr
+   16     | expr • '<' expr
+   17     | expr • "<=" expr
+   18     | expr • '>' expr
+   19     | expr • ">=" expr
+   20     | expr • "==" expr
+   21     | expr • "!=" expr
+   22     | expr • '&' expr
+   23     | expr • '^' expr
+   24     | expr • '|' expr
+   25     | expr • "&&" expr
+   26     | expr • "||" expr
+   27     | expr • '=' expr
+   28     | expr • "+=" expr
+   29     | expr • "-=" expr
+   30     | expr • "*=" expr
+   31     | expr • "/=" expr
+   32     | expr • "%=" expr
+   33     | expr • "<<=" expr
+   34     | expr • ">>=" expr
+   35     | expr • "&=" expr
+   35     | expr "&=" expr •  ["<<", ">>", "<=", ">=", "==", "!=", "&&", "||", ';', '*', '/', '%', '+', '-', '<', '>', '&', '^', '|', ')']
+   36     | expr • "^=" expr
+   37     | expr • "|=" expr
+   38     | expr • ',' expr
+
+    "*="   shift, and go to state 20
+    "/="   shift, and go to state 21
+    "%="   shift, and go to state 22
+    "+="   shift, and go to state 23
+    "-="   shift, and go to state 24
+    "<<="  shift, and go to state 25
+    ">>="  shift, and go to state 26
+    "&="   shift, and go to state 27
+    "|="   shift, and go to state 28
+    "^="   shift, and go to state 29
+    '='    shift, and go to state 41
+    ','    shift, and go to state 42
+
+    $default  reduce using rule 35 (expr)
+
+    Conflict between rule 35 and token "<<" resolved as reduce ("<<" < "&=").
+    Conflict between rule 35 and token ">>" resolved as reduce (">>" < "&=").
+    Conflict between rule 35 and token "<=" resolved as reduce ("<=" < "&=").
+    Conflict between rule 35 and token ">=" resolved as reduce (">=" < "&=").
+    Conflict between rule 35 and token "==" resolved as reduce ("==" < "&=").
+    Conflict between rule 35 and token "!=" resolved as reduce ("!=" < "&=").
+    Conflict between rule 35 and token "&&" resolved as reduce ("&&" < "&=").
+    Conflict between rule 35 and token "||" resolved as reduce ("||" < "&=").
+    Conflict between rule 35 and token "*=" resolved as shift (%right "*=").
+    Conflict between rule 35 and token "/=" resolved as shift (%right "/=").
+    Conflict between rule 35 and token "%=" resolved as shift (%right "%=").
+    Conflict between rule 35 and token "+=" resolved as shift (%right "+=").
+    Conflict between rule 35 and token "-=" resolved as shift (%right "-=").
+    Conflict between rule 35 and token "<<=" resolved as shift (%right "<<=").
+    Conflict between rule 35 and token ">>=" resolved as shift (%right ">>=").
+    Conflict between rule 35 and token "&=" resolved as shift (%right "&=").
+    Conflict between rule 35 and token "|=" resolved as shift (%right "|=").
+    Conflict between rule 35 and token "^=" resolved as shift (%right "^=").
+    Conflict between rule 35 and token '*' resolved as reduce ('*' < "&=").
+    Conflict between rule 35 and token '/' resolved as reduce ('/' < "&=").
+    Conflict between rule 35 and token '%' resolved as reduce ('%' < "&=").
+    Conflict between rule 35 and token '+' resolved as reduce ('+' < "&=").
+    Conflict between rule 35 and token '-' resolved as reduce ('-' < "&=").
+    Conflict between rule 35 and token '<' resolved as reduce ('<' < "&=").
+    Conflict between rule 35 and token '>' resolved as reduce ('>' < "&=").
+    Conflict between rule 35 and token '&' resolved as reduce ('&' < "&=").
+    Conflict between rule 35 and token '^' resolved as reduce ('^' < "&=").
+    Conflict between rule 35 and token '|' resolved as reduce ('|' < "&=").
+    Conflict between rule 35 and token '=' resolved as shift (%right '=').
+    Conflict between rule 35 and token ',' resolved as shift ("&=" < ',').
+
+
+State 60
+
+    9 expr: expr • '*' expr
+   10     | expr • '/' expr
+   11     | expr • '%' expr
+   12     | expr • '+' expr
+   13     | expr • '-' expr
+   14     | expr • ">>" expr
+   15     | expr • "<<" expr
+   16     | expr • '<' expr
+   17     | expr • "<=" expr
+   18     | expr • '>' expr
+   19     | expr • ">=" expr
+   20     | expr • "==" expr
+   21     | expr • "!=" expr
+   22     | expr • '&' expr
+   23     | expr • '^' expr
+   24     | expr • '|' expr
+   25     | expr • "&&" expr
+   26     | expr • "||" expr
+   27     | expr • '=' expr
+   28     | expr • "+=" expr
+   29     | expr • "-=" expr
+   30     | expr • "*=" expr
+   31     | expr • "/=" expr
+   32     | expr • "%=" expr
+   33     | expr • "<<=" expr
+   34     | expr • ">>=" expr
+   35     | expr • "&=" expr
+   36     | expr • "^=" expr
+   37     | expr • "|=" expr
+   37     | expr "|=" expr •  ["<<", ">>", "<=", ">=", "==", "!=", "&&", "||", ';', '*', '/', '%', '+', '-', '<', '>', '&', '^', '|', ')']
+   38     | expr • ',' expr
+
+    "*="   shift, and go to state 20
+    "/="   shift, and go to state 21
+    "%="   shift, and go to state 22
+    "+="   shift, and go to state 23
+    "-="   shift, and go to state 24
+    "<<="  shift, and go to state 25
+    ">>="  shift, and go to state 26
+    "&="   shift, and go to state 27
+    "|="   shift, and go to state 28
+    "^="   shift, and go to state 29
+    '='    shift, and go to state 41
+    ','    shift, and go to state 42
+
+    $default  reduce using rule 37 (expr)
+
+    Conflict between rule 37 and token "<<" resolved as reduce ("<<" < "|=").
+    Conflict between rule 37 and token ">>" resolved as reduce (">>" < "|=").
+    Conflict between rule 37 and token "<=" resolved as reduce ("<=" < "|=").
+    Conflict between rule 37 and token ">=" resolved as reduce (">=" < "|=").
+    Conflict between rule 37 and token "==" resolved as reduce ("==" < "|=").
+    Conflict between rule 37 and token "!=" resolved as reduce ("!=" < "|=").
+    Conflict between rule 37 and token "&&" resolved as reduce ("&&" < "|=").
+    Conflict between rule 37 and token "||" resolved as reduce ("||" < "|=").
+    Conflict between rule 37 and token "*=" resolved as shift (%right "*=").
+    Conflict between rule 37 and token "/=" resolved as shift (%right "/=").
+    Conflict between rule 37 and token "%=" resolved as shift (%right "%=").
+    Conflict between rule 37 and token "+=" resolved as shift (%right "+=").
+    Conflict between rule 37 and token "-=" resolved as shift (%right "-=").
+    Conflict between rule 37 and token "<<=" resolved as shift (%right "<<=").
+    Conflict between rule 37 and token ">>=" resolved as shift (%right ">>=").
+    Conflict between rule 37 and token "&=" resolved as shift (%right "&=").
+    Conflict between rule 37 and token "|=" resolved as shift (%right "|=").
+    Conflict between rule 37 and token "^=" resolved as shift (%right "^=").
+    Conflict between rule 37 and token '*' resolved as reduce ('*' < "|=").
+    Conflict between rule 37 and token '/' resolved as reduce ('/' < "|=").
+    Conflict between rule 37 and token '%' resolved as reduce ('%' < "|=").
+    Conflict between rule 37 and token '+' resolved as reduce ('+' < "|=").
+    Conflict between rule 37 and token '-' resolved as reduce ('-' < "|=").
+    Conflict between rule 37 and token '<' resolved as reduce ('<' < "|=").
+    Conflict between rule 37 and token '>' resolved as reduce ('>' < "|=").
+    Conflict between rule 37 and token '&' resolved as reduce ('&' < "|=").
+    Conflict between rule 37 and token '^' resolved as reduce ('^' < "|=").
+    Conflict between rule 37 and token '|' resolved as reduce ('|' < "|=").
+    Conflict between rule 37 and token '=' resolved as shift (%right '=').
+    Conflict between rule 37 and token ',' resolved as shift ("|=" < ',').
+
+
+State 61
+
+    9 expr: expr • '*' expr
+   10     | expr • '/' expr
+   11     | expr • '%' expr
+   12     | expr • '+' expr
+   13     | expr • '-' expr
+   14     | expr • ">>" expr
+   15     | expr • "<<" expr
+   16     | expr • '<' expr
+   17     | expr • "<=" expr
+   18     | expr • '>' expr
+   19     | expr • ">=" expr
+   20     | expr • "==" expr
+   21     | expr • "!=" expr
+   22     | expr • '&' expr
+   23     | expr • '^' expr
+   24     | expr • '|' expr
+   25     | expr • "&&" expr
+   26     | expr • "||" expr
+   27     | expr • '=' expr
+   28     | expr • "+=" expr
+   29     | expr • "-=" expr
+   30     | expr • "*=" expr
+   31     | expr • "/=" expr
+   32     | expr • "%=" expr
+   33     | expr • "<<=" expr
+   34     | expr • ">>=" expr
+   35     | expr • "&=" expr
+   36     | expr • "^=" expr
+   36     | expr "^=" expr •  ["<<", ">>", "<=", ">=", "==", "!=", "&&", "||", ';', '*', '/', '%', '+', '-', '<', '>', '&', '^', '|', ')']
+   37     | expr • "|=" expr
+   38     | expr • ',' expr
+
+    "*="   shift, and go to state 20
+    "/="   shift, and go to state 21
+    "%="   shift, and go to state 22
+    "+="   shift, and go to state 23
+    "-="   shift, and go to state 24
+    "<<="  shift, and go to state 25
+    ">>="  shift, and go to state 26
+    "&="   shift, and go to state 27
+    "|="   shift, and go to state 28
+    "^="   shift, and go to state 29
+    '='    shift, and go to state 41
+    ','    shift, and go to state 42
+
+    $default  reduce using rule 36 (expr)
+
+    Conflict between rule 36 and token "<<" resolved as reduce ("<<" < "^=").
+    Conflict between rule 36 and token ">>" resolved as reduce (">>" < "^=").
+    Conflict between rule 36 and token "<=" resolved as reduce ("<=" < "^=").
+    Conflict between rule 36 and token ">=" resolved as reduce (">=" < "^=").
+    Conflict between rule 36 and token "==" resolved as reduce ("==" < "^=").
+    Conflict between rule 36 and token "!=" resolved as reduce ("!=" < "^=").
+    Conflict between rule 36 and token "&&" resolved as reduce ("&&" < "^=").
+    Conflict between rule 36 and token "||" resolved as reduce ("||" < "^=").
+    Conflict between rule 36 and token "*=" resolved as shift (%right "*=").
+    Conflict between rule 36 and token "/=" resolved as shift (%right "/=").
+    Conflict between rule 36 and token "%=" resolved as shift (%right "%=").
+    Conflict between rule 36 and token "+=" resolved as shift (%right "+=").
+    Conflict between rule 36 and token "-=" resolved as shift (%right "-=").
+    Conflict between rule 36 and token "<<=" resolved as shift (%right "<<=").
+    Conflict between rule 36 and token ">>=" resolved as shift (%right ">>=").
+    Conflict between rule 36 and token "&=" resolved as shift (%right "&=").
+    Conflict between rule 36 and token "|=" resolved as shift (%right "|=").
+    Conflict between rule 36 and token "^=" resolved as shift (%right "^=").
+    Conflict between rule 36 and token '*' resolved as reduce ('*' < "^=").
+    Conflict between rule 36 and token '/' resolved as reduce ('/' < "^=").
+    Conflict between rule 36 and token '%' resolved as reduce ('%' < "^=").
+    Conflict between rule 36 and token '+' resolved as reduce ('+' < "^=").
+    Conflict between rule 36 and token '-' resolved as reduce ('-' < "^=").
+    Conflict between rule 36 and token '<' resolved as reduce ('<' < "^=").
+    Conflict between rule 36 and token '>' resolved as reduce ('>' < "^=").
+    Conflict between rule 36 and token '&' resolved as reduce ('&' < "^=").
+    Conflict between rule 36 and token '^' resolved as reduce ('^' < "^=").
+    Conflict between rule 36 and token '|' resolved as reduce ('|' < "^=").
+    Conflict between rule 36 and token '=' resolved as shift (%right '=').
+    Conflict between rule 36 and token ',' resolved as shift ("^=" < ',').
+
+
+State 62
+
+    9 expr: expr • '*' expr
+    9     | expr '*' expr •  [';', '*', '/', '%', ')']
+   10     | expr • '/' expr
+   11     | expr • '%' expr
+   12     | expr • '+' expr
+   13     | expr • '-' expr
+   14     | expr • ">>" expr
+   15     | expr • "<<" expr
+   16     | expr • '<' expr
+   17     | expr • "<=" expr
+   18     | expr • '>' expr
+   19     | expr • ">=" expr
+   20     | expr • "==" expr
+   21     | expr • "!=" expr
+   22     | expr • '&' expr
+   23     | expr • '^' expr
+   24     | expr • '|' expr
+   25     | expr • "&&" expr
+   26     | expr • "||" expr
+   27     | expr • '=' expr
+   28     | expr • "+=" expr
+   29     | expr • "-=" expr
+   30     | expr • "*=" expr
+   31     | expr • "/=" expr
+   32     | expr • "%=" expr
+   33     | expr • "<<=" expr
+   34     | expr • ">>=" expr
+   35     | expr • "&=" expr
+   36     | expr • "^=" expr
+   37     | expr • "|=" expr
+   38     | expr • ',' expr
+
+    "<<"   shift, and go to state 12
+    ">>"   shift, and go to state 13
+    "<="   shift, and go to state 14
+    ">="   shift, and go to state 15
+    "=="   shift, and go to state 16
+    "!="   shift, and go to state 17
+    "&&"   shift, and go to state 18
+    "||"   shift, and go to state 19
+    "*="   shift, and go to state 20
+    "/="   shift, and go to state 21
+    "%="   shift, and go to state 22
+    "+="   shift, and go to state 23
+    "-="   shift, and go to state 24
+    "<<="  shift, and go to state 25
+    ">>="  shift, and go to state 26
+    "&="   shift, and go to state 27
+    "|="   shift, and go to state 28
+    "^="   shift, and go to state 29
+    '+'    shift, and go to state 34
+    '-'    shift, and go to state 35
+    '<'    shift, and go to state 36
+    '>'    shift, and go to state 37
+    '&'    shift, and go to state 38
+    '^'    shift, and go to state 39
+    '|'    shift, and go to state 40
+    '='    shift, and go to state 41
+    ','    shift, and go to state 42
+
+    $default  reduce using rule 9 (expr)
+
+    Conflict between rule 9 and token "<<" resolved as shift ('*' < "<<").
+    Conflict between rule 9 and token ">>" resolved as shift ('*' < ">>").
+    Conflict between rule 9 and token "<=" resolved as shift ('*' < "<=").
+    Conflict between rule 9 and token ">=" resolved as shift ('*' < ">=").
+    Conflict between rule 9 and token "==" resolved as shift ('*' < "==").
+    Conflict between rule 9 and token "!=" resolved as shift ('*' < "!=").
+    Conflict between rule 9 and token "&&" resolved as shift ('*' < "&&").
+    Conflict between rule 9 and token "||" resolved as shift ('*' < "||").
+    Conflict between rule 9 and token "*=" resolved as shift ('*' < "*=").
+    Conflict between rule 9 and token "/=" resolved as shift ('*' < "/=").
+    Conflict between rule 9 and token "%=" resolved as shift ('*' < "%=").
+    Conflict between rule 9 and token "+=" resolved as shift ('*' < "+=").
+    Conflict between rule 9 and token "-=" resolved as shift ('*' < "-=").
+    Conflict between rule 9 and token "<<=" resolved as shift ('*' < "<<=").
+    Conflict between rule 9 and token ">>=" resolved as shift ('*' < ">>=").
+    Conflict between rule 9 and token "&=" resolved as shift ('*' < "&=").
+    Conflict between rule 9 and token "|=" resolved as shift ('*' < "|=").
+    Conflict between rule 9 and token "^=" resolved as shift ('*' < "^=").
+    Conflict between rule 9 and token '*' resolved as reduce (%left '*').
+    Conflict between rule 9 and token '/' resolved as reduce (%left '/').
+    Conflict between rule 9 and token '%' resolved as reduce (%left '%').
+    Conflict between rule 9 and token '+' resolved as shift ('*' < '+').
+    Conflict between rule 9 and token '-' resolved as shift ('*' < '-').
+    Conflict between rule 9 and token '<' resolved as shift ('*' < '<').
+    Conflict between rule 9 and token '>' resolved as shift ('*' < '>').
+    Conflict between rule 9 and token '&' resolved as shift ('*' < '&').
+    Conflict between rule 9 and token '^' resolved as shift ('*' < '^').
+    Conflict between rule 9 and token '|' resolved as shift ('*' < '|').
+    Conflict between rule 9 and token '=' resolved as shift ('*' < '=').
+    Conflict between rule 9 and token ',' resolved as shift ('*' < ',').
+
+
+State 63
+
+    9 expr: expr • '*' expr
+   10     | expr • '/' expr
+   10     | expr '/' expr •  [';', '*', '/', '%', ')']
+   11     | expr • '%' expr
+   12     | expr • '+' expr
+   13     | expr • '-' expr
+   14     | expr • ">>" expr
+   15     | expr • "<<" expr
+   16     | expr • '<' expr
+   17     | expr • "<=" expr
+   18     | expr • '>' expr
+   19     | expr • ">=" expr
+   20     | expr • "==" expr
+   21     | expr • "!=" expr
+   22     | expr • '&' expr
+   23     | expr • '^' expr
+   24     | expr • '|' expr
+   25     | expr • "&&" expr
+   26     | expr • "||" expr
+   27     | expr • '=' expr
+   28     | expr • "+=" expr
+   29     | expr • "-=" expr
+   30     | expr • "*=" expr
+   31     | expr • "/=" expr
+   32     | expr • "%=" expr
+   33     | expr • "<<=" expr
+   34     | expr • ">>=" expr
+   35     | expr • "&=" expr
+   36     | expr • "^=" expr
+   37     | expr • "|=" expr
+   38     | expr • ',' expr
+
+    "<<"   shift, and go to state 12
+    ">>"   shift, and go to state 13
+    "<="   shift, and go to state 14
+    ">="   shift, and go to state 15
+    "=="   shift, and go to state 16
+    "!="   shift, and go to state 17
+    "&&"   shift, and go to state 18
+    "||"   shift, and go to state 19
+    "*="   shift, and go to state 20
+    "/="   shift, and go to state 21
+    "%="   shift, and go to state 22
+    "+="   shift, and go to state 23
+    "-="   shift, and go to state 24
+    "<<="  shift, and go to state 25
+    ">>="  shift, and go to state 26
+    "&="   shift, and go to state 27
+    "|="   shift, and go to state 28
+    "^="   shift, and go to state 29
+    '+'    shift, and go to state 34
+    '-'    shift, and go to state 35
+    '<'    shift, and go to state 36
+    '>'    shift, and go to state 37
+    '&'    shift, and go to state 38
+    '^'    shift, and go to state 39
+    '|'    shift, and go to state 40
+    '='    shift, and go to state 41
+    ','    shift, and go to state 42
+
+    $default  reduce using rule 10 (expr)
+
+    Conflict between rule 10 and token "<<" resolved as shift ('/' < "<<").
+    Conflict between rule 10 and token ">>" resolved as shift ('/' < ">>").
+    Conflict between rule 10 and token "<=" resolved as shift ('/' < "<=").
+    Conflict between rule 10 and token ">=" resolved as shift ('/' < ">=").
+    Conflict between rule 10 and token "==" resolved as shift ('/' < "==").
+    Conflict between rule 10 and token "!=" resolved as shift ('/' < "!=").
+    Conflict between rule 10 and token "&&" resolved as shift ('/' < "&&").
+    Conflict between rule 10 and token "||" resolved as shift ('/' < "||").
+    Conflict between rule 10 and token "*=" resolved as shift ('/' < "*=").
+    Conflict between rule 10 and token "/=" resolved as shift ('/' < "/=").
+    Conflict between rule 10 and token "%=" resolved as shift ('/' < "%=").
+    Conflict between rule 10 and token "+=" resolved as shift ('/' < "+=").
+    Conflict between rule 10 and token "-=" resolved as shift ('/' < "-=").
+    Conflict between rule 10 and token "<<=" resolved as shift ('/' < "<<=").
+    Conflict between rule 10 and token ">>=" resolved as shift ('/' < ">>=").
+    Conflict between rule 10 and token "&=" resolved as shift ('/' < "&=").
+    Conflict between rule 10 and token "|=" resolved as shift ('/' < "|=").
+    Conflict between rule 10 and token "^=" resolved as shift ('/' < "^=").
+    Conflict between rule 10 and token '*' resolved as reduce (%left '*').
+    Conflict between rule 10 and token '/' resolved as reduce (%left '/').
+    Conflict between rule 10 and token '%' resolved as reduce (%left '%').
+    Conflict between rule 10 and token '+' resolved as shift ('/' < '+').
+    Conflict between rule 10 and token '-' resolved as shift ('/' < '-').
+    Conflict between rule 10 and token '<' resolved as shift ('/' < '<').
+    Conflict between rule 10 and token '>' resolved as shift ('/' < '>').
+    Conflict between rule 10 and token '&' resolved as shift ('/' < '&').
+    Conflict between rule 10 and token '^' resolved as shift ('/' < '^').
+    Conflict between rule 10 and token '|' resolved as shift ('/' < '|').
+    Conflict between rule 10 and token '=' resolved as shift ('/' < '=').
+    Conflict between rule 10 and token ',' resolved as shift ('/' < ',').
+
+
+State 64
+
+    9 expr: expr • '*' expr
+   10     | expr • '/' expr
+   11     | expr • '%' expr
+   11     | expr '%' expr •  [';', '*', '/', '%', ')']
+   12     | expr • '+' expr
+   13     | expr • '-' expr
+   14     | expr • ">>" expr
+   15     | expr • "<<" expr
+   16     | expr • '<' expr
+   17     | expr • "<=" expr
+   18     | expr • '>' expr
+   19     | expr • ">=" expr
+   20     | expr • "==" expr
+   21     | expr • "!=" expr
+   22     | expr • '&' expr
+   23     | expr • '^' expr
+   24     | expr • '|' expr
+   25     | expr • "&&" expr
+   26     | expr • "||" expr
+   27     | expr • '=' expr
+   28     | expr • "+=" expr
+   29     | expr • "-=" expr
+   30     | expr • "*=" expr
+   31     | expr • "/=" expr
+   32     | expr • "%=" expr
+   33     | expr • "<<=" expr
+   34     | expr • ">>=" expr
+   35     | expr • "&=" expr
+   36     | expr • "^=" expr
+   37     | expr • "|=" expr
+   38     | expr • ',' expr
+
+    "<<"   shift, and go to state 12
+    ">>"   shift, and go to state 13
+    "<="   shift, and go to state 14
+    ">="   shift, and go to state 15
+    "=="   shift, and go to state 16
+    "!="   shift, and go to state 17
+    "&&"   shift, and go to state 18
+    "||"   shift, and go to state 19
+    "*="   shift, and go to state 20
+    "/="   shift, and go to state 21
+    "%="   shift, and go to state 22
+    "+="   shift, and go to state 23
+    "-="   shift, and go to state 24
+    "<<="  shift, and go to state 25
+    ">>="  shift, and go to state 26
+    "&="   shift, and go to state 27
+    "|="   shift, and go to state 28
+    "^="   shift, and go to state 29
+    '+'    shift, and go to state 34
+    '-'    shift, and go to state 35
+    '<'    shift, and go to state 36
+    '>'    shift, and go to state 37
+    '&'    shift, and go to state 38
+    '^'    shift, and go to state 39
+    '|'    shift, and go to state 40
+    '='    shift, and go to state 41
+    ','    shift, and go to state 42
+
+    $default  reduce using rule 11 (expr)
+
+    Conflict between rule 11 and token "<<" resolved as shift ('%' < "<<").
+    Conflict between rule 11 and token ">>" resolved as shift ('%' < ">>").
+    Conflict between rule 11 and token "<=" resolved as shift ('%' < "<=").
+    Conflict between rule 11 and token ">=" resolved as shift ('%' < ">=").
+    Conflict between rule 11 and token "==" resolved as shift ('%' < "==").
+    Conflict between rule 11 and token "!=" resolved as shift ('%' < "!=").
+    Conflict between rule 11 and token "&&" resolved as shift ('%' < "&&").
+    Conflict between rule 11 and token "||" resolved as shift ('%' < "||").
+    Conflict between rule 11 and token "*=" resolved as shift ('%' < "*=").
+    Conflict between rule 11 and token "/=" resolved as shift ('%' < "/=").
+    Conflict between rule 11 and token "%=" resolved as shift ('%' < "%=").
+    Conflict between rule 11 and token "+=" resolved as shift ('%' < "+=").
+    Conflict between rule 11 and token "-=" resolved as shift ('%' < "-=").
+    Conflict between rule 11 and token "<<=" resolved as shift ('%' < "<<=").
+    Conflict between rule 11 and token ">>=" resolved as shift ('%' < ">>=").
+    Conflict between rule 11 and token "&=" resolved as shift ('%' < "&=").
+    Conflict between rule 11 and token "|=" resolved as shift ('%' < "|=").
+    Conflict between rule 11 and token "^=" resolved as shift ('%' < "^=").
+    Conflict between rule 11 and token '*' resolved as reduce (%left '*').
+    Conflict between rule 11 and token '/' resolved as reduce (%left '/').
+    Conflict between rule 11 and token '%' resolved as reduce (%left '%').
+    Conflict between rule 11 and token '+' resolved as shift ('%' < '+').
+    Conflict between rule 11 and token '-' resolved as shift ('%' < '-').
+    Conflict between rule 11 and token '<' resolved as shift ('%' < '<').
+    Conflict between rule 11 and token '>' resolved as shift ('%' < '>').
+    Conflict between rule 11 and token '&' resolved as shift ('%' < '&').
+    Conflict between rule 11 and token '^' resolved as shift ('%' < '^').
+    Conflict between rule 11 and token '|' resolved as shift ('%' < '|').
+    Conflict between rule 11 and token '=' resolved as shift ('%' < '=').
+    Conflict between rule 11 and token ',' resolved as shift ('%' < ',').
+
+
+State 65
+
+    9 expr: expr • '*' expr
+   10     | expr • '/' expr
+   11     | expr • '%' expr
+   12     | expr • '+' expr
+   12     | expr '+' expr •  [';', '*', '/', '%', '+', '-', ')']
+   13     | expr • '-' expr
+   14     | expr • ">>" expr
+   15     | expr • "<<" expr
+   16     | expr • '<' expr
+   17     | expr • "<=" expr
+   18     | expr • '>' expr
+   19     | expr • ">=" expr
+   20     | expr • "==" expr
+   21     | expr • "!=" expr
+   22     | expr • '&' expr
+   23     | expr • '^' expr
+   24     | expr • '|' expr
+   25     | expr • "&&" expr
+   26     | expr • "||" expr
+   27     | expr • '=' expr
+   28     | expr • "+=" expr
+   29     | expr • "-=" expr
+   30     | expr • "*=" expr
+   31     | expr • "/=" expr
+   32     | expr • "%=" expr
+   33     | expr • "<<=" expr
+   34     | expr • ">>=" expr
+   35     | expr • "&=" expr
+   36     | expr • "^=" expr
+   37     | expr • "|=" expr
+   38     | expr • ',' expr
+
+    "<<"   shift, and go to state 12
+    ">>"   shift, and go to state 13
+    "<="   shift, and go to state 14
+    ">="   shift, and go to state 15
+    "=="   shift, and go to state 16
+    "!="   shift, and go to state 17
+    "&&"   shift, and go to state 18
+    "||"   shift, and go to state 19
+    "*="   shift, and go to state 20
+    "/="   shift, and go to state 21
+    "%="   shift, and go to state 22
+    "+="   shift, and go to state 23
+    "-="   shift, and go to state 24
+    "<<="  shift, and go to state 25
+    ">>="  shift, and go to state 26
+    "&="   shift, and go to state 27
+    "|="   shift, and go to state 28
+    "^="   shift, and go to state 29
+    '<'    shift, and go to state 36
+    '>'    shift, and go to state 37
+    '&'    shift, and go to state 38
+    '^'    shift, and go to state 39
+    '|'    shift, and go to state 40
+    '='    shift, and go to state 41
+    ','    shift, and go to state 42
+
+    $default  reduce using rule 12 (expr)
+
+    Conflict between rule 12 and token "<<" resolved as shift ('+' < "<<").
+    Conflict between rule 12 and token ">>" resolved as shift ('+' < ">>").
+    Conflict between rule 12 and token "<=" resolved as shift ('+' < "<=").
+    Conflict between rule 12 and token ">=" resolved as shift ('+' < ">=").
+    Conflict between rule 12 and token "==" resolved as shift ('+' < "==").
+    Conflict between rule 12 and token "!=" resolved as shift ('+' < "!=").
+    Conflict between rule 12 and token "&&" resolved as shift ('+' < "&&").
+    Conflict between rule 12 and token "||" resolved as shift ('+' < "||").
+    Conflict between rule 12 and token "*=" resolved as shift ('+' < "*=").
+    Conflict between rule 12 and token "/=" resolved as shift ('+' < "/=").
+    Conflict between rule 12 and token "%=" resolved as shift ('+' < "%=").
+    Conflict between rule 12 and token "+=" resolved as shift ('+' < "+=").
+    Conflict between rule 12 and token "-=" resolved as shift ('+' < "-=").
+    Conflict between rule 12 and token "<<=" resolved as shift ('+' < "<<=").
+    Conflict between rule 12 and token ">>=" resolved as shift ('+' < ">>=").
+    Conflict between rule 12 and token "&=" resolved as shift ('+' < "&=").
+    Conflict between rule 12 and token "|=" resolved as shift ('+' < "|=").
+    Conflict between rule 12 and token "^=" resolved as shift ('+' < "^=").
+    Conflict between rule 12 and token '*' resolved as reduce ('*' < '+').
+    Conflict between rule 12 and token '/' resolved as reduce ('/' < '+').
+    Conflict between rule 12 and token '%' resolved as reduce ('%' < '+').
+    Conflict between rule 12 and token '+' resolved as reduce (%left '+').
+    Conflict between rule 12 and token '-' resolved as reduce (%left '-').
+    Conflict between rule 12 and token '<' resolved as shift ('+' < '<').
+    Conflict between rule 12 and token '>' resolved as shift ('+' < '>').
+    Conflict between rule 12 and token '&' resolved as shift ('+' < '&').
+    Conflict between rule 12 and token '^' resolved as shift ('+' < '^').
+    Conflict between rule 12 and token '|' resolved as shift ('+' < '|').
+    Conflict between rule 12 and token '=' resolved as shift ('+' < '=').
+    Conflict between rule 12 and token ',' resolved as shift ('+' < ',').
+
+
+State 66
+
+    9 expr: expr • '*' expr
+   10     | expr • '/' expr
+   11     | expr • '%' expr
+   12     | expr • '+' expr
+   13     | expr • '-' expr
+   13     | expr '-' expr •  [';', '*', '/', '%', '+', '-', ')']
+   14     | expr • ">>" expr
+   15     | expr • "<<" expr
+   16     | expr • '<' expr
+   17     | expr • "<=" expr
+   18     | expr • '>' expr
+   19     | expr • ">=" expr
+   20     | expr • "==" expr
+   21     | expr • "!=" expr
+   22     | expr • '&' expr
+   23     | expr • '^' expr
+   24     | expr • '|' expr
+   25     | expr • "&&" expr
+   26     | expr • "||" expr
+   27     | expr • '=' expr
+   28     | expr • "+=" expr
+   29     | expr • "-=" expr
+   30     | expr • "*=" expr
+   31     | expr • "/=" expr
+   32     | expr • "%=" expr
+   33     | expr • "<<=" expr
+   34     | expr • ">>=" expr
+   35     | expr • "&=" expr
+   36     | expr • "^=" expr
+   37     | expr • "|=" expr
+   38     | expr • ',' expr
+
+    "<<"   shift, and go to state 12
+    ">>"   shift, and go to state 13
+    "<="   shift, and go to state 14
+    ">="   shift, and go to state 15
+    "=="   shift, and go to state 16
+    "!="   shift, and go to state 17
+    "&&"   shift, and go to state 18
+    "||"   shift, and go to state 19
+    "*="   shift, and go to state 20
+    "/="   shift, and go to state 21
+    "%="   shift, and go to state 22
+    "+="   shift, and go to state 23
+    "-="   shift, and go to state 24
+    "<<="  shift, and go to state 25
+    ">>="  shift, and go to state 26
+    "&="   shift, and go to state 27
+    "|="   shift, and go to state 28
+    "^="   shift, and go to state 29
+    '<'    shift, and go to state 36
+    '>'    shift, and go to state 37
+    '&'    shift, and go to state 38
+    '^'    shift, and go to state 39
+    '|'    shift, and go to state 40
+    '='    shift, and go to state 41
+    ','    shift, and go to state 42
+
+    $default  reduce using rule 13 (expr)
+
+    Conflict between rule 13 and token "<<" resolved as shift ('-' < "<<").
+    Conflict between rule 13 and token ">>" resolved as shift ('-' < ">>").
+    Conflict between rule 13 and token "<=" resolved as shift ('-' < "<=").
+    Conflict between rule 13 and token ">=" resolved as shift ('-' < ">=").
+    Conflict between rule 13 and token "==" resolved as shift ('-' < "==").
+    Conflict between rule 13 and token "!=" resolved as shift ('-' < "!=").
+    Conflict between rule 13 and token "&&" resolved as shift ('-' < "&&").
+    Conflict between rule 13 and token "||" resolved as shift ('-' < "||").
+    Conflict between rule 13 and token "*=" resolved as shift ('-' < "*=").
+    Conflict between rule 13 and token "/=" resolved as shift ('-' < "/=").
+    Conflict between rule 13 and token "%=" resolved as shift ('-' < "%=").
+    Conflict between rule 13 and token "+=" resolved as shift ('-' < "+=").
+    Conflict between rule 13 and token "-=" resolved as shift ('-' < "-=").
+    Conflict between rule 13 and token "<<=" resolved as shift ('-' < "<<=").
+    Conflict between rule 13 and token ">>=" resolved as shift ('-' < ">>=").
+    Conflict between rule 13 and token "&=" resolved as shift ('-' < "&=").
+    Conflict between rule 13 and token "|=" resolved as shift ('-' < "|=").
+    Conflict between rule 13 and token "^=" resolved as shift ('-' < "^=").
+    Conflict between rule 13 and token '*' resolved as reduce ('*' < '-').
+    Conflict between rule 13 and token '/' resolved as reduce ('/' < '-').
+    Conflict between rule 13 and token '%' resolved as reduce ('%' < '-').
+    Conflict between rule 13 and token '+' resolved as reduce (%left '+').
+    Conflict between rule 13 and token '-' resolved as reduce (%left '-').
+    Conflict between rule 13 and token '<' resolved as shift ('-' < '<').
+    Conflict between rule 13 and token '>' resolved as shift ('-' < '>').
+    Conflict between rule 13 and token '&' resolved as shift ('-' < '&').
+    Conflict between rule 13 and token '^' resolved as shift ('-' < '^').
+    Conflict between rule 13 and token '|' resolved as shift ('-' < '|').
+    Conflict between rule 13 and token '=' resolved as shift ('-' < '=').
+    Conflict between rule 13 and token ',' resolved as shift ('-' < ',').
+
+
+State 67
+
+    9 expr: expr • '*' expr
+   10     | expr • '/' expr
+   11     | expr • '%' expr
+   12     | expr • '+' expr
+   13     | expr • '-' expr
+   14     | expr • ">>" expr
+   15     | expr • "<<" expr
+   16     | expr • '<' expr
+   16     | expr '<' expr •  ["<<", ">>", "<=", ">=", ';', '*', '/', '%', '+', '-', '<', '>', ')']
+   17     | expr • "<=" expr
+   18     | expr • '>' expr
+   19     | expr • ">=" expr
+   20     | expr • "==" expr
+   21     | expr • "!=" expr
+   22     | expr • '&' expr
+   23     | expr • '^' expr
+   24     | expr • '|' expr
+   25     | expr • "&&" expr
+   26     | expr • "||" expr
+   27     | expr • '=' expr
+   28     | expr • "+=" expr
+   29     | expr • "-=" expr
+   30     | expr • "*=" expr
+   31     | expr • "/=" expr
+   32     | expr • "%=" expr
+   33     | expr • "<<=" expr
+   34     | expr • ">>=" expr
+   35     | expr • "&=" expr
+   36     | expr • "^=" expr
+   37     | expr • "|=" expr
+   38     | expr • ',' expr
+
+    "=="   shift, and go to state 16
+    "!="   shift, and go to state 17
+    "&&"   shift, and go to state 18
+    "||"   shift, and go to state 19
+    "*="   shift, and go to state 20
+    "/="   shift, and go to state 21
+    "%="   shift, and go to state 22
+    "+="   shift, and go to state 23
+    "-="   shift, and go to state 24
+    "<<="  shift, and go to state 25
+    ">>="  shift, and go to state 26
+    "&="   shift, and go to state 27
+    "|="   shift, and go to state 28
+    "^="   shift, and go to state 29
+    '&'    shift, and go to state 38
+    '^'    shift, and go to state 39
+    '|'    shift, and go to state 40
+    '='    shift, and go to state 41
+    ','    shift, and go to state 42
+
+    $default  reduce using rule 16 (expr)
+
+    Conflict between rule 16 and token "<<" resolved as reduce ("<<" < '<').
+    Conflict between rule 16 and token ">>" resolved as reduce (">>" < '<').
+    Conflict between rule 16 and token "<=" resolved as reduce (%left "<=").
+    Conflict between rule 16 and token ">=" resolved as reduce (%left ">=").
+    Conflict between rule 16 and token "==" resolved as shift ('<' < "==").
+    Conflict between rule 16 and token "!=" resolved as shift ('<' < "!=").
+    Conflict between rule 16 and token "&&" resolved as shift ('<' < "&&").
+    Conflict between rule 16 and token "||" resolved as shift ('<' < "||").
+    Conflict between rule 16 and token "*=" resolved as shift ('<' < "*=").
+    Conflict between rule 16 and token "/=" resolved as shift ('<' < "/=").
+    Conflict between rule 16 and token "%=" resolved as shift ('<' < "%=").
+    Conflict between rule 16 and token "+=" resolved as shift ('<' < "+=").
+    Conflict between rule 16 and token "-=" resolved as shift ('<' < "-=").
+    Conflict between rule 16 and token "<<=" resolved as shift ('<' < "<<=").
+    Conflict between rule 16 and token ">>=" resolved as shift ('<' < ">>=").
+    Conflict between rule 16 and token "&=" resolved as shift ('<' < "&=").
+    Conflict between rule 16 and token "|=" resolved as shift ('<' < "|=").
+    Conflict between rule 16 and token "^=" resolved as shift ('<' < "^=").
+    Conflict between rule 16 and token '*' resolved as reduce ('*' < '<').
+    Conflict between rule 16 and token '/' resolved as reduce ('/' < '<').
+    Conflict between rule 16 and token '%' resolved as reduce ('%' < '<').
+    Conflict between rule 16 and token '+' resolved as reduce ('+' < '<').
+    Conflict between rule 16 and token '-' resolved as reduce ('-' < '<').
+    Conflict between rule 16 and token '<' resolved as reduce (%left '<').
+    Conflict between rule 16 and token '>' resolved as reduce (%left '>').
+    Conflict between rule 16 and token '&' resolved as shift ('<' < '&').
+    Conflict between rule 16 and token '^' resolved as shift ('<' < '^').
+    Conflict between rule 16 and token '|' resolved as shift ('<' < '|').
+    Conflict between rule 16 and token '=' resolved as shift ('<' < '=').
+    Conflict between rule 16 and token ',' resolved as shift ('<' < ',').
+
+
+State 68
+
+    9 expr: expr • '*' expr
+   10     | expr • '/' expr
+   11     | expr • '%' expr
+   12     | expr • '+' expr
+   13     | expr • '-' expr
+   14     | expr • ">>" expr
+   15     | expr • "<<" expr
+   16     | expr • '<' expr
+   17     | expr • "<=" expr
+   18     | expr • '>' expr
+   18     | expr '>' expr •  ["<<", ">>", "<=", ">=", ';', '*', '/', '%', '+', '-', '<', '>', ')']
+   19     | expr • ">=" expr
+   20     | expr • "==" expr
+   21     | expr • "!=" expr
+   22     | expr • '&' expr
+   23     | expr • '^' expr
+   24     | expr • '|' expr
+   25     | expr • "&&" expr
+   26     | expr • "||" expr
+   27     | expr • '=' expr
+   28     | expr • "+=" expr
+   29     | expr • "-=" expr
+   30     | expr • "*=" expr
+   31     | expr • "/=" expr
+   32     | expr • "%=" expr
+   33     | expr • "<<=" expr
+   34     | expr • ">>=" expr
+   35     | expr • "&=" expr
+   36     | expr • "^=" expr
+   37     | expr • "|=" expr
+   38     | expr • ',' expr
+
+    "=="   shift, and go to state 16
+    "!="   shift, and go to state 17
+    "&&"   shift, and go to state 18
+    "||"   shift, and go to state 19
+    "*="   shift, and go to state 20
+    "/="   shift, and go to state 21
+    "%="   shift, and go to state 22
+    "+="   shift, and go to state 23
+    "-="   shift, and go to state 24
+    "<<="  shift, and go to state 25
+    ">>="  shift, and go to state 26
+    "&="   shift, and go to state 27
+    "|="   shift, and go to state 28
+    "^="   shift, and go to state 29
+    '&'    shift, and go to state 38
+    '^'    shift, and go to state 39
+    '|'    shift, and go to state 40
+    '='    shift, and go to state 41
+    ','    shift, and go to state 42
+
+    $default  reduce using rule 18 (expr)
+
+    Conflict between rule 18 and token "<<" resolved as reduce ("<<" < '>').
+    Conflict between rule 18 and token ">>" resolved as reduce (">>" < '>').
+    Conflict between rule 18 and token "<=" resolved as reduce (%left "<=").
+    Conflict between rule 18 and token ">=" resolved as reduce (%left ">=").
+    Conflict between rule 18 and token "==" resolved as shift ('>' < "==").
+    Conflict between rule 18 and token "!=" resolved as shift ('>' < "!=").
+    Conflict between rule 18 and token "&&" resolved as shift ('>' < "&&").
+    Conflict between rule 18 and token "||" resolved as shift ('>' < "||").
+    Conflict between rule 18 and token "*=" resolved as shift ('>' < "*=").
+    Conflict between rule 18 and token "/=" resolved as shift ('>' < "/=").
+    Conflict between rule 18 and token "%=" resolved as shift ('>' < "%=").
+    Conflict between rule 18 and token "+=" resolved as shift ('>' < "+=").
+    Conflict between rule 18 and token "-=" resolved as shift ('>' < "-=").
+    Conflict between rule 18 and token "<<=" resolved as shift ('>' < "<<=").
+    Conflict between rule 18 and token ">>=" resolved as shift ('>' < ">>=").
+    Conflict between rule 18 and token "&=" resolved as shift ('>' < "&=").
+    Conflict between rule 18 and token "|=" resolved as shift ('>' < "|=").
+    Conflict between rule 18 and token "^=" resolved as shift ('>' < "^=").
+    Conflict between rule 18 and token '*' resolved as reduce ('*' < '>').
+    Conflict between rule 18 and token '/' resolved as reduce ('/' < '>').
+    Conflict between rule 18 and token '%' resolved as reduce ('%' < '>').
+    Conflict between rule 18 and token '+' resolved as reduce ('+' < '>').
+    Conflict between rule 18 and token '-' resolved as reduce ('-' < '>').
+    Conflict between rule 18 and token '<' resolved as reduce (%left '<').
+    Conflict between rule 18 and token '>' resolved as reduce (%left '>').
+    Conflict between rule 18 and token '&' resolved as shift ('>' < '&').
+    Conflict between rule 18 and token '^' resolved as shift ('>' < '^').
+    Conflict between rule 18 and token '|' resolved as shift ('>' < '|').
+    Conflict between rule 18 and token '=' resolved as shift ('>' < '=').
+    Conflict between rule 18 and token ',' resolved as shift ('>' < ',').
+
+
+State 69
+
+    9 expr: expr • '*' expr
+   10     | expr • '/' expr
+   11     | expr • '%' expr
+   12     | expr • '+' expr
+   13     | expr • '-' expr
+   14     | expr • ">>" expr
+   15     | expr • "<<" expr
+   16     | expr • '<' expr
+   17     | expr • "<=" expr
+   18     | expr • '>' expr
+   19     | expr • ">=" expr
+   20     | expr • "==" expr
+   21     | expr • "!=" expr
+   22     | expr • '&' expr
+   22     | expr '&' expr •  ["<<", ">>", "<=", ">=", "==", "!=", ';', '*', '/', '%', '+', '-', '<', '>', '&', ')']
+   23     | expr • '^' expr
+   24     | expr • '|' expr
+   25     | expr • "&&" expr
+   26     | expr • "||" expr
+   27     | expr • '=' expr
+   28     | expr • "+=" expr
+   29     | expr • "-=" expr
+   30     | expr • "*=" expr
+   31     | expr • "/=" expr
+   32     | expr • "%=" expr
+   33     | expr • "<<=" expr
+   34     | expr • ">>=" expr
+   35     | expr • "&=" expr
+   36     | expr • "^=" expr
+   37     | expr • "|=" expr
+   38     | expr • ',' expr
+
+    "&&"   shift, and go to state 18
+    "||"   shift, and go to state 19
+    "*="   shift, and go to state 20
+    "/="   shift, and go to state 21
+    "%="   shift, and go to state 22
+    "+="   shift, and go to state 23
+    "-="   shift, and go to state 24
+    "<<="  shift, and go to state 25
+    ">>="  shift, and go to state 26
+    "&="   shift, and go to state 27
+    "|="   shift, and go to state 28
+    "^="   shift, and go to state 29
+    '^'    shift, and go to state 39
+    '|'    shift, and go to state 40
+    '='    shift, and go to state 41
+    ','    shift, and go to state 42
+
+    $default  reduce using rule 22 (expr)
+
+    Conflict between rule 22 and token "<<" resolved as reduce ("<<" < '&').
+    Conflict between rule 22 and token ">>" resolved as reduce (">>" < '&').
+    Conflict between rule 22 and token "<=" resolved as reduce ("<=" < '&').
+    Conflict between rule 22 and token ">=" resolved as reduce (">=" < '&').
+    Conflict between rule 22 and token "==" resolved as reduce ("==" < '&').
+    Conflict between rule 22 and token "!=" resolved as reduce ("!=" < '&').
+    Conflict between rule 22 and token "&&" resolved as shift ('&' < "&&").
+    Conflict between rule 22 and token "||" resolved as shift ('&' < "||").
+    Conflict between rule 22 and token "*=" resolved as shift ('&' < "*=").
+    Conflict between rule 22 and token "/=" resolved as shift ('&' < "/=").
+    Conflict between rule 22 and token "%=" resolved as shift ('&' < "%=").
+    Conflict between rule 22 and token "+=" resolved as shift ('&' < "+=").
+    Conflict between rule 22 and token "-=" resolved as shift ('&' < "-=").
+    Conflict between rule 22 and token "<<=" resolved as shift ('&' < "<<=").
+    Conflict between rule 22 and token ">>=" resolved as shift ('&' < ">>=").
+    Conflict between rule 22 and token "&=" resolved as shift ('&' < "&=").
+    Conflict between rule 22 and token "|=" resolved as shift ('&' < "|=").
+    Conflict between rule 22 and token "^=" resolved as shift ('&' < "^=").
+    Conflict between rule 22 and token '*' resolved as reduce ('*' < '&').
+    Conflict between rule 22 and token '/' resolved as reduce ('/' < '&').
+    Conflict between rule 22 and token '%' resolved as reduce ('%' < '&').
+    Conflict between rule 22 and token '+' resolved as reduce ('+' < '&').
+    Conflict between rule 22 and token '-' resolved as reduce ('-' < '&').
+    Conflict between rule 22 and token '<' resolved as reduce ('<' < '&').
+    Conflict between rule 22 and token '>' resolved as reduce ('>' < '&').
+    Conflict between rule 22 and token '&' resolved as reduce (%left '&').
+    Conflict between rule 22 and token '^' resolved as shift ('&' < '^').
+    Conflict between rule 22 and token '|' resolved as shift ('&' < '|').
+    Conflict between rule 22 and token '=' resolved as shift ('&' < '=').
+    Conflict between rule 22 and token ',' resolved as shift ('&' < ',').
+
+
+State 70
+
+    9 expr: expr • '*' expr
+   10     | expr • '/' expr
+   11     | expr • '%' expr
+   12     | expr • '+' expr
+   13     | expr • '-' expr
+   14     | expr • ">>" expr
+   15     | expr • "<<" expr
+   16     | expr • '<' expr
+   17     | expr • "<=" expr
+   18     | expr • '>' expr
+   19     | expr • ">=" expr
+   20     | expr • "==" expr
+   21     | expr • "!=" expr
+   22     | expr • '&' expr
+   23     | expr • '^' expr
+   23     | expr '^' expr •  ["<<", ">>", "<=", ">=", "==", "!=", ';', '*', '/', '%', '+', '-', '<', '>', '&', '^', ')']
+   24     | expr • '|' expr
+   25     | expr • "&&" expr
+   26     | expr • "||" expr
+   27     | expr • '=' expr
+   28     | expr • "+=" expr
+   29     | expr • "-=" expr
+   30     | expr • "*=" expr
+   31     | expr • "/=" expr
+   32     | expr • "%=" expr
+   33     | expr • "<<=" expr
+   34     | expr • ">>=" expr
+   35     | expr • "&=" expr
+   36     | expr • "^=" expr
+   37     | expr • "|=" expr
+   38     | expr • ',' expr
+
+    "&&"   shift, and go to state 18
+    "||"   shift, and go to state 19
+    "*="   shift, and go to state 20
+    "/="   shift, and go to state 21
+    "%="   shift, and go to state 22
+    "+="   shift, and go to state 23
+    "-="   shift, and go to state 24
+    "<<="  shift, and go to state 25
+    ">>="  shift, and go to state 26
+    "&="   shift, and go to state 27
+    "|="   shift, and go to state 28
+    "^="   shift, and go to state 29
+    '|'    shift, and go to state 40
+    '='    shift, and go to state 41
+    ','    shift, and go to state 42
+
+    $default  reduce using rule 23 (expr)
+
+    Conflict between rule 23 and token "<<" resolved as reduce ("<<" < '^').
+    Conflict between rule 23 and token ">>" resolved as reduce (">>" < '^').
+    Conflict between rule 23 and token "<=" resolved as reduce ("<=" < '^').
+    Conflict between rule 23 and token ">=" resolved as reduce (">=" < '^').
+    Conflict between rule 23 and token "==" resolved as reduce ("==" < '^').
+    Conflict between rule 23 and token "!=" resolved as reduce ("!=" < '^').
+    Conflict between rule 23 and token "&&" resolved as shift ('^' < "&&").
+    Conflict between rule 23 and token "||" resolved as shift ('^' < "||").
+    Conflict between rule 23 and token "*=" resolved as shift ('^' < "*=").
+    Conflict between rule 23 and token "/=" resolved as shift ('^' < "/=").
+    Conflict between rule 23 and token "%=" resolved as shift ('^' < "%=").
+    Conflict between rule 23 and token "+=" resolved as shift ('^' < "+=").
+    Conflict between rule 23 and token "-=" resolved as shift ('^' < "-=").
+    Conflict between rule 23 and token "<<=" resolved as shift ('^' < "<<=").
+    Conflict between rule 23 and token ">>=" resolved as shift ('^' < ">>=").
+    Conflict between rule 23 and token "&=" resolved as shift ('^' < "&=").
+    Conflict between rule 23 and token "|=" resolved as shift ('^' < "|=").
+    Conflict between rule 23 and token "^=" resolved as shift ('^' < "^=").
+    Conflict between rule 23 and token '*' resolved as reduce ('*' < '^').
+    Conflict between rule 23 and token '/' resolved as reduce ('/' < '^').
+    Conflict between rule 23 and token '%' resolved as reduce ('%' < '^').
+    Conflict between rule 23 and token '+' resolved as reduce ('+' < '^').
+    Conflict between rule 23 and token '-' resolved as reduce ('-' < '^').
+    Conflict between rule 23 and token '<' resolved as reduce ('<' < '^').
+    Conflict between rule 23 and token '>' resolved as reduce ('>' < '^').
+    Conflict between rule 23 and token '&' resolved as reduce ('&' < '^').
+    Conflict between rule 23 and token '^' resolved as reduce (%left '^').
+    Conflict between rule 23 and token '|' resolved as shift ('^' < '|').
+    Conflict between rule 23 and token '=' resolved as shift ('^' < '=').
+    Conflict between rule 23 and token ',' resolved as shift ('^' < ',').
+
+
+State 71
+
+    9 expr: expr • '*' expr
+   10     | expr • '/' expr
+   11     | expr • '%' expr
+   12     | expr • '+' expr
+   13     | expr • '-' expr
+   14     | expr • ">>" expr
+   15     | expr • "<<" expr
+   16     | expr • '<' expr
+   17     | expr • "<=" expr
+   18     | expr • '>' expr
+   19     | expr • ">=" expr
+   20     | expr • "==" expr
+   21     | expr • "!=" expr
+   22     | expr • '&' expr
+   23     | expr • '^' expr
+   24     | expr • '|' expr
+   24     | expr '|' expr •  ["<<", ">>", "<=", ">=", "==", "!=", ';', '*', '/', '%', '+', '-', '<', '>', '&', '^', '|', ')']
+   25     | expr • "&&" expr
+   26     | expr • "||" expr
+   27     | expr • '=' expr
+   28     | expr • "+=" expr
+   29     | expr • "-=" expr
+   30     | expr • "*=" expr
+   31     | expr • "/=" expr
+   32     | expr • "%=" expr
+   33     | expr • "<<=" expr
+   34     | expr • ">>=" expr
+   35     | expr • "&=" expr
+   36     | expr • "^=" expr
+   37     | expr • "|=" expr
+   38     | expr • ',' expr
+
+    "&&"   shift, and go to state 18
+    "||"   shift, and go to state 19
+    "*="   shift, and go to state 20
+    "/="   shift, and go to state 21
+    "%="   shift, and go to state 22
+    "+="   shift, and go to state 23
+    "-="   shift, and go to state 24
+    "<<="  shift, and go to state 25
+    ">>="  shift, and go to state 26
+    "&="   shift, and go to state 27
+    "|="   shift, and go to state 28
+    "^="   shift, and go to state 29
+    '='    shift, and go to state 41
+    ','    shift, and go to state 42
+
+    $default  reduce using rule 24 (expr)
+
+    Conflict between rule 24 and token "<<" resolved as reduce ("<<" < '|').
+    Conflict between rule 24 and token ">>" resolved as reduce (">>" < '|').
+    Conflict between rule 24 and token "<=" resolved as reduce ("<=" < '|').
+    Conflict between rule 24 and token ">=" resolved as reduce (">=" < '|').
+    Conflict between rule 24 and token "==" resolved as reduce ("==" < '|').
+    Conflict between rule 24 and token "!=" resolved as reduce ("!=" < '|').
+    Conflict between rule 24 and token "&&" resolved as shift ('|' < "&&").
+    Conflict between rule 24 and token "||" resolved as shift ('|' < "||").
+    Conflict between rule 24 and token "*=" resolved as shift ('|' < "*=").
+    Conflict between rule 24 and token "/=" resolved as shift ('|' < "/=").
+    Conflict between rule 24 and token "%=" resolved as shift ('|' < "%=").
+    Conflict between rule 24 and token "+=" resolved as shift ('|' < "+=").
+    Conflict between rule 24 and token "-=" resolved as shift ('|' < "-=").
+    Conflict between rule 24 and token "<<=" resolved as shift ('|' < "<<=").
+    Conflict between rule 24 and token ">>=" resolved as shift ('|' < ">>=").
+    Conflict between rule 24 and token "&=" resolved as shift ('|' < "&=").
+    Conflict between rule 24 and token "|=" resolved as shift ('|' < "|=").
+    Conflict between rule 24 and token "^=" resolved as shift ('|' < "^=").
+    Conflict between rule 24 and token '*' resolved as reduce ('*' < '|').
+    Conflict between rule 24 and token '/' resolved as reduce ('/' < '|').
+    Conflict between rule 24 and token '%' resolved as reduce ('%' < '|').
+    Conflict between rule 24 and token '+' resolved as reduce ('+' < '|').
+    Conflict between rule 24 and token '-' resolved as reduce ('-' < '|').
+    Conflict between rule 24 and token '<' resolved as reduce ('<' < '|').
+    Conflict between rule 24 and token '>' resolved as reduce ('>' < '|').
+    Conflict between rule 24 and token '&' resolved as reduce ('&' < '|').
+    Conflict between rule 24 and token '^' resolved as reduce ('^' < '|').
+    Conflict between rule 24 and token '|' resolved as reduce (%left '|').
+    Conflict between rule 24 and token '=' resolved as shift ('|' < '=').
+    Conflict between rule 24 and token ',' resolved as shift ('|' < ',').
+
+
+State 72
+
+    9 expr: expr • '*' expr
+   10     | expr • '/' expr
+   11     | expr • '%' expr
+   12     | expr • '+' expr
+   13     | expr • '-' expr
+   14     | expr • ">>" expr
+   15     | expr • "<<" expr
+   16     | expr • '<' expr
+   17     | expr • "<=" expr
+   18     | expr • '>' expr
+   19     | expr • ">=" expr
+   20     | expr • "==" expr
+   21     | expr • "!=" expr
+   22     | expr • '&' expr
+   23     | expr • '^' expr
+   24     | expr • '|' expr
+   25     | expr • "&&" expr
+   26     | expr • "||" expr
+   27     | expr • '=' expr
+   27     | expr '=' expr •  ["<<", ">>", "<=", ">=", "==", "!=", "&&", "||", ';', '*', '/', '%', '+', '-', '<', '>', '&', '^', '|', ')']
+   28     | expr • "+=" expr
+   29     | expr • "-=" expr
+   30     | expr • "*=" expr
+   31     | expr • "/=" expr
+   32     | expr • "%=" expr
+   33     | expr • "<<=" expr
+   34     | expr • ">>=" expr
+   35     | expr • "&=" expr
+   36     | expr • "^=" expr
+   37     | expr • "|=" expr
+   38     | expr • ',' expr
+
+    "*="   shift, and go to state 20
+    "/="   shift, and go to state 21
+    "%="   shift, and go to state 22
+    "+="   shift, and go to state 23
+    "-="   shift, and go to state 24
+    "<<="  shift, and go to state 25
+    ">>="  shift, and go to state 26
+    "&="   shift, and go to state 27
+    "|="   shift, and go to state 28
+    "^="   shift, and go to state 29
+    '='    shift, and go to state 41
+    ','    shift, and go to state 42
+
+    $default  reduce using rule 27 (expr)
+
+    Conflict between rule 27 and token "<<" resolved as reduce ("<<" < '=').
+    Conflict between rule 27 and token ">>" resolved as reduce (">>" < '=').
+    Conflict between rule 27 and token "<=" resolved as reduce ("<=" < '=').
+    Conflict between rule 27 and token ">=" resolved as reduce (">=" < '=').
+    Conflict between rule 27 and token "==" resolved as reduce ("==" < '=').
+    Conflict between rule 27 and token "!=" resolved as reduce ("!=" < '=').
+    Conflict between rule 27 and token "&&" resolved as reduce ("&&" < '=').
+    Conflict between rule 27 and token "||" resolved as reduce ("||" < '=').
+    Conflict between rule 27 and token "*=" resolved as shift (%right "*=").
+    Conflict between rule 27 and token "/=" resolved as shift (%right "/=").
+    Conflict between rule 27 and token "%=" resolved as shift (%right "%=").
+    Conflict between rule 27 and token "+=" resolved as shift (%right "+=").
+    Conflict between rule 27 and token "-=" resolved as shift (%right "-=").
+    Conflict between rule 27 and token "<<=" resolved as shift (%right "<<=").
+    Conflict between rule 27 and token ">>=" resolved as shift (%right ">>=").
+    Conflict between rule 27 and token "&=" resolved as shift (%right "&=").
+    Conflict between rule 27 and token "|=" resolved as shift (%right "|=").
+    Conflict between rule 27 and token "^=" resolved as shift (%right "^=").
+    Conflict between rule 27 and token '*' resolved as reduce ('*' < '=').
+    Conflict between rule 27 and token '/' resolved as reduce ('/' < '=').
+    Conflict between rule 27 and token '%' resolved as reduce ('%' < '=').
+    Conflict between rule 27 and token '+' resolved as reduce ('+' < '=').
+    Conflict between rule 27 and token '-' resolved as reduce ('-' < '=').
+    Conflict between rule 27 and token '<' resolved as reduce ('<' < '=').
+    Conflict between rule 27 and token '>' resolved as reduce ('>' < '=').
+    Conflict between rule 27 and token '&' resolved as reduce ('&' < '=').
+    Conflict between rule 27 and token '^' resolved as reduce ('^' < '=').
+    Conflict between rule 27 and token '|' resolved as reduce ('|' < '=').
+    Conflict between rule 27 and token '=' resolved as shift (%right '=').
+    Conflict between rule 27 and token ',' resolved as shift ('=' < ',').
+
+
+State 73
+
+    9 expr: expr • '*' expr
+   10     | expr • '/' expr
+   11     | expr • '%' expr
+   12     | expr • '+' expr
+   13     | expr • '-' expr
+   14     | expr • ">>" expr
+   15     | expr • "<<" expr
+   16     | expr • '<' expr
+   17     | expr • "<=" expr
+   18     | expr • '>' expr
+   19     | expr • ">=" expr
+   20     | expr • "==" expr
+   21     | expr • "!=" expr
+   22     | expr • '&' expr
+   23     | expr • '^' expr
+   24     | expr • '|' expr
+   25     | expr • "&&" expr
+   26     | expr • "||" expr
+   27     | expr • '=' expr
+   28     | expr • "+=" expr
+   29     | expr • "-=" expr
+   30     | expr • "*=" expr
+   31     | expr • "/=" expr
+   32     | expr • "%=" expr
+   33     | expr • "<<=" expr
+   34     | expr • ">>=" expr
+   35     | expr • "&=" expr
+   36     | expr • "^=" expr
+   37     | expr • "|=" expr
+   38     | expr • ',' expr
+   38     | expr ',' expr •  ["<<", ">>", "<=", ">=", "==", "!=", "&&", "||", "*=", "/=", "%=", "+=", "-=", "<<=", ">>=", "&=", "|=", "^=", ';', '*', '/', '%', '+', '-', '<', '>', '&', '^', '|', '=', ',', ')']
+
+    $default  reduce using rule 38 (expr)
+
+    Conflict between rule 38 and token "<<" resolved as reduce ("<<" < ',').
+    Conflict between rule 38 and token ">>" resolved as reduce (">>" < ',').
+    Conflict between rule 38 and token "<=" resolved as reduce ("<=" < ',').
+    Conflict between rule 38 and token ">=" resolved as reduce (">=" < ',').
+    Conflict between rule 38 and token "==" resolved as reduce ("==" < ',').
+    Conflict between rule 38 and token "!=" resolved as reduce ("!=" < ',').
+    Conflict between rule 38 and token "&&" resolved as reduce ("&&" < ',').
+    Conflict between rule 38 and token "||" resolved as reduce ("||" < ',').
+    Conflict between rule 38 and token "*=" resolved as reduce ("*=" < ',').
+    Conflict between rule 38 and token "/=" resolved as reduce ("/=" < ',').
+    Conflict between rule 38 and token "%=" resolved as reduce ("%=" < ',').
+    Conflict between rule 38 and token "+=" resolved as reduce ("+=" < ',').
+    Conflict between rule 38 and token "-=" resolved as reduce ("-=" < ',').
+    Conflict between rule 38 and token "<<=" resolved as reduce ("<<=" < ',').
+    Conflict between rule 38 and token ">>=" resolved as reduce (">>=" < ',').
+    Conflict between rule 38 and token "&=" resolved as reduce ("&=" < ',').
+    Conflict between rule 38 and token "|=" resolved as reduce ("|=" < ',').
+    Conflict between rule 38 and token "^=" resolved as reduce ("^=" < ',').
+    Conflict between rule 38 and token '*' resolved as reduce ('*' < ',').
+    Conflict between rule 38 and token '/' resolved as reduce ('/' < ',').
+    Conflict between rule 38 and token '%' resolved as reduce ('%' < ',').
+    Conflict between rule 38 and token '+' resolved as reduce ('+' < ',').
+    Conflict between rule 38 and token '-' resolved as reduce ('-' < ',').
+    Conflict between rule 38 and token '<' resolved as reduce ('<' < ',').
+    Conflict between rule 38 and token '>' resolved as reduce ('>' < ',').
+    Conflict between rule 38 and token '&' resolved as reduce ('&' < ',').
+    Conflict between rule 38 and token '^' resolved as reduce ('^' < ',').
+    Conflict between rule 38 and token '|' resolved as reduce ('|' < ',').
+    Conflict between rule 38 and token '=' resolved as reduce ('=' < ',').
+    Conflict between rule 38 and token ',' resolved as reduce (%left ',').
