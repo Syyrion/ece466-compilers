@@ -1,0 +1,8 @@
+% EXPR %
+
+BINARY_OP "+"
+.left
+    IDENT "a"
+.right
+    NUMBERLIT    REAL    188.8    DOUBLE
+

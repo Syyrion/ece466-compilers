@@ -45,25 +45,11 @@
 extern int yydebug;
 #endif
 /* "%code requires" blocks.  */
-#line 16 "parser.y"
+#line 18 "parser.y"
 
-    extern char *filename;
-    extern int line_num;
+    #include "types.h"
 
-    // provided by flex
-    extern char *yytext;
-    extern int yyleng;   
-    extern int yylex(void);
-
-    #define NT_UNSIGNED 0b1000
-    #define NT_INT 0b0000
-    #define NT_LONG 0b0001
-    #define NT_LONG_LONG 0b0010
-    #define NT_FLOAT 0b0100
-    #define NT_DOUBLE 0b0101
-    #define NT_LONG_DOUBLE 0b0110
-
-#line 67 "parser.tab.h"
+#line 53 "parser.tab.h"
 
 /* Token kinds.  */
 #ifndef YYTOKENTYPE
@@ -145,27 +131,13 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 34 "parser.y"
+#line 22 "parser.y"
 
-    char *string;
-    unsigned long long strlen;
-    unsigned long long strsize;
+    string_t string;
+    number_t number;
+    ast_node_t *node;
 
-    unsigned long long integer;
-    long double real;
-
-    union
-    {
-        char nt_full;
-        struct
-        {
-            char type : 2;
-            char is_real : 1;
-            char is_unsigned : 1;
-        };
-    };
-
-#line 169 "parser.tab.h"
+#line 141 "parser.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

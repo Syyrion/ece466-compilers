@@ -5,50 +5,24 @@
 
     #include <stdlib.h>
     #include <stdio.h>
+    #include "lexer.h"
+    #include "ast.h"
 
     void yyerror (const char *s)
     {
-        fprintf (stderr, "%s\n", s);
+        fprintf (stderr, "%s:%d: %s\n", filename, line_num, s);
     }
 
 %}
 
 %code requires{
-    extern char *filename;
-    extern int line_num;
-
-    // provided by flex
-    extern char *yytext;
-    extern int yyleng;   
-    extern int yylex(void);
-
-    #define NT_UNSIGNED 0b1000
-    #define NT_INT 0b0000
-    #define NT_LONG 0b0001
-    #define NT_LONG_LONG 0b0010
-    #define NT_FLOAT 0b0100
-    #define NT_DOUBLE 0b0101
-    #define NT_LONG_DOUBLE 0b0110
+    #include "types.h"
 }
 
 %union{
-    char *string;
-    unsigned long long strlen;
-    unsigned long long strsize;
-
-    unsigned long long integer;
-    long double real;
-
-    union
-    {
-        char nt_full;
-        struct
-        {
-            char type : 2;
-            char is_real : 1;
-            char is_unsigned : 1;
-        };
-    };
+    string_t string;
+    number_t number;
+    ast_node_t *node;
 }
 
 %token
@@ -115,79 +89,90 @@
     _BOOL
     _COMPLEX
     _IMAGINARY
-    ';'
+
+/* precedence ordered from lowest to highest priority */
+
+%left ','
+%right '=' "+=" "-=" "*=" "/=" "%=" "<<=" ">>=" "&=" "^=" "|="
+%right '?' ':' /* all ternaries are evaluated like  ? ( ) : */
+%left "||"
+%left "&&"
+%left '|'
+%left '^'
+%left '&'
+%left "==" "!="
+%left '<' "<=" '>' ">="
+%left "<<" ">>"
+%left '+' '-'
+%left '*' '/' '%'
 
 /* TODO alignof and friends */
-%left '*' '/' '%'
-%left '+' '-'
-%left "<<" ">>"
-%left '<' "<=" '>' ">="
-%left "==" "!="
-%left '&'
-%left '^'
-%left '|'
-%left "&&"
-%left "||"
-%right '?' ':' /* all ternaries are evaluated like  ? ( ) : */
-%right '=' "+=" "-=" "*=" "/=" "%=" "<<=" ">>=" "&=" "^=" "|="
-%left ','
+/* postfix unary operators have priority over prefix */
 
-%type <string> IDENT
+
+
+%type <string> IDENT STRINGLIT CHARLIT
+%type <number> NUMBERLIT
+%nterm <node> expr
+
+%destructor { } <number>
+%destructor {free($$.buffer);} <string>
+%destructor {ast_free($$);} <node>
 
 %%
 
 statement_sequence:
-    statement
-    | statement_sequence statement
+    statement                       {}
+    | statement_sequence statement  {}
 
 statement:
-    expr ';'
+    expr ';'                        {printf("%% EXPR %%\n\n"); ast_print($1, 0); ast_free($1); printf("\n");}
 
 expr:
-    IDENT                           {printf("%d", ($1)[0]);}
-    | CHARLIT
-    | STRINGLIT
-    | NUMBERLIT
-    | '(' expr ')'
+    IDENT                           {$$ = ast_new_ident($1.buffer);}
+    | CHARLIT                       {$$ = ast_new_charlit($1.buffer[0]);}
+    | STRINGLIT                     {$$ = ast_new_stringlit($1);}
+    | NUMBERLIT                     {$$ = ast_new_numberlit($1);}
+    | '(' expr ')'                  {$$ = $2;}
 
-    | expr '*' expr
-    | expr '/' expr
-    | expr '%' expr
+    | expr '*' expr                 {$$ = ast_new_binary_op('*', $1, $3);}
+    | expr '/' expr                 {$$ = ast_new_binary_op('/', $1, $3);}
+    | expr '%' expr                 {$$ = ast_new_binary_op('%', $1, $3);}
 
-    | expr '+' expr
-    | expr '-' expr
+    | expr '+' expr                 {$$ = ast_new_binary_op('+', $1, $3);}
+    | expr '-' expr                 {$$ = ast_new_binary_op('-', $1, $3);}
 
-    | expr ">>" expr
-    | expr "<<" expr
+    | expr "<<" expr                {$$ = ast_new_binary_op(SHL, $1, $3);}
+    | expr ">>" expr                {$$ = ast_new_binary_op(SHR, $1, $3);}
 
-    | expr '<' expr
-    | expr "<=" expr
-    | expr '>' expr
-    | expr ">=" expr
+    | expr '<' expr                 {$$ = ast_new_binary_op('<', $1, $3);}
+    | expr "<=" expr                {$$ = ast_new_binary_op(LTEQ, $1, $3);}
+    | expr '>' expr                 {$$ = ast_new_binary_op('>', $1, $3);}
+    | expr ">=" expr                {$$ = ast_new_binary_op(GTEQ, $1, $3);}
 
-    | expr "==" expr
-    | expr "!=" expr
+    | expr "==" expr                {$$ = ast_new_binary_op(EQEQ, $1, $3);}
+    | expr "!=" expr                {$$ = ast_new_binary_op(NOTEQ, $1, $3);}
 
-    | expr '&' expr
-    | expr '^' expr
-    | expr '|' expr
+    | expr '&' expr                 {$$ = ast_new_binary_op('&', $1, $3);}
+    | expr '^' expr                 {$$ = ast_new_binary_op('^', $1, $3);}
+    | expr '|' expr                 {$$ = ast_new_binary_op('|', $1, $3);}
     
-    | expr "&&" expr
-    | expr "||" expr
+    | expr "&&" expr                {$$ = ast_new_binary_op(LOGAND, $1, $3);}
+    | expr "||" expr                {$$ = ast_new_binary_op(LOGOR, $1, $3);}
 
-    | expr '=' expr
-    | expr "+=" expr
-    | expr "-=" expr
-    | expr "*=" expr
-    | expr "/=" expr
-    | expr "%=" expr
-    | expr "<<=" expr
-    | expr ">>=" expr
-    | expr "&=" expr
-    | expr "^=" expr
-    | expr "|=" expr
+    | expr '=' expr                 {$$ = ast_new_binary_op('=', $1, $3);}
+    | expr "+=" expr                {$$ = ast_new_binary_op(PLUSEQ, $1, $3);}
+    | expr "-=" expr                {$$ = ast_new_binary_op(MINUSEQ, $1, $3);}
+    | expr "*=" expr                {$$ = ast_new_binary_op(TIMESEQ, $1, $3);}
+    | expr "/=" expr                {$$ = ast_new_binary_op(DIVEQ, $1, $3);}
+    | expr "%=" expr                {$$ = ast_new_binary_op(MODEQ, $1, $3);}
+    | expr "<<=" expr               {$$ = ast_new_binary_op(SHLEQ, $1, $3);}
+    | expr ">>=" expr               {$$ = ast_new_binary_op(SHREQ, $1, $3);}
+    | expr "&=" expr                {$$ = ast_new_binary_op(ANDEQ, $1, $3);}
+    | expr "^=" expr                {$$ = ast_new_binary_op(XOREQ, $1, $3);}
+    | expr "|=" expr                {$$ = ast_new_binary_op(OREQ, $1, $3);}
 
-    | expr ',' expr
+    | expr ',' expr                 {$$ = ast_new_binary_op(',', $1, $3);}
 
 
 

@@ -6,6 +6,7 @@
     #include <string.h>
     #include <stdlib.h>
     #include <ctype.h>
+    #include "lexer.h"
     #include "parser.tab.h"
 
     char *filename;
@@ -16,17 +17,18 @@
     // string lvalue stuff
     void begin_str()
     {
-        yylval.strsize = INITIAL_SIZE;
-        yylval.strlen = 0;
-        yylval.string = malloc(yylval.strsize);
+        yylval.string.size = INITIAL_SIZE;
+        yylval.string.length = 0;
+        yylval.string.buffer = malloc(yylval.string.size);
     }
 
     void append_char(const char c)
     {
-        yylval.string[yylval.strlen] = c;
-        yylval.string[yylval.strlen + 1] = 0;
-        if (++yylval.strlen == yylval.strsize - 1) // size - 1 because of null byte
-            yylval.string = realloc(yylval.string, yylval.strsize *= 2);
+        yylval.string.buffer[yylval.string.length] = c;
+        yylval.string.buffer[yylval.string.length + 1] = 0;
+
+        if (++yylval.string.length == yylval.string.size - 1) // size - 1 because of null byte
+            yylval.string.buffer = realloc(yylval.string.buffer, yylval.string.size *= 2);
     }
 
     char get_real_type(char *n)
@@ -191,8 +193,8 @@ _Imaginary      {return _IMAGINARY;}
 \.{3}           {return ELLIPSIS;}
 
 [A-Za-z_][A-Za-z0-9_]*      {
-                                yylval.string = strdup(yytext);
-                                yylval.strlen = strlen(yylval.string);
+                                yylval.string.buffer = strdup(yytext);
+                                yylval.string.length = strlen(yylval.string.buffer);
                                 return IDENT;
                             }
 
@@ -205,24 +207,24 @@ _Imaginary      {return _IMAGINARY;}
 0[xX][0-9A-Fa-f]+p[\+\-]?[0-9]+{FLOAT_SUFFIX}                   |
 [0-9]+e[\+\-]?[0-9]+{FLOAT_SUFFIX}                              |
 (([0-9]*\.[0-9]+)|([0-9]+\.))(e[\+\-]?[0-9]+)?{FLOAT_SUFFIX}    {
-                                                                    yylval.nt_full = get_real_type(yytext);
-                                                                    yylval.real = strtold(yytext, NULL);
+                                                                    yylval.number.full_type = get_real_type(yytext);
+                                                                    yylval.number.real = strtold(yytext, NULL);
                                                                     return NUMBERLIT;
                                                                 }
 
 0[xX][0-9A-Fa-f]+{INT_SUFFIX}                                   {
-                                                                    yylval.nt_full = get_int_type(yytext);
-                                                                    yylval.integer = strtoull(yytext + 2, NULL, 16);
+                                                                    yylval.number.full_type = get_int_type(yytext);
+                                                                    yylval.number.integer = strtoull(yytext + 2, NULL, 16);
                                                                     return NUMBERLIT;
                                                                 }
 0[bB][01]+{INT_SUFFIX}                                          {   // binary too
-                                                                    yylval.nt_full = get_int_type(yytext);
-                                                                    yylval.integer = strtoull(yytext + 2, NULL, 2);
+                                                                    yylval.number.full_type = get_int_type(yytext);
+                                                                    yylval.number.integer = strtoull(yytext + 2, NULL, 2);
                                                                     return NUMBERLIT;
                                                                 }
 [0-9]+{INT_SUFFIX}                                              {
-                                                                    yylval.nt_full = get_int_type(yytext);
-                                                                    yylval.integer = strtoull(yytext, NULL, yytext[0] == '0' ? 8 : 10);
+                                                                    yylval.number.full_type = get_int_type(yytext);
+                                                                    yylval.number.integer = strtoull(yytext, NULL, yytext[0] == '0' ? 8 : 10);
                                                                     return NUMBERLIT;
                                                                 }
 
@@ -267,15 +269,15 @@ L?\'                                BEGIN charlit; begin_str();
 <strlit>\"                          BEGIN INITIAL; return STRINGLIT;
 <charlit>\'                         {
                                         BEGIN INITIAL;
-                                        if (yylval.strlen == 0)
+                                        if (yylval.string.length == 0)
                                         {
                                             fprintf(stderr, "%s:%d: Error: empty character constant\n", filename, line_num);
                                         }
-                                        else if (yylval.strlen > 1)
+                                        else if (yylval.string.length > 1)
                                         {
                                             fprintf(stderr, "%s:%d: Warning: Unsupported multibyte character literal truncated to first byte\n", filename, line_num);
-                                            yylval.string[1] = 0;
-                                            yylval.strlen = 1;
+                                            yylval.string.buffer[1] = 0;
+                                            yylval.string.length = 1;
                                             return CHARLIT;
                                         }
                                         else
