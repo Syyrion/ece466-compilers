@@ -1,0 +1,218 @@
+% EXPR %
+
+BINARY_OP ","
+.left
+    BINARY_OP "="
+    .left
+        IDENT "a"
+    .right
+        IDENT "b"
+.right
+    BINARY_OP "+="
+    .left
+        IDENT "c"
+    .right
+        BINARY_OP "/"
+        .left
+            UNARY_OP "-"
+            .operand
+                NUMBERLIT    INTEGER    10    INT
+        .right
+            IDENT "d"
+
+% EXPR %
+
+TERNARY_OP
+.condition
+    BINARY_OP "!="
+    .left
+        STRINGLIT "X"
+    .right
+        STRINGLIT "Y"
+.true_branch
+    BINARY_OP "-="
+    .left
+        IDENT "e"
+    .right
+        NUMBERLIT    INTEGER    1    INT
+.false_branch
+    UNARY_OP "++"
+    .operand
+        IDENT "f"
+
+% EXPR %
+
+BINARY_OP "-="
+.left
+    IDENT "g"
+.right
+    UNARY_OP "*"
+    .operand
+        BINARY_OP "+"
+        .left
+            STRINGLIT "ABC"
+        .right
+            NUMBERLIT    INTEGER    3    INT
+
+% EXPR %
+
+BINARY_OP "%="
+.left
+    IDENT "h"
+.right
+    UNARY_OP "+"
+    .operand
+        IDENT "i"
+
+% EXPR %
+
+BINARY_OP "/="
+.left
+    IDENT "i"
+.right
+    NUMBERLIT    REAL    15.3    DOUBLE
+
+% EXPR %
+
+BINARY_OP "<<="
+.left
+    IDENT "j"
+.right
+    NUMBERLIT    INTEGER    3    INT
+
+% EXPR %
+
+BINARY_OP ","
+.left
+    BINARY_OP ">>="
+    .left
+        IDENT "j"
+    .right
+        IDENT "k"
+.right
+    IDENT "l"
+
+% EXPR %
+
+BINARY_OP "&="
+.left
+    IDENT "m"
+.right
+    BINARY_OP "&&"
+    .left
+        IDENT "n"
+    .right
+        IDENT "o"
+
+% EXPR %
+
+BINARY_OP "|="
+.left
+    IDENT "n"
+.right
+    BINARY_OP "^"
+    .left
+        IDENT "n"
+    .right
+        IDENT "o"
+
+% EXPR %
+
+BINARY_OP ">="
+.left
+    FUNCTION_CALL
+    .name
+        IDENT "fn"
+    .arg[0]
+        BINARY_OP "||"
+        .left
+            BINARY_OP "&&"
+            .left
+                IDENT "a"
+            .right
+                IDENT "b"
+        .right
+            IDENT "c"
+    .arg[1]
+        BINARY_OP "|"
+        .left
+            BINARY_OP "&"
+            .left
+                IDENT "d"
+            .right
+                IDENT "e"
+        .right
+            BINARY_OP "^"
+            .left
+                IDENT "f"
+            .right
+                IDENT "g"
+    .arg[2]
+        BINARY_OP "!="
+        .left
+            BINARY_OP "=="
+            .left
+                NUMBERLIT    INTEGER    10    INT
+            .right
+                NUMBERLIT    INTEGER    20    INT
+        .right
+            NUMBERLIT    INTEGER    0    INT
+.right
+    BINARY_OP "<<"
+    .left
+        UNARY_OP "~"
+        .operand
+            IDENT "a"
+    .right
+        NUMBERLIT    INTEGER    2    INT
+
+% EXPR %
+
+BINARY_OP "^="
+.left
+    IDENT "o"
+.right
+    CHARLIT "A"
+
+% EXPR %
+
+BINARY_OP "="
+.left
+    IDENT "p"
+.right
+    UNARY_OP "&"
+    .operand
+        BINARY_OP "."
+        .left
+            UNARY_OP "*"
+            .operand
+                IDENT "x"
+        .right
+            IDENT "m"
+
+% EXPR %
+
+UNARY_OP "*"
+.operand
+    UNARY_OP "++"
+    .operand
+        BINARY_OP "."
+        .left
+            IDENT "q"
+        .right
+            IDENT "m"
+
+% EXPR %
+
+BINARY_OP "="
+.left
+    IDENT "s"
+.right
+    UNARY_OP "sizeof"
+    .operand
+        BINARY_OP "+="
+        .left
+            IDENT "a"
+        .right
+            NUMBERLIT    INTEGER    1    INT
+
