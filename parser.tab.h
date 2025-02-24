@@ -87,42 +87,44 @@ extern int yydebug;
     OREQ = 282,                    /* "|="  */
     XOREQ = 283,                   /* "^="  */
     AUTO = 284,                    /* AUTO  */
-    BREAK = 285,                   /* BREAK  */
-    CASE = 286,                    /* CASE  */
-    CHAR = 287,                    /* CHAR  */
-    CONST = 288,                   /* CONST  */
-    CONTINUE = 289,                /* CONTINUE  */
-    DEFAULT = 290,                 /* DEFAULT  */
-    DO = 291,                      /* DO  */
-    DOUBLE = 292,                  /* DOUBLE  */
-    ELSE = 293,                    /* ELSE  */
-    ENUM = 294,                    /* ENUM  */
-    EXTERN = 295,                  /* EXTERN  */
-    FLOAT = 296,                   /* FLOAT  */
-    FOR = 297,                     /* FOR  */
-    GOTO = 298,                    /* GOTO  */
-    IF = 299,                      /* IF  */
-    INLINE = 300,                  /* INLINE  */
-    INT = 301,                     /* INT  */
-    LONG = 302,                    /* LONG  */
-    REGISTER = 303,                /* REGISTER  */
-    RESTRICT = 304,                /* RESTRICT  */
-    RETURN = 305,                  /* RETURN  */
-    SHORT = 306,                   /* SHORT  */
-    SIGNED = 307,                  /* SIGNED  */
-    SIZEOF = 308,                  /* SIZEOF  */
-    STATIC = 309,                  /* STATIC  */
-    STRUCT = 310,                  /* STRUCT  */
-    SWITCH = 311,                  /* SWITCH  */
-    TYPEDEF = 312,                 /* TYPEDEF  */
-    UNION = 313,                   /* UNION  */
-    UNSIGNED = 314,                /* UNSIGNED  */
-    VOID = 315,                    /* VOID  */
-    VOLATILE = 316,                /* VOLATILE  */
-    WHILE = 317,                   /* WHILE  */
-    _BOOL = 318,                   /* _BOOL  */
-    _COMPLEX = 319,                /* _COMPLEX  */
-    _IMAGINARY = 320               /* _IMAGINARY  */
+    ALIGNOF = 285,                 /* ALIGNOF  */
+    BREAK = 286,                   /* BREAK  */
+    CASE = 287,                    /* CASE  */
+    CHAR = 288,                    /* CHAR  */
+    CONST = 289,                   /* CONST  */
+    CONTINUE = 290,                /* CONTINUE  */
+    DEFAULT = 291,                 /* DEFAULT  */
+    DO = 292,                      /* DO  */
+    DOUBLE = 293,                  /* DOUBLE  */
+    ELSE = 294,                    /* ELSE  */
+    ENUM = 295,                    /* ENUM  */
+    EXTERN = 296,                  /* EXTERN  */
+    FLOAT = 297,                   /* FLOAT  */
+    FOR = 298,                     /* FOR  */
+    GOTO = 299,                    /* GOTO  */
+    IF = 300,                      /* IF  */
+    INLINE = 301,                  /* INLINE  */
+    INT = 302,                     /* INT  */
+    LONG = 303,                    /* LONG  */
+    REGISTER = 304,                /* REGISTER  */
+    RESTRICT = 305,                /* RESTRICT  */
+    RETURN = 306,                  /* RETURN  */
+    SHORT = 307,                   /* SHORT  */
+    SIGNED = 308,                  /* SIGNED  */
+    SIZEOF = 309,                  /* SIZEOF  */
+    STATIC = 310,                  /* STATIC  */
+    STRUCT = 311,                  /* STRUCT  */
+    SWITCH = 312,                  /* SWITCH  */
+    TYPEDEF = 313,                 /* TYPEDEF  */
+    UNION = 314,                   /* UNION  */
+    UNSIGNED = 315,                /* UNSIGNED  */
+    VOID = 316,                    /* VOID  */
+    VOLATILE = 317,                /* VOLATILE  */
+    WHILE = 318,                   /* WHILE  */
+    _BOOL = 319,                   /* _BOOL  */
+    _COMPLEX = 320,                /* _COMPLEX  */
+    _IMAGINARY = 321,              /* _IMAGINARY  */
+    FUNCTION_CALL = 322            /* FUNCTION_CALL  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -137,7 +139,7 @@ union YYSTYPE
     number_t number;
     ast_node_t *node;
 
-#line 141 "parser.tab.h"
+#line 143 "parser.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

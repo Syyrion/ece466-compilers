@@ -63,14 +63,6 @@ ast_node_t *ast_new_ternary_op(ast_node_t *condition, ast_node_t *true_branch, a
     return new_inst;
 }
 
-// TODO
-ast_node_t *ast_new_function_call(char *name)
-{
-    ast_node_t *new_inst = malloc(sizeof(ast_node_t));
-    new_inst->kind = AST_FUNCTION_CALL;
-    return new_inst;
-}
-
 // recursively frees an ast_node
 void ast_free(ast_node_t *node)
 {
@@ -98,15 +90,52 @@ void ast_free(ast_node_t *node)
         ast_free(node->ternary_op.true_branch);
         ast_free(node->ternary_op.false_branch);
         break;
-    case AST_FUNCTION_CALL:
-        // todo
-        break;
     default:
         fprintf(stderr, "invalid ast node kind %d", node->kind);
         exit(88);
         break;
     }
     free(node);
+}
+
+// Returns a null terminated array of ast nodes made by unreducing a left sided tree of equivalent binary operations.
+// All branches should exist.
+ast_node_t **ast_left_unreduce(ast_node_t *node)
+{
+    // unreduce only works on binary operations
+    if (node->kind != AST_BINARY_OP)
+        return 0;
+
+    // the operator we're unreducing
+    const yytoken_kind_t op = node->binary_op.kind;
+
+    // a reversed list of nodes
+    int node_index = 0;
+    int reverse_list_size = 2;
+    ast_node_t **reverse_list = malloc(sizeof(ast_node_t *) * reverse_list_size);
+
+    ast_node_t *current_node = node;
+    do
+    {
+        reverse_list[node_index++] = current_node->binary_op.right;
+        if (node_index == reverse_list_size)
+            reverse_list = realloc(reverse_list, reverse_list_size *= 2);
+
+        // check the left node to see if we can continue
+        current_node = current_node->binary_op.left;
+    } while (current_node && current_node->kind == AST_BINARY_OP && current_node->binary_op.kind == op);
+
+    // if not then add the left to the reverse_list
+    reverse_list[node_index++] = current_node;
+
+    // make a forward_list
+    ast_node_t **forward_list = malloc(sizeof(ast_node_t *) * node_index + 1);
+    for (int i = 0, j = node_index - 1; i < node_index; i++, j--)
+        forward_list[i] = reverse_list[j];
+    forward_list[node_index] = 0;
+
+    free(reverse_list);
+    return forward_list;
 }
 
 static void print_stringlit(string_t string)
@@ -229,6 +258,21 @@ static void print_operator(yytoken_kind_t op)
     case OREQ:
         printf("|=");
         break;
+    case SIZEOF:
+        printf("sizeof");
+        break;
+    case ALIGNOF:
+        printf("alignof");
+        break;
+    case PLUSPLUS:
+        printf("++");
+        break;
+    case MINUSMINUS:
+        printf("--");
+        break;
+    case FUNCTION_CALL:
+        printf("()");
+        break;
     default:
         fprintf(stderr, "attempted to print operator with unknown id %d", op);
         printf("<unknown operator %d>", op);
@@ -277,20 +321,33 @@ void ast_print(ast_node_t *node, const unsigned int depth)
         SUBSECTION("operand", node->unary_op.operand);
         break;
     case AST_BINARY_OP:
-        printf("BINARY_OP \"");
-        print_operator(node->binary_op.kind);
-        printf("\"\n");
-        SUBSECTION("left", node->binary_op.left);
-        SUBSECTION("right", node->binary_op.right);
+        if (node->binary_op.kind == FUNCTION_CALL)
+        {
+            printf("FUNCTION_CALL\n");
+            SUBSECTION("name", node->binary_op.left);
+
+            char tag[128];
+            ast_node_t **args = ast_left_unreduce(node->binary_op.right);
+            for (int i = 0; args[i] != 0; i++)
+            {
+                snprintf(tag, sizeof(tag), "arg[%d]", i);
+                SUBSECTION(tag, args[i]);
+            }
+        }
+        else
+        {
+            printf("BINARY_OP \"");
+            print_operator(node->binary_op.kind);
+            printf("\"\n");
+            SUBSECTION("left", node->binary_op.left);
+            SUBSECTION("right", node->binary_op.right);
+        }
         break;
     case AST_TERNARY_OP:
         printf("TERNARY_OP\n");
         SUBSECTION("condition", node->ternary_op.condition);
         SUBSECTION("true_branch", node->ternary_op.true_branch);
         SUBSECTION("false_branch", node->ternary_op.false_branch);
-        break;
-    case AST_FUNCTION_CALL:
-        // todo
         break;
     default:
         fprintf(stderr, "invalid ast node kind %d", node->kind);

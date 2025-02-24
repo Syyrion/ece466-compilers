@@ -37,19 +37,6 @@ struct ast_ternary_op
     ast_node_t *false_branch;
 };
 
-#define AST_FCALL_MAX_INLINE_ARGS 8
-
-struct ast_function_call
-{
-    char *ident;
-    unsigned int argc;
-    union
-    {
-        ast_node_t *args[AST_FCALL_MAX_INLINE_ARGS];
-        ast_node_t **args_more;
-    };
-};
-
 struct ast_node
 {
     ast_node_kind_t kind;
@@ -58,7 +45,6 @@ struct ast_node
         struct ast_unary_op unary_op;
         struct ast_binary_op binary_op;
         struct ast_ternary_op ternary_op;
-        struct ast_function_call function_call;
 
         char *ident;
         char charlit;
@@ -74,7 +60,6 @@ ast_node_t *ast_new_numberlit(number_t number);
 ast_node_t *ast_new_unary_op(yytoken_kind_t kind, ast_node_t *operand);
 ast_node_t *ast_new_binary_op(yytoken_kind_t kind, ast_node_t *left, ast_node_t *right);
 ast_node_t *ast_new_ternary_op(ast_node_t *condition, ast_node_t *true_branch, ast_node_t *false_branch);
-ast_node_t *ast_new_function_call(char *name);
 void ast_free(ast_node_t *node);
 void ast_print(ast_node_t *node, const unsigned int depth);
 

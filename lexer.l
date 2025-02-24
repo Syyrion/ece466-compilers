@@ -93,6 +93,10 @@ FLOAT_SUFFIX    ([fFlL]?)
 [ \t]           /* ignore whitespace */
 
 auto            {return AUTO;}
+_alignof        |
+_Alignof        |
+__alignof       |
+alignof         {return ALIGNOF;}
 break           {return BREAK;}
 case            {return CASE;}
 char            {return CHAR;}
