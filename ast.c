@@ -2,8 +2,8 @@
 #include <stdio.h>
 #include <ctype.h>
 #include "types.h"
-#include "parser.tab.h"
 #include "ast.h"
+#include "parser.tab.h"
 
 ast_node_t *ast_new_ident(char *name)
 {
@@ -34,7 +34,7 @@ ast_node_t *ast_new_numberlit(number_t number)
     return new_inst;
 }
 
-ast_node_t *ast_new_unary_op(yytoken_kind_t kind, ast_node_t *operand)
+ast_node_t *ast_new_unary_op(int kind, ast_node_t *operand)
 {
     ast_node_t *new_inst = malloc(sizeof(ast_node_t));
     new_inst->kind = AST_UNARY_OP;
@@ -43,7 +43,7 @@ ast_node_t *ast_new_unary_op(yytoken_kind_t kind, ast_node_t *operand)
     return new_inst;
 }
 
-ast_node_t *ast_new_binary_op(yytoken_kind_t kind, ast_node_t *left, ast_node_t *right)
+ast_node_t *ast_new_binary_op(int kind, ast_node_t *left, ast_node_t *right)
 {
     ast_node_t *new_inst = malloc(sizeof(ast_node_t));
     new_inst->kind = AST_BINARY_OP;
@@ -107,7 +107,7 @@ ast_node_t **ast_left_unreduce(ast_node_t *node)
         return 0;
 
     // the operator we're unreducing
-    const yytoken_kind_t op = node->binary_op.kind;
+    const int op = node->binary_op.kind;
 
     // a reversed list of nodes
     int node_index = 0;
@@ -196,7 +196,7 @@ static void print_numberlit(number_t number)
     }
 }
 
-static void print_operator(yytoken_kind_t op)
+static void print_operator(int op)
 {
     if (isprint(op))
     {

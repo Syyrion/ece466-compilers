@@ -1,5 +1,5 @@
 main:
-	bison -d -v --report=all -Wcounterexamples parser.y 2> bison_out.txt
+	bison -d -v --report=all parser.y 2> bison_out.txt
 	flex lexer.l
 	gcc lex.yy.c parser.tab.c parser_test.c ast.c -o parser_test
 

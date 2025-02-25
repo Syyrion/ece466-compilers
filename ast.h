@@ -2,8 +2,6 @@
 #define AST_API_INCLUDED
 
 #include "types.h"
-#include "parser.tab.h"
-#include "ast.h"
 
 typedef enum
 {
@@ -19,13 +17,13 @@ typedef enum
 
 struct ast_unary_op
 {
-    yytoken_kind_t kind;
+    int kind;
     ast_node_t *operand;
 };
 
 struct ast_binary_op
 {
-    yytoken_kind_t kind;
+    int kind;
     ast_node_t *left;
     ast_node_t *right;
 };
@@ -57,8 +55,8 @@ ast_node_t *ast_new_ident(char *name);
 ast_node_t *ast_new_charlit(char c);
 ast_node_t *ast_new_stringlit(string_t string);
 ast_node_t *ast_new_numberlit(number_t number);
-ast_node_t *ast_new_unary_op(yytoken_kind_t kind, ast_node_t *operand);
-ast_node_t *ast_new_binary_op(yytoken_kind_t kind, ast_node_t *left, ast_node_t *right);
+ast_node_t *ast_new_unary_op(int kind, ast_node_t *operand);
+ast_node_t *ast_new_binary_op(int kind, ast_node_t *left, ast_node_t *right);
 ast_node_t *ast_new_ternary_op(ast_node_t *condition, ast_node_t *true_branch, ast_node_t *false_branch);
 void ast_free(ast_node_t *node);
 void ast_print(ast_node_t *node, const unsigned int depth);
