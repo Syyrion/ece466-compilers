@@ -1,8 +1,9 @@
-/* A Bison parser, made by GNU Bison 3.0.4.  */
+/* A Bison parser, made by GNU Bison 3.8.2.  */
 
 /* Bison interface for Yacc-like parsers in C
 
-   Copyright (C) 1984, 1989-1990, 2000-2015 Free Software Foundation, Inc.
+   Copyright (C) 1984, 1989-1990, 2000-2015, 2018-2021 Free Software Foundation,
+   Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -15,7 +16,7 @@
    GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
+   along with this program.  If not, see <https://www.gnu.org/licenses/>.  */
 
 /* As a special exception, you may create a larger work that contains
    part or all of the Bison parser skeleton and distribute that work
@@ -30,6 +31,10 @@
    This special exception was added by the Free Software Foundation in
    version 2.2 of Bison.  */
 
+/* DO NOT RELY ON FEATURES THAT ARE NOT DOCUMENTED in the manual,
+   especially those whose name start with YY_ or yy_.  They are
+   private implementation details that can be changed or removed.  */
+
 #ifndef YY_YY_PARSER_TAB_H_INCLUDED
 # define YY_YY_PARSER_TAB_H_INCLUDED
 /* Debug traces.  */
@@ -40,99 +45,102 @@
 extern int yydebug;
 #endif
 /* "%code requires" blocks.  */
-#line 18 "parser.y" /* yacc.c:1909  */
+#line 18 "parser.y"
 
     #include "types.h"
 
-#line 48 "parser.tab.h" /* yacc.c:1909  */
+#line 53 "parser.tab.h"
 
-/* Token type.  */
+/* Token kinds.  */
 #ifndef YYTOKENTYPE
 # define YYTOKENTYPE
   enum yytokentype
   {
-    IDENT = 258,
-    CHARLIT = 259,
-    STRINGLIT = 260,
-    NUMBERLIT = 261,
-    INDSEL = 262,
-    PLUSPLUS = 263,
-    MINUSMINUS = 264,
-    SHL = 265,
-    SHR = 266,
-    LTEQ = 267,
-    GTEQ = 268,
-    EQEQ = 269,
-    NOTEQ = 270,
-    LOGAND = 271,
-    LOGOR = 272,
-    ELLIPSIS = 273,
-    TIMESEQ = 274,
-    DIVEQ = 275,
-    MODEQ = 276,
-    PLUSEQ = 277,
-    MINUSEQ = 278,
-    SHLEQ = 279,
-    SHREQ = 280,
-    ANDEQ = 281,
-    OREQ = 282,
-    XOREQ = 283,
-    AUTO = 284,
-    ALIGNOF = 285,
-    BREAK = 286,
-    CASE = 287,
-    CHAR = 288,
-    CONST = 289,
-    CONTINUE = 290,
-    DEFAULT = 291,
-    DO = 292,
-    DOUBLE = 293,
-    ELSE = 294,
-    ENUM = 295,
-    EXTERN = 296,
-    FLOAT = 297,
-    FOR = 298,
-    GOTO = 299,
-    IF = 300,
-    INLINE = 301,
-    INT = 302,
-    LONG = 303,
-    REGISTER = 304,
-    RESTRICT = 305,
-    RETURN = 306,
-    SHORT = 307,
-    SIGNED = 308,
-    SIZEOF = 309,
-    STATIC = 310,
-    STRUCT = 311,
-    SWITCH = 312,
-    TYPEDEF = 313,
-    UNION = 314,
-    UNSIGNED = 315,
-    VOID = 316,
-    VOLATILE = 317,
-    WHILE = 318,
-    _BOOL = 319,
-    _COMPLEX = 320,
-    _IMAGINARY = 321,
-    FUNCTION_CALL = 322
+    YYEMPTY = -2,
+    YYEOF = 0,                     /* "end of file"  */
+    YYerror = 256,                 /* error  */
+    YYUNDEF = 257,                 /* "invalid token"  */
+    IDENT = 258,                   /* IDENT  */
+    CHARLIT = 259,                 /* CHARLIT  */
+    STRINGLIT = 260,               /* STRINGLIT  */
+    NUMBERLIT = 261,               /* NUMBERLIT  */
+    INDSEL = 262,                  /* "->"  */
+    PLUSPLUS = 263,                /* "++"  */
+    MINUSMINUS = 264,              /* "--"  */
+    SHL = 265,                     /* "<<"  */
+    SHR = 266,                     /* ">>"  */
+    LTEQ = 267,                    /* "<="  */
+    GTEQ = 268,                    /* ">="  */
+    EQEQ = 269,                    /* "=="  */
+    NOTEQ = 270,                   /* "!="  */
+    LOGAND = 271,                  /* "&&"  */
+    LOGOR = 272,                   /* "||"  */
+    ELLIPSIS = 273,                /* "..."  */
+    TIMESEQ = 274,                 /* "*="  */
+    DIVEQ = 275,                   /* "/="  */
+    MODEQ = 276,                   /* "%="  */
+    PLUSEQ = 277,                  /* "+="  */
+    MINUSEQ = 278,                 /* "-="  */
+    SHLEQ = 279,                   /* "<<="  */
+    SHREQ = 280,                   /* ">>="  */
+    ANDEQ = 281,                   /* "&="  */
+    OREQ = 282,                    /* "|="  */
+    XOREQ = 283,                   /* "^="  */
+    AUTO = 284,                    /* AUTO  */
+    ALIGNOF = 285,                 /* ALIGNOF  */
+    BREAK = 286,                   /* BREAK  */
+    CASE = 287,                    /* CASE  */
+    CHAR = 288,                    /* CHAR  */
+    CONST = 289,                   /* CONST  */
+    CONTINUE = 290,                /* CONTINUE  */
+    DEFAULT = 291,                 /* DEFAULT  */
+    DO = 292,                      /* DO  */
+    DOUBLE = 293,                  /* DOUBLE  */
+    ELSE = 294,                    /* ELSE  */
+    ENUM = 295,                    /* ENUM  */
+    EXTERN = 296,                  /* EXTERN  */
+    FLOAT = 297,                   /* FLOAT  */
+    FOR = 298,                     /* FOR  */
+    GOTO = 299,                    /* GOTO  */
+    IF = 300,                      /* IF  */
+    INLINE = 301,                  /* INLINE  */
+    INT = 302,                     /* INT  */
+    LONG = 303,                    /* LONG  */
+    REGISTER = 304,                /* REGISTER  */
+    RESTRICT = 305,                /* RESTRICT  */
+    RETURN = 306,                  /* RETURN  */
+    SHORT = 307,                   /* SHORT  */
+    SIGNED = 308,                  /* SIGNED  */
+    SIZEOF = 309,                  /* SIZEOF  */
+    STATIC = 310,                  /* STATIC  */
+    STRUCT = 311,                  /* STRUCT  */
+    SWITCH = 312,                  /* SWITCH  */
+    TYPEDEF = 313,                 /* TYPEDEF  */
+    UNION = 314,                   /* UNION  */
+    UNSIGNED = 315,                /* UNSIGNED  */
+    VOID = 316,                    /* VOID  */
+    VOLATILE = 317,                /* VOLATILE  */
+    WHILE = 318,                   /* WHILE  */
+    _BOOL = 319,                   /* _BOOL  */
+    _COMPLEX = 320,                /* _COMPLEX  */
+    _IMAGINARY = 321               /* _IMAGINARY  */
   };
+  typedef enum yytokentype yytoken_kind_t;
 #endif
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
-
 union YYSTYPE
 {
-#line 22 "parser.y" /* yacc.c:1909  */
+#line 22 "parser.y"
 
     string_t string;
     number_t number;
     ast_node_t *node;
 
-#line 134 "parser.tab.h" /* yacc.c:1909  */
-};
+#line 142 "parser.tab.h"
 
+};
 typedef union YYSTYPE YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1
@@ -141,6 +149,8 @@ typedef union YYSTYPE YYSTYPE;
 
 extern YYSTYPE yylval;
 
+
 int yyparse (void);
+
 
 #endif /* !YY_YY_PARSER_TAB_H_INCLUDED  */

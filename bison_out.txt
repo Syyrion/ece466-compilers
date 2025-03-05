@@ -1,0 +1,149 @@
+parser.y:179.30-39: warning: unused value: $3 [-Wother]
+  179 |     | postfix_expression '[' expression ']'
+      |                              ^~~~~~~~~~
+parser.y:190.36-56: warning: unused value: $3 [-Wother]
+  190 |     | argument_expression_list ',' assignment_expression
+      |                                    ^~~~~~~~~~~~~~~~~~~~~
+parser.y:195.7-27: warning: type clash on default action: <node> != <> [-Wother]
+  195 |     | "++" unary_expression
+      |       ^~~~~~~~~~~~~~~~~~~~~
+parser.y:195.12-27: warning: unused value: $2 [-Wother]
+  195 |     | "++" unary_expression
+      |            ^~~~~~~~~~~~~~~~
+parser.y:196.7-27: warning: type clash on default action: <node> != <> [-Wother]
+  196 |     | "--" unary_expression
+      |       ^~~~~~~~~~~~~~~~~~~~~
+parser.y:196.12-27: warning: unused value: $2 [-Wother]
+  196 |     | "--" unary_expression
+      |            ^~~~~~~~~~~~~~~~
+parser.y:197.7-25: warning: type clash on default action: <node> != <> [-Wother]
+  197 |     | '&' cast_expression
+      |       ^~~~~~~~~~~~~~~~~~~
+parser.y:197.11-25: warning: unused value: $2 [-Wother]
+  197 |     | '&' cast_expression
+      |           ^~~~~~~~~~~~~~~
+parser.y:198.7-25: warning: type clash on default action: <node> != <> [-Wother]
+  198 |     | '*' cast_expression
+      |       ^~~~~~~~~~~~~~~~~~~
+parser.y:198.11-25: warning: unused value: $2 [-Wother]
+  198 |     | '*' cast_expression
+      |           ^~~~~~~~~~~~~~~
+parser.y:199.7-25: warning: type clash on default action: <node> != <> [-Wother]
+  199 |     | '+' cast_expression
+      |       ^~~~~~~~~~~~~~~~~~~
+parser.y:199.11-25: warning: unused value: $2 [-Wother]
+  199 |     | '+' cast_expression
+      |           ^~~~~~~~~~~~~~~
+parser.y:200.7-25: warning: type clash on default action: <node> != <> [-Wother]
+  200 |     | '-' cast_expression
+      |       ^~~~~~~~~~~~~~~~~~~
+parser.y:200.11-25: warning: unused value: $2 [-Wother]
+  200 |     | '-' cast_expression
+      |           ^~~~~~~~~~~~~~~
+parser.y:201.7-25: warning: type clash on default action: <node> != <> [-Wother]
+  201 |     | '~' cast_expression
+      |       ^~~~~~~~~~~~~~~~~~~
+parser.y:201.11-25: warning: unused value: $2 [-Wother]
+  201 |     | '~' cast_expression
+      |           ^~~~~~~~~~~~~~~
+parser.y:202.7-25: warning: type clash on default action: <node> != <> [-Wother]
+  202 |     | '!' cast_expression
+      |       ^~~~~~~~~~~~~~~~~~~
+parser.y:202.11-25: warning: unused value: $2 [-Wother]
+  202 |     | '!' cast_expression
+      |           ^~~~~~~~~~~~~~~
+parser.y:203.7-29: warning: type clash on default action: <node> != <> [-Wother]
+  203 |     | SIZEOF unary_expression
+      |       ^~~~~~~~~~~~~~~~~~~~~~~
+parser.y:203.14-29: warning: unused value: $2 [-Wother]
+  203 |     | SIZEOF unary_expression
+      |              ^~~~~~~~~~~~~~~~
+parser.y:204.7-30: warning: type clash on default action: <node> != <> [-Wother]
+  204 |     | ALIGNOF unary_expression
+      |       ^~~~~~~~~~~~~~~~~~~~~~~~
+parser.y:204.15-30: warning: unused value: $2 [-Wother]
+  204 |     | ALIGNOF unary_expression
+      |               ^~~~~~~~~~~~~~~~
+parser.y:352.23-27: warning: unused value: $2 [-Wother]
+  352 |     | struct_or_union IDENT '{' struct_declaration_list '}'
+      |                       ^~~~~
+parser.y:353.23-27: warning: unused value: $2 [-Wother]
+  353 |     | struct_or_union IDENT
+      |                       ^~~~~
+parser.y:384.11-29: warning: unused value: $2 [-Wother]
+  384 |     | ':' constant_expression
+      |           ^~~~~~~~~~~~~~~~~~~
+parser.y:385.22-40: warning: unused value: $3 [-Wother]
+  385 |     | declarator ':' constant_expression
+      |                      ^~~~~~~~~~~~~~~~~~~
+parser.y:391.10-14: warning: unused value: $2 [-Wother]
+  391 |     ENUM IDENT
+      |          ^~~~~
+parser.y:393.12-16: warning: unused value: $2 [-Wother]
+  393 |     | ENUM IDENT '{' enumerator_list '}'
+      |            ^~~~~
+parser.y:395.12-16: warning: unused value: $2 [-Wother]
+  395 |     | ENUM IDENT '{' enumerator_list ',' '}'
+      |            ^~~~~
+parser.y:405.32-50: warning: unused value: $3 [-Wother]
+  405 |     | enumeration_constant '=' constant_expression
+      |                                ^~~~~~~~~~~~~~~~~~~
+parser.y:432.29-49: warning: unused value: $3 [-Wother]
+  432 |     | direct_declarator '[' assignment_expression ']'
+      |                             ^~~~~~~~~~~~~~~~~~~~~
+parser.y:433.49-69: warning: unused value: $4 [-Wother]
+  433 |     | direct_declarator '[' type_qualifier_list assignment_expression...
+      |                                                 ^~~~~~~~~~~~~~~~~~~~~
+parser.y:434.36-56: warning: unused value: $4 [-Wother]
+  434 |     | direct_declarator '[' STATIC assignment_expression ']'
+      |                                    ^~~~~~~~~~~~~~~~~~~~~
+parser.y:435.56-76: warning: unused value: $5 [-Wother]
+  435 |     | direct_declarator '[' STATIC type_qualifier_list assignment_exp...
+      |                                                        ^~~~~~~~~~~~~~
+parser.y:436.56-76: warning: unused value: $5 [-Wother]
+  436 |     | direct_declarator '[' type_qualifier_list STATIC assignment_exp...
+      |                                                        ^~~~~~~~~~~~~~
+parser.y:474.27-31: warning: unused value: $3 [-Wother]
+  474 |     | identifier_list ',' IDENT
+      |                           ^~~~~
+parser.y:492.11-31: warning: unused value: $2 [-Wother]
+  492 |     | '[' assignment_expression ']'
+      |           ^~~~~~~~~~~~~~~~~~~~~
+parser.y:493.38-58: warning: unused value: $3 [-Wother]
+  493 |     | direct_abstract_declarator '[' assignment_expression ']'
+      |                                      ^~~~~~~~~~~~~~~~~~~~~
+parser.y: warning: 6 nonterminals useless in grammar [-Wother]
+parser.y: warning: 12 rules useless in grammar [-Wother]
+parser.y:134.1-16: warning: nonterminal useless in grammar: declaration_list [-Wother]
+  134 | declaration_list:
+      | ^~~~~~~~~~~~~~~~
+parser.y:299.1-11: warning: nonterminal useless in grammar: declaration [-Wother]
+  299 | declaration:
+      | ^~~~~~~~~~~
+parser.y:314.1-20: warning: nonterminal useless in grammar: init_declarator_list [-Wother]
+  314 | init_declarator_list:
+      | ^~~~~~~~~~~~~~~~~~~~
+parser.y:319.1-15: warning: nonterminal useless in grammar: init_declarator [-Wother]
+  319 | init_declarator:
+      | ^~~~~~~~~~~~~~~
+parser.y:477.1-9: warning: nonterminal useless in grammar: type_name [-Wother]
+  477 | type_name:
+      | ^~~~~~~~~
+parser.y:506.1-11: warning: nonterminal useless in grammar: initializer [-Wother]
+  506 | initializer:
+      | ^~~~~~~~~~~
+parser.y:126.7-17: warning: rule useless in grammar [-Wother]
+  126 |     | declaration
+      |       ^~~~~~~~~~~
+parser.y:131.7-75: warning: rule useless in grammar [-Wother]
+  131 |     | declaration_specifiers declarator declaration_list compound_sta...
+      |       ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+parser.y:150.5-15: warning: rule useless in grammar [-Wother]
+  150 |     declaration
+      |     ^~~~~~~~~~~
+parser.y: warning: 24 reduce/reduce conflicts [-Wconflicts-rr]
+parser.y: note: rerun with option '-Wcounterexamples' to generate conflict counterexamples
+parser.y:237.7-89: warning: rule useless in parser due to conflicts [-Wother]
+  237 |     | relational_expression "<=" shift_expression {$$ = ast_new_binar...
+      |       ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Productions leading up to the conflict state found.  Still finding a possible unifying counterexample...time limit exceeded: 6.000000

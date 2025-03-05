@@ -5,6 +5,8 @@
 #include <string.h>
 #include <ctype.h>
 
+unsigned int a[] = L"xyz";
+
 struct A
 {
     const int a;
@@ -12,5 +14,6 @@ struct A
 
 int main()
 {
+
     return;
 }
