@@ -31,34 +31,39 @@
             yylval.string.buffer = realloc(yylval.string.buffer, yylval.string.size *= 2);
     }
 
-    char get_real_type(char *n)
+    unsigned short get_real_type(char *n)
     {
         int i = strlen(n) - 1;
         char t = tolower(n[i]);
         if (t == 'f')
         {
             n[i] = 0;
-            return NT_FLOAT;
+            return SCLR_FLOAT;
         }
         if (t == 'l')
         {
             n[i] = 0;
-            return NT_LONG_DOUBLE;
+            return SCLR_LONG | SCLR_DOUBLE;
         }
-        return NT_DOUBLE;
+        return SCLR_DOUBLE;
     }
 
-    char get_int_type(char *n)
+    unsigned short get_int_type(char *n)
     {
-        char type = 0;
+        unsigned short type = SCLR_INT;
         int i = strlen(n) - 1;
         char c;
         while ((c = tolower(n[i])) == 'l' || c == 'u')
         {
             if (c == 'u')
-                type |= NT_UNSIGNED;
+                type |= SCLR_UNSIGNED;
             else
-                type++;
+            {
+                if (type & SCLR_LONG)
+                    type |= SCLR_LONG2;
+                else
+                    type |= SCLR_LONG;
+            }
             i--;
         }
         n[i + 1] = 0;
@@ -211,23 +216,23 @@ _Imaginary      {return _IMAGINARY;}
 0[xX][0-9A-Fa-f]+p[\+\-]?[0-9]+{FLOAT_SUFFIX}                   |
 [0-9]+e[\+\-]?[0-9]+{FLOAT_SUFFIX}                              |
 (([0-9]*\.[0-9]+)|([0-9]+\.))(e[\+\-]?[0-9]+)?{FLOAT_SUFFIX}    {
-                                                                    yylval.number.full_type = get_real_type(yytext);
+                                                                    yylval.number.type.full = get_real_type(yytext);
                                                                     yylval.number.real = strtold(yytext, NULL);
                                                                     return NUMBERLIT;
                                                                 }
 
 0[xX][0-9A-Fa-f]+{INT_SUFFIX}                                   {
-                                                                    yylval.number.full_type = get_int_type(yytext);
+                                                                    yylval.number.type.full = get_int_type(yytext);
                                                                     yylval.number.integer = strtoull(yytext + 2, NULL, 16);
                                                                     return NUMBERLIT;
                                                                 }
 0[bB][01]+{INT_SUFFIX}                                          {   // binary too
-                                                                    yylval.number.full_type = get_int_type(yytext);
+                                                                    yylval.number.type.full = get_int_type(yytext);
                                                                     yylval.number.integer = strtoull(yytext + 2, NULL, 2);
                                                                     return NUMBERLIT;
                                                                 }
 [0-9]+{INT_SUFFIX}                                              {
-                                                                    yylval.number.full_type = get_int_type(yytext);
+                                                                    yylval.number.type.full = get_int_type(yytext);
                                                                     yylval.number.integer = strtoull(yytext, NULL, yytext[0] == '0' ? 8 : 10);
                                                                     return NUMBERLIT;
                                                                 }

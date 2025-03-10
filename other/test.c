@@ -6,7 +6,6 @@
 #include <ctype.h>
 
 unsigned int a[] = L"xyz";
-
 struct A
 {
     const int a;

@@ -63,6 +63,139 @@ ast_node_t *ast_new_ternary_op(ast_node_t *condition, ast_node_t *true_branch, a
     return new_inst;
 }
 
+ast_node_t *ast_new_function_call(void)
+{
+    ast_node_t *new_inst = calloc(1, sizeof(ast_node_t));
+    new_inst->kind = AST_FUNCTION_CALL;
+    return new_inst;
+}
+
+ast_node_t *ast_add_function_call_name(ast_node_t *function_call, ast_node_t *name)
+{
+    if (function_call->kind != AST_FUNCTION_CALL)
+    {
+        fprintf(stderr, "node is not a function call");
+        return 0;
+    }
+    function_call->function_call.name = name;
+    return function_call;
+}
+
+ast_node_t *ast_add_function_call_argument(ast_node_t *function_call, ast_node_t *arg)
+{
+    if (function_call->kind != AST_FUNCTION_CALL)
+    {
+        fprintf(stderr, "node is not a function call");
+        return 0;
+    }
+    struct ast_function_call *f = &(function_call->function_call);
+    if (f->args)
+    {
+        if (f->arg_count == f->arg_capacity)
+            f->args = realloc(f->args, f->arg_capacity *= 2);
+    }
+    else
+    {
+        f->arg_capacity = 1;
+        f->args = malloc(sizeof(ast_node_t *));
+    }
+    f->args[f->arg_count++] = arg;
+    return function_call;
+}
+
+ast_node_t *ast_new_variable()
+{
+    ast_node_t *new_inst = calloc(1, sizeof(ast_node_t));
+    new_inst->kind = AST_VARIABLE;
+    new_inst->variable.storage_class = SC_IMPLICIT_EXTERN; // TODO figure out how this works
+    new_inst->variable.function_specifier = FS_NONE;
+    return new_inst;
+}
+
+ast_node_t *ast_add_variable_type_qualifier(ast_node_t *variable, char type_qualifiers)
+{
+    if (variable->kind != AST_VARIABLE)
+    {
+        fprintf(stderr, "node is not a variable");
+        return 0;
+    }
+    variable->variable.type_qualifier.full |= type_qualifiers;
+    return variable;
+}
+
+ast_node_t *ast_set_variable_storage_class(ast_node_t *variable, storage_class_t storage_class)
+{
+    if (variable->kind != AST_VARIABLE)
+    {
+        fprintf(stderr, "node is not a variable");
+        return 0;
+    }
+    if (variable->variable.sc_is_set)
+    {
+        fprintf(stderr, "the storage class of this variable has already been set");
+        return 0;
+    }
+    variable->variable.storage_class = storage_class;
+    variable->variable.sc_is_set = 1;
+    return variable;
+};
+
+ast_node_t *ast_set_variable_function_specifier(ast_node_t *variable, function_specifier_t function_specifier)
+{
+    if (variable->kind != AST_VARIABLE)
+    {
+        fprintf(stderr, "node is not a variable");
+        return 0;
+    }
+    variable->variable.function_specifier = function_specifier;
+    return variable;
+};
+
+ast_node_t *ast_add_variable_type_specifier(ast_node_t *variable, type_specifier_t type_specifier)
+{
+    if (variable->kind != AST_VARIABLE)
+    {
+        fprintf(stderr, "node is not a variable");
+        return 0;
+    }
+
+    ast_node_t *end_type = variable->variable.end_type;
+    if (!end_type)
+    {
+        if (type_specifier.scalar.full & SCLR_CUSTOM)
+        {
+            variable->variable.end_type = type_specifier.custom;
+            return variable;
+        }
+
+        end_type = calloc(1, sizeof(ast_node_t));
+        end_type->kind = AST_SCALAR;
+
+        variable->variable.end_type = end_type;
+    }
+
+    if (type_specifier.scalar.full & SCLR_CUSTOM)
+    {
+        fprintf(stderr, "invalid combination of type specifiers");
+        return 0;
+    }
+
+    unsigned short current_scalar = end_type->scalar.full;
+    unsigned short new_scalar = type_specifier.scalar.full;
+
+    if (current_scalar & SCLR_LONG && new_scalar == SCLR_LONG)
+        new_scalar = SCLR_LONG2;
+
+    if (current_scalar & new_scalar)
+    {
+        fprintf(stderr, "invalid combination of type specifiers");
+        return 0;
+    }
+
+    end_type->scalar.full |= new_scalar;
+}
+
+// TODO update
 // recursively frees an ast_node
 void ast_free(ast_node_t *node)
 {
@@ -89,6 +222,12 @@ void ast_free(ast_node_t *node)
         ast_free(node->ternary_op.condition);
         ast_free(node->ternary_op.true_branch);
         ast_free(node->ternary_op.false_branch);
+        break;
+    case AST_FUNCTION_CALL:
+        ast_free(node->function_call.name);
+        if (node->function_call.args)
+            for (int i = 0; i < node->function_call.arg_count; i++)
+                ast_free(node->function_call.args[i]);
         break;
     default:
         fprintf(stderr, "invalid ast node kind %d", node->kind);
@@ -175,24 +314,24 @@ static void print_stringlit(string_t string)
 
 static void print_numberlit(number_t number)
 {
-    if (number.is_real)
+    if (number.type.full & SCLR_REAL)
     {
         printf(
             "REAL    %Lg    %s",
             number.real,
-            number.type == 0   ? "FLOAT"
-            : number.type == 1 ? "DOUBLE"
-                               : "LONG DOUBLE");
+            number.type.long_bit     ? "LONG DOUBLE"
+            : number.type.double_bit ? "DOUBLE"
+                                     : "FLOAT");
     }
     else
     {
         printf(
             "INTEGER    %lld    %s%s",
             number.integer,
-            number.is_unsigned ? "UNSIGNED " : "",
-            number.type == 0   ? "INT"
-            : number.type == 1 ? "LONG"
-                               : "LONG LONG");
+            number.type.unsigned_bit ? "UNSIGNED " : "",
+            number.type.long2_bit       ? "LONG LONG"
+            : number.type.long_bit == 1 ? "LONG"
+                                        : "INT");
     }
 }
 
@@ -271,9 +410,6 @@ static void print_operator(int op)
     case MINUSMINUS:
         printf("--");
         break;
-    case FUNCTION_CALL:
-        printf("()");
-        break;
     default:
         fprintf(stderr, "attempted to print operator with unknown id %d", op);
         printf("<unknown operator %d>", op);
@@ -322,33 +458,20 @@ void ast_print(ast_node_t *node, const unsigned int depth)
         SUBSECTION("operand", node->unary_op.operand);
         break;
     case AST_BINARY_OP:
-        // binary operations handle function calls too
-        if (node->binary_op.kind == FUNCTION_CALL)
-        {
-            printf("FUNCTION_CALL\n");
-            SUBSECTION("name", node->binary_op.left);
-            char tag[128];
-            ast_node_t **args = ast_left_unreduce(node->binary_op.right);
-            for (int i = 0; args[i] != 0; i++)
-            {
-                snprintf(tag, sizeof(tag), "arg[%d]", i);
-                SUBSECTION(tag, args[i]);
-            }
-        }
-        else
-        {
-            printf("BINARY_OP \"");
-            print_operator(node->binary_op.kind);
-            printf("\"\n");
-            SUBSECTION("left", node->binary_op.left);
-            SUBSECTION("right", node->binary_op.right);
-        }
+        printf("BINARY_OP \"");
+        print_operator(node->binary_op.kind);
+        printf("\"\n");
+        SUBSECTION("left", node->binary_op.left);
+        SUBSECTION("right", node->binary_op.right);
         break;
     case AST_TERNARY_OP:
         printf("TERNARY_OP\n");
         SUBSECTION("condition", node->ternary_op.condition);
         SUBSECTION("true_branch", node->ternary_op.true_branch);
         SUBSECTION("false_branch", node->ternary_op.false_branch);
+        break;
+    case AST_FUNCTION_CALL:
+
         break;
     default:
         fprintf(stderr, "invalid ast node kind %d", node->kind);
