@@ -63,44 +63,13 @@ ast_node_t *ast_new_ternary_op(ast_node_t *condition, ast_node_t *true_branch, a
     return new_inst;
 }
 
-ast_node_t *ast_new_function_call(void)
+ast_node_t *ast_new_function_call(ast_node_t *name, ast_node_list_t *args)
 {
-    ast_node_t *new_inst = calloc(1, sizeof(ast_node_t));
+    ast_node_t *new_inst = malloc(sizeof(ast_node_t));
     new_inst->kind = AST_FUNCTION_CALL;
+    new_inst->function_call.name = name;
+    new_inst->function_call.args = args;
     return new_inst;
-}
-
-ast_node_t *ast_add_function_call_name(ast_node_t *function_call, ast_node_t *name)
-{
-    if (function_call->kind != AST_FUNCTION_CALL)
-    {
-        fprintf(stderr, "node is not a function call");
-        return 0;
-    }
-    function_call->function_call.name = name;
-    return function_call;
-}
-
-ast_node_t *ast_add_function_call_argument(ast_node_t *function_call, ast_node_t *arg)
-{
-    if (function_call->kind != AST_FUNCTION_CALL)
-    {
-        fprintf(stderr, "node is not a function call");
-        return 0;
-    }
-    struct ast_function_call *f = &(function_call->function_call);
-    if (f->args)
-    {
-        if (f->arg_count == f->arg_capacity)
-            f->args = realloc(f->args, f->arg_capacity *= 2);
-    }
-    else
-    {
-        f->arg_capacity = 1;
-        f->args = malloc(sizeof(ast_node_t *));
-    }
-    f->args[f->arg_count++] = arg;
-    return function_call;
 }
 
 ast_node_t *ast_new_variable()
@@ -123,7 +92,7 @@ ast_node_t *ast_add_variable_type_qualifier(ast_node_t *variable, char type_qual
     return variable;
 }
 
-ast_node_t *ast_set_variable_storage_class(ast_node_t *variable, storage_class_t storage_class)
+ast_node_t *ast_set_variable_storage_class(ast_node_t *variable, storage_class_specifier_t storage_class)
 {
     if (variable->kind != AST_VARIABLE)
     {
@@ -159,41 +128,57 @@ ast_node_t *ast_add_variable_type_specifier(ast_node_t *variable, type_specifier
         return 0;
     }
 
-    ast_node_t *end_type = variable->variable.end_type;
-    if (!end_type)
-    {
-        if (type_specifier.scalar.full & SCLR_CUSTOM)
-        {
-            variable->variable.end_type = type_specifier.custom;
-            return variable;
-        }
-
-        end_type = calloc(1, sizeof(ast_node_t));
-        end_type->kind = AST_SCALAR;
-
-        variable->variable.end_type = end_type;
-    }
-
-    if (type_specifier.scalar.full & SCLR_CUSTOM)
-    {
-        fprintf(stderr, "invalid combination of type specifiers");
-        return 0;
-    }
-
-    unsigned short current_scalar = end_type->scalar.full;
+    unsigned short current_scalar = variable->variable.type_specifier.scalar.full;
     unsigned short new_scalar = type_specifier.scalar.full;
 
+    // if a long was already encountered, try using long2
     if (current_scalar & SCLR_LONG && new_scalar == SCLR_LONG)
         new_scalar = SCLR_LONG2;
 
+    // duplicate type specifiers aren't allowed (except for long)
     if (current_scalar & new_scalar)
     {
         fprintf(stderr, "invalid combination of type specifiers");
         return 0;
     }
 
-    end_type->scalar.full |= new_scalar;
+    if (new_scalar & SCLR_CUSTOM)
+        variable->variable.type_specifier.custom = type_specifier.custom;
+
+    variable->variable.type_specifier.scalar.full |= new_scalar;
 }
+
+
+ast_node_list_t *ast_list_new(void)
+{
+    ast_node_list_t *new_inst = calloc(1, sizeof(ast_node_list_t));
+    return new_inst;
+}
+
+ast_node_list_t *ast_list_add(ast_node_list_t *list, ast_node_t* node)
+{
+    if (list->nodes)
+    {
+        if (list->node_count == list->capacity)
+            list->nodes = realloc(list->nodes, list->capacity *= 2);
+    }
+    else
+    {
+        list->capacity = 1;
+        list->nodes = malloc(sizeof(ast_node_t *));
+    }
+    return list;
+}
+
+// Frees a node list. Does not free any contained nodes. 
+void ast_list_free(ast_node_list_t *list)
+{
+    if (list->nodes)
+        free(list->nodes);
+    free(list);
+}
+
+// ## Other stuff below
 
 // TODO update
 // recursively frees an ast_node
@@ -225,57 +210,16 @@ void ast_free(ast_node_t *node)
         break;
     case AST_FUNCTION_CALL:
         ast_free(node->function_call.name);
-        if (node->function_call.args)
-            for (int i = 0; i < node->function_call.arg_count; i++)
-                ast_free(node->function_call.args[i]);
+        for (int i = 0; i < node->function_call.args->node_count; i++)
+            ast_free(node->function_call.args->nodes[i]);
+        ast_list_free(node->function_call.args);
         break;
     default:
-        fprintf(stderr, "invalid ast node kind %d", node->kind);
+        fprintf(stderr, "invalid ast node kind %d\n", node->kind);
         exit(88);
         break;
     }
     free(node);
-}
-
-// Returns a null terminated array of ast nodes made by unreducing a left sided tree of equivalent binary operations.
-// All branches should exist.
-ast_node_t **ast_left_unreduce(ast_node_t *node)
-{
-    // unreduce only works on binary operations
-    if (node->kind != AST_BINARY_OP)
-        return 0;
-
-    // the operator we're unreducing
-    const int op = node->binary_op.kind;
-
-    // a reversed list of nodes
-    int node_index = 0;
-    int reverse_list_size = 2;
-    ast_node_t **reverse_list = malloc(sizeof(ast_node_t *) * reverse_list_size);
-
-    ast_node_t *current_node = node;
-    do
-    {
-        // add the right side to the list
-        reverse_list[node_index++] = current_node->binary_op.right;
-        if (node_index == reverse_list_size)
-            reverse_list = realloc(reverse_list, reverse_list_size *= 2);
-
-        // check the left node to see if we can continue
-        current_node = current_node->binary_op.left;
-    } while (current_node && current_node->kind == AST_BINARY_OP && current_node->binary_op.kind == op);
-
-    // if not then add the left to the reverse_list
-    reverse_list[node_index++] = current_node;
-
-    // make a forward_list
-    ast_node_t **forward_list = malloc(sizeof(ast_node_t *) * node_index + 1);
-    for (int i = 0, j = node_index - 1; i < node_index; i++, j--)
-        forward_list[i] = reverse_list[j];
-    forward_list[node_index] = 0;
-
-    free(reverse_list);
-    return forward_list;
 }
 
 static void print_stringlit(string_t string)
@@ -471,7 +415,14 @@ void ast_print(ast_node_t *node, const unsigned int depth)
         SUBSECTION("false_branch", node->ternary_op.false_branch);
         break;
     case AST_FUNCTION_CALL:
-
+        printf("FUNCTION_CALL");
+        SUBSECTION("name", node->function_call.name);
+        for (int i = 0; i < node->function_call.args->node_count; i++)
+        {
+            char b[16];
+            snprintf(b, sizeof(b), "arg[%d]", i);
+            SUBSECTION(b, node->function_call.args->nodes[i]);
+        }
         break;
     default:
         fprintf(stderr, "invalid ast node kind %d", node->kind);

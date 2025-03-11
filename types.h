@@ -10,6 +10,9 @@ typedef struct string string_t;
 struct ast_node;
 typedef struct ast_node ast_node_t;
 
+struct ast_node_list;
+typedef struct ast_node_list ast_node_list_t;
+
 // scalar types
 #define SCLR_VOID 0b00000000000001
 #define SCLR_CHAR 0b00000000000010
@@ -25,8 +28,8 @@ typedef struct ast_node ast_node_t;
 #define SCLR_COMPLEX 0b00100000000000
 #define SCLR_STRUCT_OR_UNION 0b01000000000000
 #define SCLR_ENUM 0b10000000000000
-#define SCLR_CUSTOM SCLR_STRUCT_OR_UNION | SCLR_ENUM
-#define SCLR_REAL SCLR_FLOAT | SCLR_DOUBLE
+#define SCLR_CUSTOM (SCLR_STRUCT_OR_UNION | SCLR_ENUM)
+#define SCLR_REAL (SCLR_FLOAT | SCLR_DOUBLE)
 
 // encoded semantic rules for type specifiers
 static const unsigned short SCLR_VALID[] = {
@@ -132,7 +135,7 @@ typedef enum
     SC_STATIC,
     SC_AUTO,
     SC_REGISTER,
-} storage_class_t;
+} storage_class_specifier_t;
 
 // function specifiers
 typedef enum
@@ -151,9 +154,9 @@ typedef union
     char full;
     struct
     {
-        char is_const : 1;
-        char is_restrict : 1;
-        char is_volatile : 1;
+        int is_const : 1;
+        int is_restrict : 1;
+        int is_volatile : 1;
     };
 } type_qualifier_t;
 

@@ -135,15 +135,18 @@ union YYSTYPE
 #line 22 "parser.y"
 
     int integer;
+
+    storage_class_specifier_t storage_class_specifier;
+    function_specifier_t function_specifier;
     int type_qualifier;
     type_specifier_t type_specifier;
-    storage_class_t storage_class_specifier;
-    function_specifier_t function_specifier;
+
     string_t string;
     number_t number;
     ast_node_t *node;
+    ast_node_list_t *node_list;
 
-#line 147 "parser.tab.h"
+#line 150 "parser.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

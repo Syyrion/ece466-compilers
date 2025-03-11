@@ -1,188 +1,90 @@
-parser.y:234.7-30: warning: type clash on default action: <node> != <> [-Wother]
-  234 |     | SIZEOF '(' type_name ')'
+parser.y:245.7-30: warning: type clash on default action: <node> != <> [-Wother]
+  245 |     | SIZEOF '(' type_name ')'
       |       ^~~~~~~~~~~~~~~~~~~~~~~~
-parser.y:240.23-37: warning: unused value: $5 [-Wother]
-  240 |     '(' type_name ')' cast_expression
-      |                       ^~~~~~~~~~~~~~~
-parser.y:403.5-51: warning: type clash on default action: <node> != <> [-Wother]
-  403 |     struct_or_union '{' struct_declaration_list '}'
+parser.y:251.7-39: warning: type clash on default action: <node> != <> [-Wother]
+  251 |     | '(' type_name ')' cast_expression
+      |       ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+parser.y:251.25-39: warning: unused value: $4 [-Wother]
+  251 |     | '(' type_name ')' cast_expression
+      |                         ^~~~~~~~~~~~~~~
+parser.y:349.5-26: warning: unused value: $1 [-Wother]
+  349 |     declaration_specifiers init_declarator_list ';' {fprintf(stderr, ...
+      |     ^~~~~~~~~~~~~~~~~~~~~~
+parser.y:370.22-32: warning: unused value: $3 [-Wother]
+  370 |     | declarator '=' initializer
+      |                      ^~~~~~~~~~~
+parser.y:414.5-51: warning: type clash on default action: <node> != <> [-Wother]
+  414 |     struct_or_union '{' struct_declaration_list '}'
       |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-parser.y:404.7-59: warning: type clash on default action: <node> != <> [-Wother]
-  404 |     | struct_or_union IDENT '{' struct_declaration_list '}'
+parser.y:415.7-59: warning: type clash on default action: <node> != <> [-Wother]
+  415 |     | struct_or_union IDENT '{' struct_declaration_list '}'
       |       ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-parser.y:404.23-27: warning: unused value: $2 [-Wother]
-  404 |     | struct_or_union IDENT '{' struct_declaration_list '}'
+parser.y:415.23-27: warning: unused value: $2 [-Wother]
+  415 |     | struct_or_union IDENT '{' struct_declaration_list '}'
       |                       ^~~~~
-parser.y:405.7-27: warning: type clash on default action: <node> != <> [-Wother]
-  405 |     | struct_or_union IDENT
+parser.y:416.7-27: warning: type clash on default action: <node> != <> [-Wother]
+  416 |     | struct_or_union IDENT
       |       ^~~~~~~~~~~~~~~~~~~~~
-parser.y:405.23-27: warning: unused value: $2 [-Wother]
-  405 |     | struct_or_union IDENT
+parser.y:416.23-27: warning: unused value: $2 [-Wother]
+  416 |     | struct_or_union IDENT
       |                       ^~~~~
-parser.y:436.11-29: warning: unused value: $2 [-Wother]
-  436 |     | ':' constant_expression
+parser.y:447.11-29: warning: unused value: $2 [-Wother]
+  447 |     | ':' constant_expression
       |           ^~~~~~~~~~~~~~~~~~~
-parser.y:437.22-40: warning: unused value: $3 [-Wother]
-  437 |     | declarator ':' constant_expression
+parser.y:448.22-40: warning: unused value: $3 [-Wother]
+  448 |     | declarator ':' constant_expression
       |                      ^~~~~~~~~~~~~~~~~~~
-parser.y:443.5-19: warning: type clash on default action: <node> != <> [-Wother]
-  443 |     ENUM identifier
+parser.y:454.5-19: warning: type clash on default action: <node> != <> [-Wother]
+  454 |     ENUM identifier
       |     ^~~~~~~~~~~~~~~
-parser.y:443.10-19: warning: unused value: $2 [-Wother]
-  443 |     ENUM identifier
+parser.y:454.10-19: warning: unused value: $2 [-Wother]
+  454 |     ENUM identifier
       |          ^~~~~~~~~~
-parser.y:444.7-34: warning: type clash on default action: <node> != <> [-Wother]
-  444 |     | ENUM '{' enumerator_list '}'
+parser.y:455.7-34: warning: type clash on default action: <node> != <> [-Wother]
+  455 |     | ENUM '{' enumerator_list '}'
       |       ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
-parser.y:445.7-45: warning: type clash on default action: <node> != <> [-Wother]
-  445 |     | ENUM identifier '{' enumerator_list '}'
+parser.y:456.7-45: warning: type clash on default action: <node> != <> [-Wother]
+  456 |     | ENUM identifier '{' enumerator_list '}'
       |       ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-parser.y:445.12-21: warning: unused value: $2 [-Wother]
-  445 |     | ENUM identifier '{' enumerator_list '}'
+parser.y:456.12-21: warning: unused value: $2 [-Wother]
+  456 |     | ENUM identifier '{' enumerator_list '}'
       |            ^~~~~~~~~~
-parser.y:446.7-38: warning: type clash on default action: <node> != <> [-Wother]
-  446 |     | ENUM '{' enumerator_list ',' '}' 
+parser.y:457.7-38: warning: type clash on default action: <node> != <> [-Wother]
+  457 |     | ENUM '{' enumerator_list ',' '}'
       |       ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-parser.y:447.7-49: warning: type clash on default action: <node> != <> [-Wother]
-  447 |     | ENUM identifier '{' enumerator_list ',' '}'
+parser.y:458.7-49: warning: type clash on default action: <node> != <> [-Wother]
+  458 |     | ENUM identifier '{' enumerator_list ',' '}'
       |       ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-parser.y:447.12-21: warning: unused value: $2 [-Wother]
-  447 |     | ENUM identifier '{' enumerator_list ',' '}'
+parser.y:458.12-21: warning: unused value: $2 [-Wother]
+  458 |     | ENUM identifier '{' enumerator_list ',' '}'
       |            ^~~~~~~~~~
-parser.y:457.22-40: warning: unused value: $3 [-Wother]
-  457 |     | identifier '=' constant_expression
+parser.y:468.22-40: warning: unused value: $3 [-Wother]
+  468 |     | identifier '=' constant_expression
       |                      ^~~~~~~~~~~~~~~~~~~
-parser.y:470.29-49: warning: unused value: $3 [-Wother]
-  470 |     | direct_declarator '[' assignment_expression ']'
+parser.y:477.5-14: warning: unused value: $1 [-Wother]
+  477 |     identifier {fprintf(stderr, "dd1\n");}
+      |     ^~~~~~~~~~
+parser.y:481.29-49: warning: unused value: $3 [-Wother]
+  481 |     | direct_declarator '[' assignment_expression ']' {fprintf(stderr...
       |                             ^~~~~~~~~~~~~~~~~~~~~
-parser.y:471.49-69: warning: unused value: $4 [-Wother]
-  471 |     | direct_declarator '[' type_qualifier_list assignment_expression...
+parser.y:482.49-69: warning: unused value: $4 [-Wother]
+  482 |     | direct_declarator '[' type_qualifier_list assignment_expression...
       |                                                 ^~~~~~~~~~~~~~~~~~~~~
-parser.y:472.36-56: warning: unused value: $4 [-Wother]
-  472 |     | direct_declarator '[' STATIC assignment_expression ']'
+parser.y:483.36-56: warning: unused value: $4 [-Wother]
+  483 |     | direct_declarator '[' STATIC assignment_expression ']' {fprintf...
       |                                    ^~~~~~~~~~~~~~~~~~~~~
-parser.y:473.56-76: warning: unused value: $5 [-Wother]
-  473 |     | direct_declarator '[' STATIC type_qualifier_list assignment_exp...
+parser.y:484.56-76: warning: unused value: $5 [-Wother]
+  484 |     | direct_declarator '[' STATIC type_qualifier_list assignment_exp...
       |                                                        ^~~~~~~~~~~~~~
-parser.y:474.56-76: warning: unused value: $5 [-Wother]
-  474 |     | direct_declarator '[' type_qualifier_list STATIC assignment_exp...
+parser.y:485.56-76: warning: unused value: $5 [-Wother]
+  485 |     | direct_declarator '[' type_qualifier_list STATIC assignment_exp...
       |                                                        ^~~~~~~~~~~~~~
-parser.y:512.27-36: warning: unused value: $3 [-Wother]
-  512 |     | identifier_list ',' identifier
+parser.y:525.27-36: warning: unused value: $3 [-Wother]
+  525 |     | identifier_list ',' identifier
       |                           ^~~~~~~~~~
-parser.y:530.11-31: warning: unused value: $2 [-Wother]
-  530 |     | '[' assignment_expression ']'
+parser.y:543.11-31: warning: unused value: $2 [-Wother]
+  543 |     | '[' assignment_expression ']'
       |           ^~~~~~~~~~~~~~~~~~~~~
-parser.y:531.38-58: warning: unused value: $3 [-Wother]
-  531 |     | direct_abstract_declarator '[' assignment_expression ']'
+parser.y:544.38-58: warning: unused value: $3 [-Wother]
+  544 |     | direct_abstract_declarator '[' assignment_expression ']'
       |                                      ^~~~~~~~~~~~~~~~~~~~~
-parser.y: warning: 24 nonterminals useless in grammar [-Wother]
-parser.y: warning: 91 rules useless in grammar [-Wother]
-parser.y:190.1-14: warning: nonterminal useless in grammar: string_literal [-Wother]
-  190 | string_literal:
-      | ^~~~~~~~~~~~~~
-parser.y:194.1-8: warning: nonterminal useless in grammar: constant [-Wother]
-  194 | constant:
-      | ^~~~~~~~
-parser.y:199.1-18: warning: nonterminal useless in grammar: primary_expression [-Wother]
-  199 | primary_expression:
-      | ^~~~~~~~~~~~~~~~~~
-parser.y:207.1-18: warning: nonterminal useless in grammar: postfix_expression [-Wother]
-  207 | postfix_expression:
-      | ^~~~~~~~~~~~~~~~~~
-parser.y:218.1-24: warning: nonterminal useless in grammar: argument_expression_list [-Wother]
-  218 | argument_expression_list:
-      | ^~~~~~~~~~~~~~~~~~~~~~~~
-parser.y:223.1-16: warning: nonterminal useless in grammar: unary_expression [-Wother]
-  223 | unary_expression:
-      | ^~~~~~~~~~~~~~~~
-parser.y:238.1-15: warning: nonterminal useless in grammar: cast_expression [-Wother]
-  238 | cast_expression:
-      | ^~~~~~~~~~~~~~~
-parser.y:243.1-25: warning: nonterminal useless in grammar: multiplicative_expression [-Wother]
-  243 | multiplicative_expression:
-      | ^~~~~~~~~~~~~~~~~~~~~~~~~
-parser.y:250.1-19: warning: nonterminal useless in grammar: additive_expression [-Wother]
-  250 | additive_expression:
-      | ^~~~~~~~~~~~~~~~~~~
-parser.y:256.1-16: warning: nonterminal useless in grammar: shift_expression [-Wother]
-  256 | shift_expression:
-      | ^~~~~~~~~~~~~~~~
-parser.y:262.1-21: warning: nonterminal useless in grammar: relational_expression [-Wother]
-  262 | relational_expression:
-      | ^~~~~~~~~~~~~~~~~~~~~
-parser.y:270.1-19: warning: nonterminal useless in grammar: equality_expression [-Wother]
-  270 | equality_expression:
-      | ^~~~~~~~~~~~~~~~~~~
-parser.y:276.1-14: warning: nonterminal useless in grammar: and_expression [-Wother]
-  276 | and_expression:
-      | ^~~~~~~~~~~~~~
-parser.y:280.1-14: warning: nonterminal useless in grammar: xor_expression [-Wother]
-  280 | xor_expression:
-      | ^~~~~~~~~~~~~~
-parser.y:284.1-13: warning: nonterminal useless in grammar: or_expression [-Wother]
-  284 | or_expression:
-      | ^~~~~~~~~~~~~
-parser.y:289.1-22: warning: nonterminal useless in grammar: logical_and_expression [-Wother]
-  289 | logical_and_expression:
-      | ^~~~~~~~~~~~~~~~~~~~~~
-parser.y:294.1-21: warning: nonterminal useless in grammar: logical_or_expression [-Wother]
-  294 | logical_or_expression:
-      | ^~~~~~~~~~~~~~~~~~~~~
-parser.y:299.1-22: warning: nonterminal useless in grammar: conditional_expression [-Wother]
-  299 | conditional_expression:
-      | ^~~~~~~~~~~~~~~~~~~~~~
-parser.y:304.1-21: warning: nonterminal useless in grammar: assignment_expression [-Wother]
-  304 | assignment_expression:
-      | ^~~~~~~~~~~~~~~~~~~~~
-parser.y:309.1-19: warning: nonterminal useless in grammar: assignment_operator [-Wother]
-  309 | assignment_operator:
-      | ^~~~~~~~~~~~~~~~~~~
-parser.y:323.1-10: warning: nonterminal useless in grammar: expression [-Wother]
-  323 | expression:
-      | ^~~~~~~~~~
-parser.y:328.1-19: warning: nonterminal useless in grammar: constant_expression [-Wother]
-  328 | constant_expression:
-      | ^~~~~~~~~~~~~~~~~~~
-parser.y:515.1-9: warning: nonterminal useless in grammar: type_name [-Wother]
-  515 | type_name:
-      | ^~~~~~~~~
-parser.y:544.1-11: warning: nonterminal useless in grammar: initializer [-Wother]
-  544 | initializer:
-      | ^~~~~~~~~~~
-parser.y:179.5-18: warning: rule useless in grammar [-Wother]
-  179 |     expression ';'
-      |     ^~~~~~~~~~~~~~
-parser.y:359.7-32: warning: rule useless in grammar [-Wother]
-  359 |     | declarator '=' initializer
-      |       ^~~~~~~~~~~~~~~~~~~~~~~~~~
-parser.y:436.7-29: warning: rule useless in grammar [-Wother]
-  436 |     | ':' constant_expression
-      |       ^~~~~~~~~~~~~~~~~~~~~~~
-parser.y:437.7-40: warning: rule useless in grammar [-Wother]
-  437 |     | declarator ':' constant_expression
-      |       ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-parser.y:457.7-40: warning: rule useless in grammar [-Wother]
-  457 |     | identifier '=' constant_expression
-      |       ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-parser.y:470.7-53: warning: rule useless in grammar [-Wother]
-  470 |     | direct_declarator '[' assignment_expression ']'
-      |       ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-parser.y:471.7-73: warning: rule useless in grammar [-Wother]
-  471 |     | direct_declarator '[' type_qualifier_list assignment_expression...
-      |       ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-parser.y:472.7-60: warning: rule useless in grammar [-Wother]
-  472 |     | direct_declarator '[' STATIC assignment_expression ']'
-      |       ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-parser.y:473.7-80: warning: rule useless in grammar [-Wother]
-  473 |     | direct_declarator '[' STATIC type_qualifier_list assignment_exp...
-      |       ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-parser.y:474.7-80: warning: rule useless in grammar [-Wother]
-  474 |     | direct_declarator '[' type_qualifier_list STATIC assignment_exp...
-      |       ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-parser.y:530.7-35: warning: rule useless in grammar [-Wother]
-  530 |     | '[' assignment_expression ']'
-      |       ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-parser.y:531.7-62: warning: rule useless in grammar [-Wother]
-  531 |     | direct_abstract_declarator '[' assignment_expression ']'
-      |       ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

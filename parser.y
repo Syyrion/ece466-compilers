@@ -21,13 +21,16 @@
 
 %union{
     int integer;
+
+    storage_class_specifier_t storage_class_specifier;
+    function_specifier_t function_specifier;
     int type_qualifier;
     type_specifier_t type_specifier;
-    storage_class_t storage_class_specifier;
-    function_specifier_t function_specifier;
+
     string_t string;
     number_t number;
     ast_node_t *node;
+    ast_node_list_t *node_list;
 }
 
 %token
@@ -100,11 +103,11 @@
 
 %type <string> IDENT STRINGLIT CHARLIT
 %type <number> NUMBERLIT
-%nterm 
+%nterm
     <node> identifier string_literal constant
     <node> primary_expression
     <node> postfix_expression
-    <node> argument_expression_list
+    <node_list> argument_expression_list
     <node> unary_expression
     <node> cast_expression
     <node> multiplicative_expression
@@ -119,15 +122,20 @@
     <node> logical_or_expression
     <node> conditional_expression
     <node> assignment_expression
+    <integer> assignment_operator
     <node> expression
     <node> constant_expression
+
+    <node> initializer
     <node> declaration_specifiers
-    <integer> assignment_operator
-    <type_qualifier> type_qualifier
-    <type_qualifier> type_qualifier_list
+
     <storage_class_specifier> storage_class_specifier
     <function_specifier> function_specifier
+    <type_qualifier> type_qualifier
     <type_specifier> type_specifier
+
+
+    <type_qualifier> type_qualifier_list
     <node> struct_or_union_specifier
     <node> enum_specifier
 
@@ -136,6 +144,9 @@
 %destructor {ast_free($$);} <node>
 
 %%
+external_declaration_list:
+    external_declaration
+    | external_declaration_list external_declaration
 
 external_declaration:
     function_definition
@@ -154,7 +165,7 @@ declaration_list:
 
 compound_statement:
     '{' block_item_list '}'
-    '{' '}'
+    | '{' '}'
     ;
 
 block_item_list:
@@ -176,7 +187,7 @@ statement:
     ;
 
 expression_statement:
-    expression ';'
+    expression ';' {ast_print($1, 0);}
     | ';'
     ;
 
@@ -207,8 +218,8 @@ primary_expression:
 postfix_expression:
     primary_expression
     | postfix_expression '[' expression ']' {$$ = ast_new_unary_op('*', ast_new_binary_op('+', $1, $3));}
-    | postfix_expression '(' ')' {$$ = ast_add_function_call_name(ast_new_function_call(), $1);}
-    | postfix_expression '(' argument_expression_list ')' {$$ = ast_add_function_call_name($3, $1);}
+    | postfix_expression '(' ')' {$$ = ast_new_function_call($1, ast_list_new());}
+    | postfix_expression '(' argument_expression_list ')' {$$ = ast_new_function_call($1, $3);}
     | postfix_expression '.' identifier {$$ = ast_new_binary_op('.', $1, $3);}
     | postfix_expression "->" identifier {$$ = ast_new_binary_op('.', ast_new_unary_op('*', $1), $3);}
     | postfix_expression "++" {$$ = ast_new_unary_op(PLUSPLUS, $1);}
@@ -216,14 +227,14 @@ postfix_expression:
     ;
 
 argument_expression_list:
-    assignment_expression {$$ = ast_add_function_call_argument(ast_new_function_call(), $1);}
-    | argument_expression_list ',' assignment_expression {$$ = ast_add_function_call_argument($1, $3);}
+    assignment_expression {$$ = ast_list_add(ast_list_new(), $1);}
+    | argument_expression_list ',' assignment_expression {$$ = ast_list_add($1, $3);}
     ;
 
 unary_expression:
     postfix_expression
-    | "++" unary_expression {$$ = ast_new_binary_op(PLUSEQ, $2, ast_new_numberlit((number_t){.integer = 1, .full_type = NT_INT}));}
-    | "--" unary_expression {$$ = ast_new_binary_op(MINUSEQ, $2, ast_new_numberlit((number_t){.integer = 1, .full_type = NT_INT}));}
+    | "++" unary_expression {$$ = ast_new_binary_op(PLUSEQ, $2, ast_new_numberlit((number_t){.integer = 1, .type = (scalar_t){.full = SCLR_INT}}));}
+    | "--" unary_expression {$$ = ast_new_binary_op(MINUSEQ, $2, ast_new_numberlit((number_t){.integer = 1, .type = (scalar_t){.full = SCLR_INT}}));}
     | '&' cast_expression {$$ = ast_new_unary_op('&', $2);}
     | '*' cast_expression {$$ = ast_new_unary_op('*', $2);}
     | '+' cast_expression {$$ = ast_new_unary_op('+', $2);}
@@ -237,7 +248,7 @@ unary_expression:
 
 cast_expression:
     unary_expression
-    '(' type_name ')' cast_expression
+    | '(' type_name ')' cast_expression
     ;
 
 multiplicative_expression:
@@ -307,17 +318,17 @@ assignment_expression:
     ;
 
 assignment_operator:
-    '=' {$$ = '='}
-    | "*=" {$$ = PLUSEQ}
-    | "/=" {$$ = MINUSEQ}
-    | "%=" {$$ = TIMESEQ}
-    | "+=" {$$ = DIVEQ}
-    | "-=" {$$ = MODEQ}
-    | "<<=" {$$ = SHLEQ}
-    | ">>=" {$$ = SHREQ}
-    | "&=" {$$ = ANDEQ}
-    | "^=" {$$ = XOREQ}
-    | "|=" {$$ = OREQ}
+    '=' {$$ = '=';}
+    | "*=" {$$ = PLUSEQ;}
+    | "/=" {$$ = MINUSEQ;}
+    | "%=" {$$ = TIMESEQ;}
+    | "+=" {$$ = DIVEQ;}
+    | "-=" {$$ = MODEQ;}
+    | "<<=" {$$ = SHLEQ;}
+    | ">>=" {$$ = SHREQ;}
+    | "&=" {$$ = ANDEQ;}
+    | "^=" {$$ = XOREQ;}
+    | "|=" {$$ = OREQ;}
     ;
 
 expression:
@@ -335,7 +346,7 @@ constant_expression:
 // man, they really messed this standard up
 
 declaration:
-    declaration_specifiers init_declarator_list ';'
+    declaration_specifiers init_declarator_list ';' {fprintf(stderr, "declaration\n");}
     ;
 
 declaration_specifiers:
@@ -368,7 +379,7 @@ storage_class_specifier:
     // | TYPEDEF
     ;
 
-// At least one needed per declaration
+// At least one needed per declaration (well not according to gcc, it just defaults to int)
 type_specifier:
     VOID {$$ = (type_specifier_t){.scalar = SCLR_VOID};}
     | CHAR {$$ = (type_specifier_t){.scalar = SCLR_CHAR};}
@@ -443,7 +454,7 @@ enum_specifier:
     ENUM identifier
     | ENUM '{' enumerator_list '}'
     | ENUM identifier '{' enumerator_list '}'
-    | ENUM '{' enumerator_list ',' '}' 
+    | ENUM '{' enumerator_list ',' '}'
     | ENUM identifier '{' enumerator_list ',' '}'
     ;
 
@@ -463,27 +474,29 @@ declarator:
     ;
 
 direct_declarator:
-    identifier
-    | '(' declarator ')'
-    | direct_declarator '[' ']'
-    | direct_declarator '[' type_qualifier_list ']'
-    | direct_declarator '[' assignment_expression ']'
-    | direct_declarator '[' type_qualifier_list assignment_expression ']'
-    | direct_declarator '[' STATIC assignment_expression ']'
-    | direct_declarator '[' STATIC type_qualifier_list assignment_expression ']'
-    | direct_declarator '[' type_qualifier_list STATIC assignment_expression ']'
-    | direct_declarator '[' type_qualifier_list '*' ']'
-    | direct_declarator '[' '*' ']'
-    | direct_declarator '(' parameter_type_list ')'
-    | direct_declarator '(' identifier_list ')'
-    | direct_declarator '(' ')'
+    identifier {fprintf(stderr, "dd1\n");}
+    | '(' declarator ')' {fprintf(stderr, "dd2\n");}
+    | direct_declarator '[' ']' {fprintf(stderr, "dd3\n");}
+    | direct_declarator '[' type_qualifier_list ']' {fprintf(stderr, "dd4\n");}
+    | direct_declarator '[' assignment_expression ']' {fprintf(stderr, "dd5\n");}
+    | direct_declarator '[' type_qualifier_list assignment_expression ']' {fprintf(stderr, "dd6\n");}
+    | direct_declarator '[' STATIC assignment_expression ']' {fprintf(stderr, "dd7\n");}
+    | direct_declarator '[' STATIC type_qualifier_list assignment_expression ']' {fprintf(stderr, "dd8\n");}
+    | direct_declarator '[' type_qualifier_list STATIC assignment_expression ']' {fprintf(stderr, "dd9\n");}
+    | direct_declarator '[' type_qualifier_list '*' ']' {fprintf(stderr, "dd10\n");}
+    | direct_declarator '[' '*' ']' {fprintf(stderr, "dd11\n");}
+    | direct_declarator '(' parameter_type_list ')' {fprintf(stderr, "dd12\n");}
+    | direct_declarator '(' identifier_list ')' {fprintf(stderr, "dd13\n");}
+    | direct_declarator '(' ')' {fprintf(stderr, "dd14\n");}
     ;
 
+// char (*(*x())[5])()
+
 pointer:
-    '*' {}
-    | '*' type_qualifier_list
-    | '*' pointer
-    | '*' type_qualifier_list pointer
+    '*' {fprintf(stderr, "p1\n");}
+    | '*' type_qualifier_list {fprintf(stderr, "p2\n");}
+    | '*' pointer {fprintf(stderr, "p3\n");}
+    | '*' type_qualifier_list pointer {fprintf(stderr, "p4\n");}
     ;
 
 type_qualifier_list:

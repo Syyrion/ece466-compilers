@@ -6,5 +6,7 @@ main:
 run:
 	gcc -E sample_inputs/exprtests.c | ./parser_test > exprtests.txt
 
+#	gcc -E sample_inputs/ttests/base.c | ./parser_test > exprtests.txt
+
 clean:
 	rm parser.tab.c parser.tab.h lex.yy.c
