@@ -93,6 +93,54 @@ BINARY_OP ">="
 .left
     FUNCTION_CALL    .name
         IDENT "fn"
+    .arg[0]
+        BINARY_OP "||"
+        .left
+            BINARY_OP "&&"
+            .left
+                IDENT "a"
+            .right
+                IDENT "b"
+        .right
+            IDENT "c"
+    .arg[1]
+        BINARY_OP "|"
+        .left
+            BINARY_OP "&"
+            .left
+                IDENT "d"
+            .right
+                IDENT "e"
+        .right
+            BINARY_OP "^"
+            .left
+                IDENT "f"
+            .right
+                IDENT "g"
+    .arg[2]
+        BINARY_OP "!="
+        .left
+            BINARY_OP "=="
+            .left
+                NUMBERLIT    INTEGER    10    INT
+            .right
+                NUMBERLIT    INTEGER    20    INT
+        .right
+            NUMBERLIT    INTEGER    0    INT
+    .arg[3]
+        NUMBERLIT    INTEGER    1    INT
+    .arg[4]
+        NUMBERLIT    INTEGER    1    INT
+    .arg[5]
+        NUMBERLIT    INTEGER    1    INT
+    .arg[6]
+        NUMBERLIT    INTEGER    1    INT
+    .arg[7]
+        NUMBERLIT    INTEGER    1    INT
+    .arg[8]
+        NUMBERLIT    INTEGER    1    INT
+    .arg[9]
+        NUMBERLIT    INTEGER    1    INT
 .right
     BINARY_OP "<<"
     .left

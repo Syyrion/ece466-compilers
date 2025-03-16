@@ -7,6 +7,7 @@
     #include <stdlib.h>
     #include <ctype.h>
     #include "lexer.h"
+    #include "location.h"
     #include "parser.tab.h"
 
     char *filename;
@@ -38,31 +39,31 @@
         if (t == 'f')
         {
             n[i] = 0;
-            return SCLR_FLOAT;
+            return TS_FLOAT;
         }
         if (t == 'l')
         {
             n[i] = 0;
-            return SCLR_LONG | SCLR_DOUBLE;
+            return TS_LONG | TS_DOUBLE;
         }
-        return SCLR_DOUBLE;
+        return TS_DOUBLE;
     }
 
     unsigned short get_int_type(char *n)
     {
-        unsigned short type = SCLR_INT;
+        unsigned short type = TS_INT;
         int i = strlen(n) - 1;
         char c;
         while ((c = tolower(n[i])) == 'l' || c == 'u')
         {
             if (c == 'u')
-                type |= SCLR_UNSIGNED;
+                type |= TS_UNSIGNED;
             else
             {
-                if (type & SCLR_LONG)
-                    type |= SCLR_LONG2;
+                if (type & TS_LONG)
+                    type |= TS_LONG2;
                 else
-                    type |= SCLR_LONG;
+                    type |= TS_LONG;
             }
             i--;
         }

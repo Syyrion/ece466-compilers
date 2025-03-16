@@ -72,82 +72,41 @@ ast_node_t *ast_new_function_call(ast_node_t *name, ast_node_list_t *args)
     return new_inst;
 }
 
-ast_node_t *ast_new_variable()
+ast_node_t *ast_new_struct_or_union(int kind, char *name)
 {
-    ast_node_t *new_inst = calloc(1, sizeof(ast_node_t));
-    new_inst->kind = AST_VARIABLE;
-    new_inst->variable.storage_class = SC_IMPLICIT_EXTERN; // TODO figure out how this works
-    new_inst->variable.function_specifier = FS_NONE;
+    ast_node_t *new_inst = malloc(sizeof(ast_node_t));
+    new_inst->kind = kind;
+    new_inst->ident = name;
+    new_inst->struct_or_union.complete = 0;
+    new_inst->struct_or_union.members = ast_list_new();
     return new_inst;
 }
 
-ast_node_t *ast_add_variable_type_qualifier(ast_node_t *variable, char type_qualifiers)
+ast_node_t *ast_new_pointer(int type_qualifier)
 {
-    if (variable->kind != AST_VARIABLE)
-    {
-        fprintf(stderr, "node is not a variable");
-        return 0;
-    }
-    variable->variable.type_qualifier.full |= type_qualifiers;
-    return variable;
-}
-
-ast_node_t *ast_set_variable_storage_class(ast_node_t *variable, storage_class_specifier_t storage_class)
-{
-    if (variable->kind != AST_VARIABLE)
-    {
-        fprintf(stderr, "node is not a variable");
-        return 0;
-    }
-    if (variable->variable.sc_is_set)
-    {
-        fprintf(stderr, "the storage class of this variable has already been set");
-        return 0;
-    }
-    variable->variable.storage_class = storage_class;
-    variable->variable.sc_is_set = 1;
-    return variable;
+    ast_node_t *new_inst = malloc(sizeof(ast_node_t));
+    new_inst->kind = AST_POINTER;
+    new_inst->pointer_qualifiers.full = (char)type_qualifier;
+    new_inst->next = 0;
+    return new_inst;
 };
 
-ast_node_t *ast_set_variable_function_specifier(ast_node_t *variable, function_specifier_t function_specifier)
+ast_node_t *ast_new_array(ast_node_t *size)
 {
-    if (variable->kind != AST_VARIABLE)
-    {
-        fprintf(stderr, "node is not a variable");
-        return 0;
-    }
-    variable->variable.function_specifier = function_specifier;
-    return variable;
+    ast_node_t *new_inst = malloc(sizeof(ast_node_t));
+    new_inst->kind = AST_ARRAY;
+    new_inst->array_size = size;
+    new_inst->next = 0;
+    return new_inst;
 };
 
-ast_node_t *ast_add_variable_type_specifier(ast_node_t *variable, type_specifier_t type_specifier)
+ast_node_t *ast_new_scalar(scalar_t scalar)
 {
-    if (variable->kind != AST_VARIABLE)
-    {
-        fprintf(stderr, "node is not a variable");
-        return 0;
-    }
-
-    unsigned short current_scalar = variable->variable.type_specifier.scalar.full;
-    unsigned short new_scalar = type_specifier.scalar.full;
-
-    // if a long was already encountered, try using long2
-    if (current_scalar & SCLR_LONG && new_scalar == SCLR_LONG)
-        new_scalar = SCLR_LONG2;
-
-    // duplicate type specifiers aren't allowed (except for long)
-    if (current_scalar & new_scalar)
-    {
-        fprintf(stderr, "invalid combination of type specifiers");
-        return 0;
-    }
-
-    if (new_scalar & SCLR_CUSTOM)
-        variable->variable.type_specifier.custom = type_specifier.custom;
-
-    variable->variable.type_specifier.scalar.full |= new_scalar;
+    ast_node_t *new_inst = malloc(sizeof(ast_node_t));
+    new_inst->kind = AST_SCALAR;
+    new_inst->scalar = scalar;
+    return new_inst;
 }
-
 
 ast_node_list_t *ast_list_new(void)
 {
@@ -155,22 +114,23 @@ ast_node_list_t *ast_list_new(void)
     return new_inst;
 }
 
-ast_node_list_t *ast_list_add(ast_node_list_t *list, ast_node_t* node)
+ast_node_list_t *ast_list_add(ast_node_list_t *list, ast_node_t *node)
 {
     if (list->nodes)
     {
         if (list->node_count == list->capacity)
-            list->nodes = realloc(list->nodes, list->capacity *= 2);
+            list->nodes = realloc(list->nodes, (list->capacity *= 2) * sizeof(ast_node_t *));
     }
     else
     {
         list->capacity = 1;
         list->nodes = malloc(sizeof(ast_node_t *));
     }
+    list->nodes[list->node_count++] = node; 
     return list;
 }
 
-// Frees a node list. Does not free any contained nodes. 
+// Frees a node list. Does not free any contained nodes.
 void ast_list_free(ast_node_list_t *list)
 {
     if (list->nodes)
@@ -180,7 +140,6 @@ void ast_list_free(ast_node_list_t *list)
 
 // ## Other stuff below
 
-// TODO update
 // recursively frees an ast_node
 void ast_free(ast_node_t *node)
 {
@@ -258,7 +217,7 @@ static void print_stringlit(string_t string)
 
 static void print_numberlit(number_t number)
 {
-    if (number.type.full & SCLR_REAL)
+    if (number.type.full & TS_REAL)
     {
         printf(
             "REAL    %Lg    %s",

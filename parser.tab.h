@@ -45,11 +45,12 @@
 extern int yydebug;
 #endif
 /* "%code requires" blocks.  */
-#line 18 "parser.y"
+#line 19 "parser.y"
 
+    #include "declarations.h"
     #include "types.h"
 
-#line 53 "parser.tab.h"
+#line 54 "parser.tab.h"
 
 /* Token kinds.  */
 #ifndef YYTOKENTYPE
@@ -132,7 +133,7 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 22 "parser.y"
+#line 24 "parser.y"
 
     int integer;
 
@@ -146,7 +147,11 @@ union YYSTYPE
     ast_node_t *node;
     ast_node_list_t *node_list;
 
-#line 150 "parser.tab.h"
+    declaration_specifiers_t declaration_specifiers;
+    declarator_helper_t declarator_helper;
+    declarator_list_t declarator_list;
+
+#line 155 "parser.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

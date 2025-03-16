@@ -1,22 +1,23 @@
 #ifndef SYMBOL_TABLE_API_INCLUDED
 #define SYMBOL_TABLE_API_INCLUDED
 
+#include "types.h"
 #include "ast.h"
 
-typedef struct
+typedef struct symbol_table symbol_table_t;
+
+struct symbol_table
 {
     symbol_table_t *parent;
-    unsigned long entry_capacity;
-    unsigned long entry_count;
-    ast_node_t **entries;
-} symbol_table_t;
+    ast_node_list_t *entries;
+};
 
-extern symbol_table_t __root = {0};
-extern symbol_table_t *root = &__root;
+extern symbol_table_t __root;
+extern symbol_table_t *st_top;
 
-symbol_table_t *st_new(symbol_table_t *parent);
-symbol_table_t *st_add(symbol_table_t *st, ast_node_t *entry);
+void st_push(void);
+ast_node_list_t *st_pop(void);
+void st_add(ast_node_t *entry);
 ast_node_t *st_find(symbol_table_t *st, char *name);
-void st_free(symbol_table_t *st);
 
 #endif

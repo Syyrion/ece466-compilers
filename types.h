@@ -14,73 +14,73 @@ struct ast_node_list;
 typedef struct ast_node_list ast_node_list_t;
 
 // scalar types
-#define SCLR_VOID 0b00000000000001
-#define SCLR_CHAR 0b00000000000010
-#define SCLR_SHORT 0b00000000000100
-#define SCLR_INT 0b00000000001000
-#define SCLR_LONG 0b00000000010000
-#define SCLR_LONG2 0b00000000100000
-#define SCLR_FLOAT 0b00000001000000
-#define SCLR_DOUBLE 0b00000010000000
-#define SCLR_SIGNED 0b00000100000000
-#define SCLR_UNSIGNED 0b00001000000000
-#define SCLR_BOOL 0b00010000000000
-#define SCLR_COMPLEX 0b00100000000000
-#define SCLR_STRUCT_OR_UNION 0b01000000000000
-#define SCLR_ENUM 0b10000000000000
-#define SCLR_CUSTOM (SCLR_STRUCT_OR_UNION | SCLR_ENUM)
-#define SCLR_REAL (SCLR_FLOAT | SCLR_DOUBLE)
+#define TS_VOID 0b00000000000001
+#define TS_CHAR 0b00000000000010
+#define TS_SHORT 0b00000000000100
+#define TS_INT 0b00000000001000
+#define TS_LONG 0b00000000010000
+#define TS_LONG2 0b00000000100000
+#define TS_FLOAT 0b00000001000000
+#define TS_DOUBLE 0b00000010000000
+#define TS_SIGNED 0b00000100000000
+#define TS_UNSIGNED 0b00001000000000
+#define TS_BOOL 0b00010000000000
+#define TS_COMPLEX 0b00100000000000
+#define TS_STRUCT_OR_UNION 0b01000000000000
+#define TS_ENUM 0b10000000000000
+#define TS_CUSTOM (TS_STRUCT_OR_UNION | TS_ENUM)
+#define TS_REAL (TS_FLOAT | TS_DOUBLE)
 
 // encoded semantic rules for type specifiers
-static const unsigned short SCLR_VALID[] = {
+static const unsigned short TS_VALID[] = {
     // giga-pain
 
-    SCLR_VOID,
+    TS_VOID,
 
-    SCLR_CHAR,
-    SCLR_SIGNED | SCLR_CHAR,
-    SCLR_UNSIGNED | SCLR_CHAR,
+    TS_CHAR,
+    TS_SIGNED | TS_CHAR,
+    TS_UNSIGNED | TS_CHAR,
 
-    SCLR_SHORT,
-    SCLR_SIGNED | SCLR_SHORT,
-    SCLR_SHORT | SCLR_INT,
-    SCLR_SIGNED | SCLR_SHORT | SCLR_INT,
+    TS_SHORT,
+    TS_SIGNED | TS_SHORT,
+    TS_SHORT | TS_INT,
+    TS_SIGNED | TS_SHORT | TS_INT,
 
-    SCLR_UNSIGNED | SCLR_SHORT,
-    SCLR_UNSIGNED | SCLR_SHORT | SCLR_INT,
+    TS_UNSIGNED | TS_SHORT,
+    TS_UNSIGNED | TS_SHORT | TS_INT,
 
-    SCLR_INT,
-    SCLR_SIGNED,
-    SCLR_SIGNED | SCLR_INT,
+    TS_INT,
+    TS_SIGNED,
+    TS_SIGNED | TS_INT,
 
-    SCLR_UNSIGNED,
-    SCLR_UNSIGNED | SCLR_INT,
+    TS_UNSIGNED,
+    TS_UNSIGNED | TS_INT,
 
-    SCLR_LONG,
-    SCLR_SIGNED | SCLR_LONG,
-    SCLR_LONG | SCLR_INT,
-    SCLR_SIGNED | SCLR_LONG | SCLR_INT,
+    TS_LONG,
+    TS_SIGNED | TS_LONG,
+    TS_LONG | TS_INT,
+    TS_SIGNED | TS_LONG | TS_INT,
 
-    SCLR_UNSIGNED | SCLR_LONG,
-    SCLR_UNSIGNED | SCLR_LONG | SCLR_INT,
+    TS_UNSIGNED | TS_LONG,
+    TS_UNSIGNED | TS_LONG | TS_INT,
 
-    SCLR_LONG | SCLR_LONG2,
-    SCLR_SIGNED | SCLR_LONG | SCLR_LONG2,
-    SCLR_LONG | SCLR_LONG2 | SCLR_INT,
-    SCLR_SIGNED | SCLR_LONG | SCLR_LONG2 | SCLR_INT,
+    TS_LONG | TS_LONG2,
+    TS_SIGNED | TS_LONG | TS_LONG2,
+    TS_LONG | TS_LONG2 | TS_INT,
+    TS_SIGNED | TS_LONG | TS_LONG2 | TS_INT,
 
-    SCLR_UNSIGNED | SCLR_LONG | SCLR_LONG,
-    SCLR_UNSIGNED | SCLR_LONG | SCLR_LONG | SCLR_INT,
+    TS_UNSIGNED | TS_LONG | TS_LONG,
+    TS_UNSIGNED | TS_LONG | TS_LONG | TS_INT,
 
-    SCLR_FLOAT,
-    SCLR_DOUBLE,
-    SCLR_LONG | SCLR_DOUBLE,
+    TS_FLOAT,
+    TS_DOUBLE,
+    TS_LONG | TS_DOUBLE,
 
-    SCLR_BOOL,
+    TS_BOOL,
 
-    SCLR_FLOAT | SCLR_COMPLEX,
-    SCLR_DOUBLE | SCLR_COMPLEX,
-    SCLR_LONG | SCLR_DOUBLE | SCLR_COMPLEX,
+    TS_FLOAT | TS_COMPLEX,
+    TS_DOUBLE | TS_COMPLEX,
+    TS_LONG | TS_DOUBLE | TS_COMPLEX,
 };
 
 typedef union
@@ -108,6 +108,68 @@ typedef union
     };
 } scalar_t;
 
+// type_specifier
+typedef struct
+{
+    scalar_t scalar;
+    ast_node_t *custom; // only used by struct, unions, and enums
+} type_specifier_t;
+
+// type qualifiers
+#define TQ_CONST 0b001
+#define TQ_RESTRICT 0b010
+#define TQ_VOLATILE 0b100
+
+typedef union
+{
+    unsigned char full;
+    struct
+    {
+        int is_const : 1;
+        int is_restrict : 1;
+        int is_volatile : 1;
+    };
+} type_qualifier_t;
+
+// storage classes
+typedef enum
+{
+    SC_EXTERN = 1,
+    SC_STATIC,
+    SC_AUTO,
+    SC_REGISTER,
+} storage_class_specifier_t;
+
+// function specifiers
+typedef enum
+{
+    FS_INLINE = 1,
+} function_specifier_t;
+
+typedef struct
+{
+    type_specifier_t type_specifier;
+    type_qualifier_t type_qualifier;
+    storage_class_specifier_t storage_class;
+    function_specifier_t function_specifier;
+} declaration_specifiers_t;
+
+// holds the representation of a declarator
+typedef struct
+{
+    ast_node_t *oldest;      // first created declarator element
+    ast_node_t *newest;      // newest created declarator element
+    ast_node_t *initializer; // declarator initializer or function definition
+} declarator_helper_t;
+
+// list of declarator helpers
+typedef struct
+{
+    unsigned long capacity;
+    unsigned long declarator_count;
+    declarator_helper_t *declarators;
+} declarator_list_t;
+
 // string literal value
 struct string
 {
@@ -126,45 +188,5 @@ struct number
     };
     scalar_t type;
 };
-
-// storage classes
-typedef enum
-{
-    SC_IMPLICIT_EXTERN,
-    SC_EXTERN,
-    SC_STATIC,
-    SC_AUTO,
-    SC_REGISTER,
-} storage_class_specifier_t;
-
-// function specifiers
-typedef enum
-{
-    FS_NONE,
-    FS_INLINE,
-} function_specifier_t;
-
-// type qualifiers
-#define TQ_CONST 0b001
-#define TQ_RESTRICT 0b010
-#define TQ_VOLATILE 0b100
-
-typedef union
-{
-    char full;
-    struct
-    {
-        int is_const : 1;
-        int is_restrict : 1;
-        int is_volatile : 1;
-    };
-} type_qualifier_t;
-
-// type_specifier
-typedef struct
-{
-    scalar_t scalar;
-    ast_node_t *custom;
-} type_specifier_t;
 
 #endif

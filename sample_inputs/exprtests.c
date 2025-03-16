@@ -24,4 +24,5 @@ int f()
     p = &x->m;
     *q.m++;
     s = sizeof(++a);
+
 }

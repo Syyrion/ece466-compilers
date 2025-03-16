@@ -1,21 +1,23 @@
 %debug
 
 %{
-    // what the hell is happening
+    // so much bread
 
     #include <stdlib.h>
     #include <stdio.h>
     #include "lexer.h"
     #include "ast.h"
+    #include "location.h"
+    #include "symbol_table.h"
 
     void yyerror (const char *s)
     {
         fprintf (stderr, "%s:%d: %s\n", filename, line_num, s);
     }
-
 %}
 
 %code requires{
+    #include "declarations.h"
     #include "types.h"
 }
 
@@ -31,6 +33,10 @@
     number_t number;
     ast_node_t *node;
     ast_node_list_t *node_list;
+
+    declaration_specifiers_t declaration_specifiers;
+    declarator_helper_t declarator_helper;
+    declarator_list_t declarator_list;
 }
 
 %token
@@ -127,15 +133,23 @@
     <node> constant_expression
 
     <node> initializer
-    <node> declaration_specifiers
 
+    <declaration_specifiers> declaration_specifiers
     <storage_class_specifier> storage_class_specifier
     <function_specifier> function_specifier
     <type_qualifier> type_qualifier
     <type_specifier> type_specifier
-
+    
+    <declarator_list> init_declarator_list
+    <declarator_helper> init_declarator
+    <declarator_helper> declarator
+    <declarator_helper> direct_declarator
+    <declarator_helper> pointer
+    <declarator_helper> abstract_declarator
+    <declarator_helper> direct_abstract_declarator
 
     <type_qualifier> type_qualifier_list
+    <integer> struct_or_union
     <node> struct_or_union_specifier
     <node> enum_specifier
 
@@ -193,7 +207,6 @@ expression_statement:
 
 // ## EXPRESSIONS
 
-
 identifier:
     IDENT {$$ = ast_new_ident($1.buffer);}
     ;
@@ -233,8 +246,8 @@ argument_expression_list:
 
 unary_expression:
     postfix_expression
-    | "++" unary_expression {$$ = ast_new_binary_op(PLUSEQ, $2, ast_new_numberlit((number_t){.integer = 1, .type = (scalar_t){.full = SCLR_INT}}));}
-    | "--" unary_expression {$$ = ast_new_binary_op(MINUSEQ, $2, ast_new_numberlit((number_t){.integer = 1, .type = (scalar_t){.full = SCLR_INT}}));}
+    | "++" unary_expression {$$ = ast_new_binary_op(PLUSEQ, $2, ast_new_numberlit((number_t){.integer = 1, .type = (scalar_t){.full = TS_INT}}));}
+    | "--" unary_expression {$$ = ast_new_binary_op(MINUSEQ, $2, ast_new_numberlit((number_t){.integer = 1, .type = (scalar_t){.full = TS_INT}}));}
     | '&' cast_expression {$$ = ast_new_unary_op('&', $2);}
     | '*' cast_expression {$$ = ast_new_unary_op('*', $2);}
     | '+' cast_expression {$$ = ast_new_unary_op('+', $2);}
@@ -341,33 +354,63 @@ constant_expression:
     ;
 
 
-
 // ## DECLARATIONS
 // man, they really messed this standard up
 
 declaration:
-    declaration_specifiers init_declarator_list ';' {fprintf(stderr, "declaration\n");}
+    declaration_specifiers init_declarator_list ';'
+    {
+        if ($1.type_specifier.scalar.full == 0)
+        {
+            fprintf(stderr, "%s:%d: Warning: declaration with no type specifiers treated as int\n", filename, line_num);
+            $1.type_specifier.scalar.full |= TS_INT;
+            goto ts_check_continue;
+        }
+        for (int i = 0, j = sizeof(TS_VALID) / sizeof(*TS_VALID); i < j; i++)
+            if ($1.type_specifier.scalar.full == TS_VALID[i])
+                goto ts_check_continue;
+        fprintf(stderr, "%s:%d: Error: invalid combination of type specifiers\n", filename, line_num);
+        exit(80);
+        ts_check_continue:
+
+        // ast_node_t *end_scalar;
+        // if ($1.type_specifier.scalar.full & TS_CUSTOM)
+        //     end_scalar = $1.type_specifier.custom;
+        // else
+        //     end_scalar = ast_new_scalar($1.type_specifier.scalar);
+
+        // for (int i = 0; i < $2.declarator_count ; i++)
+        // {
+        //     $2.declarators[i].ident
+        //     if (st_find())
+        //     {
+        //         fprintf(stderr, "invalid combination of type specifiers");
+        //         exit(80);
+        //     }
+        // }
+        // st_add();
+    }
     ;
 
 declaration_specifiers:
-    storage_class_specifier {$$ = ast_set_variable_storage_class(ast_new_variable(), $1);}
-    | type_specifier {$$ = ast_add_variable_type_specifier(ast_new_variable(), $1);}
-    | type_qualifier {$$ = ast_add_variable_type_qualifier(ast_new_variable(), $1);}
-    | function_specifier {$$ = ast_set_variable_function_specifier(ast_new_variable(), $1);}
-    | declaration_specifiers storage_class_specifier {$$ = ast_set_variable_storage_class($1, $2);}
-    | declaration_specifiers type_specifier {$$ = ast_add_variable_type_specifier($1, $2);}
-    | declaration_specifiers type_qualifier {$$ = ast_add_variable_type_qualifier($1, $2);}
-    | declaration_specifiers function_specifier {$$ = ast_set_variable_function_specifier($1, $2);}
+    type_specifier {ds_init(&$$); ds_add_type_specifier(&$$, $1);}
+    | type_qualifier {ds_init(&$$); ds_add_type_qualifier(&$$, $1);}
+    | storage_class_specifier {ds_init(&$$); ds_add_storage_class(&$$, $1);}
+    | function_specifier {ds_init(&$$); ds_add_function_specifier(&$$, $1);}
+    | declaration_specifiers type_specifier {ds_add_type_specifier(&$1, $2); $$ = $1;}
+    | declaration_specifiers type_qualifier {ds_add_type_qualifier(&$1, $2); $$ = $1;}
+    | declaration_specifiers storage_class_specifier {ds_add_storage_class(&$1, $2); $$ = $1;}
+    | declaration_specifiers function_specifier {ds_add_function_specifier(&$1, $2); $$ = $1;}
     ;
 
 init_declarator_list:
-    init_declarator
-    | init_declarator_list ',' init_declarator
+    init_declarator {dl_init(&$$); dl_add(&$$, $1);}
+    | init_declarator_list ',' init_declarator {dl_add(&$1, $3); $$ = $1;}
     ;
 
 init_declarator:
-    declarator
-    | declarator '=' initializer
+    declarator {$1.initializer = 0; $$ = $1;}
+    | declarator '=' initializer {$1.initializer = $3; $$ = $1;}
     ;
 
 // No more than one allowed per declaration
@@ -379,21 +422,21 @@ storage_class_specifier:
     // | TYPEDEF
     ;
 
-// At least one needed per declaration (well not according to gcc, it just defaults to int)
+// At least one needed per declaration
 type_specifier:
-    VOID {$$ = (type_specifier_t){.scalar = SCLR_VOID};}
-    | CHAR {$$ = (type_specifier_t){.scalar = SCLR_CHAR};}
-    | SHORT {$$ = (type_specifier_t){.scalar = SCLR_SHORT};}
-    | INT {$$ = (type_specifier_t){.scalar = SCLR_INT};}
-    | LONG {$$ = (type_specifier_t){.scalar = SCLR_LONG};}
-    | FLOAT {$$ = (type_specifier_t){.scalar = SCLR_FLOAT};}
-    | DOUBLE {$$ = (type_specifier_t){.scalar = SCLR_DOUBLE};}
-    | SIGNED {$$ = (type_specifier_t){.scalar = SCLR_SIGNED};}
-    | UNSIGNED {$$ = (type_specifier_t){.scalar = SCLR_UNSIGNED};}
-    | _BOOL {$$ = (type_specifier_t){.scalar = SCLR_BOOL};}
-    | _COMPLEX {$$ = (type_specifier_t){.scalar = SCLR_COMPLEX};}
-    | struct_or_union_specifier {$$ = (type_specifier_t){.scalar = SCLR_STRUCT_OR_UNION, .custom = $1};}
-    | enum_specifier {$$ = (type_specifier_t){.scalar = SCLR_ENUM, .custom = $1};}
+    VOID {$$ = (type_specifier_t){.scalar = TS_VOID};}
+    | CHAR {$$ = (type_specifier_t){.scalar = TS_CHAR};}
+    | SHORT {$$ = (type_specifier_t){.scalar = TS_SHORT};}
+    | INT {$$ = (type_specifier_t){.scalar = TS_INT};}
+    | LONG {$$ = (type_specifier_t){.scalar = TS_LONG};}
+    | FLOAT {$$ = (type_specifier_t){.scalar = TS_FLOAT};}
+    | DOUBLE {$$ = (type_specifier_t){.scalar = TS_DOUBLE};}
+    | SIGNED {$$ = (type_specifier_t){.scalar = TS_SIGNED};}
+    | UNSIGNED {$$ = (type_specifier_t){.scalar = TS_UNSIGNED};}
+    | _BOOL {$$ = (type_specifier_t){.scalar = TS_BOOL};}
+    | _COMPLEX {$$ = (type_specifier_t){.scalar = TS_COMPLEX};}
+    | struct_or_union_specifier {$$ = (type_specifier_t){.scalar = TS_STRUCT_OR_UNION, .custom = $1};}
+    | enum_specifier {$$ = (type_specifier_t){.scalar = TS_ENUM, .custom = $1};}
     // | typedef_name
     ;
 
@@ -411,19 +454,21 @@ function_specifier:
 
 // ## STRUCTS AND UNIONS
 struct_or_union_specifier:
-    struct_or_union '{' struct_declaration_list '}'
-    | struct_or_union IDENT '{' struct_declaration_list '}'
-    | struct_or_union IDENT
+    struct_or_union //{fprintf(stderr, "begin\n");} 
+        '{' struct_declaration_list '}' //{fprintf(stderr, "end\n");}
+    | struct_or_union IDENT //{st_add($<node>$ = ast_new_struct_or_union($1, $2.buffer)); st_push();}
+        '{' struct_declaration_list '}' //{fprintf(stderr, "end2\n"); st_pop();}
+    | struct_or_union IDENT //{st_add($$ = ast_new_struct_or_union($1, $2.buffer));}
     ;
 
 struct_or_union:
-    STRUCT
-    | UNION
+    STRUCT {$$ = AST_STRUCT;}
+    | UNION {$$ = AST_UNION;}
     ;
 
 struct_declaration_list:
-    struct_declaration
-    | struct_declaration_list struct_declaration
+    struct_declaration //{st_add($1);}
+    | struct_declaration_list struct_declaration //{st_add($2);}
     ;
 
 struct_declaration:
@@ -444,7 +489,7 @@ struct_declarator_list:
 
 struct_declarator:
     declarator
-    | ':' constant_expression
+    | ':' constant_expression 
     | declarator ':' constant_expression
     ;
 
@@ -469,34 +514,32 @@ enumerator:
     ;
 
 declarator:
-    direct_declarator
-    | pointer direct_declarator
+    direct_declarator {$$ = $1;}
+    | pointer direct_declarator {$2.newest = $1.oldest; $$.oldest = $2.oldest; $$.newest = $1.newest;}
     ;
 
 direct_declarator:
-    identifier {fprintf(stderr, "dd1\n");}
-    | '(' declarator ')' {fprintf(stderr, "dd2\n");}
-    | direct_declarator '[' ']' {fprintf(stderr, "dd3\n");}
-    | direct_declarator '[' type_qualifier_list ']' {fprintf(stderr, "dd4\n");}
-    | direct_declarator '[' assignment_expression ']' {fprintf(stderr, "dd5\n");}
-    | direct_declarator '[' type_qualifier_list assignment_expression ']' {fprintf(stderr, "dd6\n");}
-    | direct_declarator '[' STATIC assignment_expression ']' {fprintf(stderr, "dd7\n");}
-    | direct_declarator '[' STATIC type_qualifier_list assignment_expression ']' {fprintf(stderr, "dd8\n");}
-    | direct_declarator '[' type_qualifier_list STATIC assignment_expression ']' {fprintf(stderr, "dd9\n");}
-    | direct_declarator '[' type_qualifier_list '*' ']' {fprintf(stderr, "dd10\n");}
-    | direct_declarator '[' '*' ']' {fprintf(stderr, "dd11\n");}
+    identifier {$$.oldest = $$.newest = $1;}
+    | '(' declarator ')' {$$ = $2;}
+    | direct_declarator '[' ']' {$$.newest = $1.newest->next = ast_new_array(0); $$.oldest = $1.oldest;}
+    | direct_declarator '[' assignment_expression ']' {$$.newest = $1.newest->next = ast_new_array($3); $$.oldest = $1.oldest;}
+//  | direct_declarator '[' type_qualifier_list ']'
+//  | direct_declarator '[' type_qualifier_list assignment_expression ']'
+//  | direct_declarator '[' STATIC assignment_expression ']'
+//  | direct_declarator '[' STATIC type_qualifier_list assignment_expression ']'
+//  | direct_declarator '[' type_qualifier_list STATIC assignment_expression ']'
+//  | direct_declarator '[' type_qualifier_list '*' ']'
+//  | direct_declarator '[' '*' ']'
     | direct_declarator '(' parameter_type_list ')' {fprintf(stderr, "dd12\n");}
     | direct_declarator '(' identifier_list ')' {fprintf(stderr, "dd13\n");}
     | direct_declarator '(' ')' {fprintf(stderr, "dd14\n");}
     ;
 
-// char (*(*x())[5])()
-
 pointer:
-    '*' {fprintf(stderr, "p1\n");}
-    | '*' type_qualifier_list {fprintf(stderr, "p2\n");}
-    | '*' pointer {fprintf(stderr, "p3\n");}
-    | '*' type_qualifier_list pointer {fprintf(stderr, "p4\n");}
+    '*' {$$.oldest = $$.newest = ast_new_pointer(0);}
+    | '*' type_qualifier_list {$$.oldest = $$.newest = ast_new_pointer($2);}
+    | '*' pointer {$$.newest = $2.newest->next = ast_new_pointer(0); $$.oldest = $2.oldest;}
+    | '*' type_qualifier_list pointer {$$.newest = $3.newest->next = ast_new_pointer($2); $$.oldest = $3.oldest;}
     ;
 
 type_qualifier_list:
@@ -537,13 +580,13 @@ abstract_declarator:
     ;
 
 direct_abstract_declarator:
-    '(' abstract_declarator ')'
-    | '[' ']'
+    '(' abstract_declarator ')' {$$ = $2;}
+    | '[' ']' {$$.oldest = $$.newest = ast_new_array(0);}
+    | '[' assignment_expression ']' {$$.oldest = $$.newest = ast_new_array($2);}
     | direct_abstract_declarator '[' ']'
-    | '[' assignment_expression ']'
     | direct_abstract_declarator '[' assignment_expression ']'
-    | '[' '*' ']'
-    | direct_abstract_declarator '[' '*' ']'
+//  | '[' '*' ']'
+//  | direct_abstract_declarator '[' '*' ']'
     | '(' ')'
     | direct_abstract_declarator '(' ')'
     | '(' parameter_type_list ')'
