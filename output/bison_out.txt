@@ -1,0 +1,69 @@
+parser.y:263.7-30: warning: type clash on default action: <node> != <> [-Wother]
+  263 |     | SIZEOF '(' type_name ')'
+      |       ^~~~~~~~~~~~~~~~~~~~~~~~
+parser.y:269.7-39: warning: type clash on default action: <node> != <> [-Wother]
+  269 |     | '(' type_name ')' cast_expression
+      |       ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+parser.y:269.25-39: warning: unused value: $4 [-Wother]
+  269 |     | '(' type_name ')' cast_expression
+      |                         ^~~~~~~~~~~~~~~
+parser.y:459.5-460.39: warning: type clash on default action: <node> != <integer> [-Wother]
+  459 |     struct_or_union //{fprintf(stderr, "begin\n");} 
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+parser.y:461.7-462.39: warning: type clash on default action: <node> != <integer> [-Wother]
+  461 |     | struct_or_union IDENT //{st_add($<node>$ = ast_new_struct_or_un...
+      |       ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+parser.y:461.23-27: warning: unused value: $2 [-Wother]
+  461 |     | struct_or_union IDENT //{st_add($<node>$ = ast_new_struct_or_un...
+      |                       ^~~~~
+parser.y:463.7-27: warning: type clash on default action: <node> != <integer> [-Wother]
+  463 |     | struct_or_union IDENT //{st_add($$ = ast_new_struct_or_union($1...
+      |       ^~~~~~~~~~~~~~~~~~~~~
+parser.y:463.23-27: warning: unused value: $2 [-Wother]
+  463 |     | struct_or_union IDENT //{st_add($$ = ast_new_struct_or_union($1...
+      |                       ^~~~~
+parser.y:494.11-29: warning: unused value: $2 [-Wother]
+  494 |     | ':' constant_expression 
+      |           ^~~~~~~~~~~~~~~~~~~
+parser.y:495.22-40: warning: unused value: $3 [-Wother]
+  495 |     | declarator ':' constant_expression
+      |                      ^~~~~~~~~~~~~~~~~~~
+parser.y:501.5-19: warning: type clash on default action: <node> != <> [-Wother]
+  501 |     ENUM identifier
+      |     ^~~~~~~~~~~~~~~
+parser.y:501.10-19: warning: unused value: $2 [-Wother]
+  501 |     ENUM identifier
+      |          ^~~~~~~~~~
+parser.y:502.7-34: warning: type clash on default action: <node> != <> [-Wother]
+  502 |     | ENUM '{' enumerator_list '}'
+      |       ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+parser.y:503.7-45: warning: type clash on default action: <node> != <> [-Wother]
+  503 |     | ENUM identifier '{' enumerator_list '}'
+      |       ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+parser.y:503.12-21: warning: unused value: $2 [-Wother]
+  503 |     | ENUM identifier '{' enumerator_list '}'
+      |            ^~~~~~~~~~
+parser.y:504.7-38: warning: type clash on default action: <node> != <> [-Wother]
+  504 |     | ENUM '{' enumerator_list ',' '}'
+      |       ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+parser.y:505.7-49: warning: type clash on default action: <node> != <> [-Wother]
+  505 |     | ENUM identifier '{' enumerator_list ',' '}'
+      |       ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+parser.y:505.12-21: warning: unused value: $2 [-Wother]
+  505 |     | ENUM identifier '{' enumerator_list ',' '}'
+      |            ^~~~~~~~~~
+parser.y:515.22-40: warning: unused value: $3 [-Wother]
+  515 |     | identifier '=' constant_expression
+      |                      ^~~~~~~~~~~~~~~~~~~
+parser.y:570.27-36: warning: unused value: $3 [-Wother]
+  570 |     | identifier_list ',' identifier
+      |                           ^~~~~~~~~~
+parser.y:589.38-58: warning: unused value: $3 [-Wother]
+  589 |     | direct_abstract_declarator '[' assignment_expression ']'
+      |                                      ^~~~~~~~~~~~~~~~~~~~~
+parser.y:592.7-13: warning: type clash on default action: <declarator_helper> != <> [-Wother]
+  592 |     | '(' ')'
+      |       ^~~~~~~
+parser.y:594.7-33: warning: type clash on default action: <declarator_helper> != <> [-Wother]
+  594 |     | '(' parameter_type_list ')'
+      |       ^~~~~~~~~~~~~~~~~~~~~~~~~~~

@@ -1,6 +1,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include "location.h"
 #include "declarations.h"
 #include "ast.h"
 
@@ -23,7 +24,7 @@ void ds_add_type_specifier(declaration_specifiers_t *ds, type_specifier_t type_s
     // duplicate type specifiers aren't allowed (except for long)
     if (current_scalar & new_scalar)
     {
-        fprintf(stderr, "invalid combination of type specifiers");
+        fprintf(stderr, "%s:%d: Error: invalid combination of type specifiers\n", filename, line_num);
         exit(80);
     }
 
@@ -42,7 +43,7 @@ void ds_add_storage_class(declaration_specifiers_t *ds, int storage_class)
 {
     if (ds->storage_class)
     {
-        fprintf(stderr, "storage class has already been specified");
+        fprintf(stderr, "%s:%d: Error: storage class has already been specified\n", filename, line_num);
         exit(80);
     }
     ds->storage_class = storage_class;

@@ -69,8 +69,8 @@ static const unsigned short TS_VALID[] = {
     TS_LONG | TS_LONG2 | TS_INT,
     TS_SIGNED | TS_LONG | TS_LONG2 | TS_INT,
 
-    TS_UNSIGNED | TS_LONG | TS_LONG,
-    TS_UNSIGNED | TS_LONG | TS_LONG | TS_INT,
+    TS_UNSIGNED | TS_LONG | TS_LONG2,
+    TS_UNSIGNED | TS_LONG | TS_LONG2 | TS_INT,
 
     TS_FLOAT,
     TS_DOUBLE,
@@ -188,5 +188,10 @@ struct number
     };
     scalar_t type;
 };
+
+
+void print_stringlit(string_t string);
+void print_numberlit(number_t number);
+void print_operator(int op);
 
 #endif

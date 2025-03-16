@@ -15,6 +15,8 @@ struct symbol_table
 extern symbol_table_t __root;
 extern symbol_table_t *st_top;
 
+symbol_table_t *st_new(symbol_table_t *parent);
+ast_node_list_t *st_free(symbol_table_t *st);
 void st_push(void);
 ast_node_list_t *st_pop(void);
 void st_add(ast_node_t *entry);

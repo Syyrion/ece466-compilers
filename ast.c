@@ -1,6 +1,5 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include <ctype.h>
 #include "types.h"
 #include "ast.h"
 #include "parser.tab.h"
@@ -100,12 +99,22 @@ ast_node_t *ast_new_array(ast_node_t *size)
     return new_inst;
 };
 
-ast_node_t *ast_new_scalar(scalar_t scalar)
+ast_node_t *ast_new_scalar(type_specifier_t type_specifier, type_qualifier_t type_qualifier)
 {
     ast_node_t *new_inst = malloc(sizeof(ast_node_t));
     new_inst->kind = AST_SCALAR;
-    new_inst->scalar = scalar;
+    new_inst->scalar = type_specifier.scalar;
+    new_inst->next = type_specifier.custom;
+    new_inst->type_qualifier = type_qualifier;
     return new_inst;
+}
+
+// converts an identifier into a variable
+ast_node_t *ast_ident_to_variable(ast_node_t *node, storage_class_specifier_t storage_class_specifier)
+{
+    node->kind = AST_VARIABLE;
+    node->storage_class = storage_class_specifier;
+    return node;
 }
 
 ast_node_list_t *ast_list_new(void)
@@ -126,7 +135,7 @@ ast_node_list_t *ast_list_add(ast_node_list_t *list, ast_node_t *node)
         list->capacity = 1;
         list->nodes = malloc(sizeof(ast_node_t *));
     }
-    list->nodes[list->node_count++] = node; 
+    list->nodes[list->node_count++] = node;
     return list;
 }
 
@@ -181,146 +190,7 @@ void ast_free(ast_node_t *node)
     free(node);
 }
 
-static void print_stringlit(string_t string)
-{
-    const char *s = string.buffer;
-    for (int i = 0; i < string.length; i++)
-    {
-        if (s[i] == '\x07')
-            printf("\\a");
-        else if (s[i] == '\x08')
-            printf("\\b");
-        else if (s[i] == '\x0c')
-            printf("\\f");
-        else if (s[i] == '\x0a')
-            printf("\\n");
-        else if (s[i] == '\x0d')
-            printf("\\r");
-        else if (s[i] == '\x09')
-            printf("\\t");
-        else if (s[i] == '\x0b')
-            printf("\\v");
-        else if (s[i] == '\\')
-            printf("\\\\");
-        else if (s[i] == '\'')
-            printf("\\\'");
-        else if (s[i] == '"')
-            printf("\\\"");
-        else if (s[i] == 0)
-            printf("\\0");
-        else if (isprint(s[i]))
-            fputc(s[i], stdout);
-        else
-            printf("\\%03o", (unsigned char)s[i]);
-    }
-}
-
-static void print_numberlit(number_t number)
-{
-    if (number.type.full & TS_REAL)
-    {
-        printf(
-            "REAL    %Lg    %s",
-            number.real,
-            number.type.long_bit     ? "LONG DOUBLE"
-            : number.type.double_bit ? "DOUBLE"
-                                     : "FLOAT");
-    }
-    else
-    {
-        printf(
-            "INTEGER    %lld    %s%s",
-            number.integer,
-            number.type.unsigned_bit ? "UNSIGNED " : "",
-            number.type.long2_bit       ? "LONG LONG"
-            : number.type.long_bit == 1 ? "LONG"
-                                        : "INT");
-    }
-}
-
-static void print_operator(int op)
-{
-    if (isprint(op))
-    {
-        fputc(op, stdout);
-        return;
-    }
-    switch (op)
-    {
-    case SHL:
-        printf("<<");
-        break;
-    case SHR:
-        printf(">>");
-        break;
-    case LTEQ:
-        printf("<=");
-        break;
-    case GTEQ:
-        printf(">=");
-        break;
-    case EQEQ:
-        printf("==");
-        break;
-    case NOTEQ:
-        printf("!=");
-        break;
-    case LOGAND:
-        printf("&&");
-        break;
-    case LOGOR:
-        printf("||");
-        break;
-    case PLUSEQ:
-        printf("+=");
-        break;
-    case MINUSEQ:
-        printf("-=");
-        break;
-    case TIMESEQ:
-        printf("*=");
-        break;
-    case DIVEQ:
-        printf("/=");
-        break;
-    case MODEQ:
-        printf("%=");
-        break;
-    case SHLEQ:
-        printf("<<=");
-        break;
-    case SHREQ:
-        printf(">>=");
-        break;
-    case ANDEQ:
-        printf("&=");
-        break;
-    case XOREQ:
-        printf("^=");
-        break;
-    case OREQ:
-        printf("|=");
-        break;
-    case SIZEOF:
-        printf("sizeof");
-        break;
-    case ALIGNOF:
-        printf("alignof");
-        break;
-    case PLUSPLUS:
-        printf("++");
-        break;
-    case MINUSMINUS:
-        printf("--");
-        break;
-    default:
-        fprintf(stderr, "attempted to print operator with unknown id %d", op);
-        printf("<unknown operator %d>", op);
-        break;
-    }
-}
-
-void ast_print(ast_node_t *node, const unsigned int depth)
+void ast_print_expression(ast_node_t *node, const unsigned int depth)
 {
 #define TAB_PAD                         \
     {                                   \
@@ -332,7 +202,7 @@ void ast_print(ast_node_t *node, const unsigned int depth)
     {                                \
         TAB_PAD;                     \
         printf(".%s\n", name);       \
-        ast_print(where, depth + 1); \
+        ast_print_expression(where, depth + 1); \
     }
 
     TAB_PAD;

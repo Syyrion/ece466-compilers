@@ -60,12 +60,6 @@ struct ast_struct_or_union
     ast_node_list_t *members;
 };
 
-// struct ast_member
-// {
-//     type_specifier_t type_specifier;
-//     type_qualifier_t type_qualifier;
-// };
-
 struct ast_node
 {
     ast_node_kind_t kind;
@@ -79,14 +73,20 @@ struct ast_node
         struct ast_function_call function_call;
 
         struct ast_struct_or_union struct_or_union;
-        // struct ast_member member;
 
         // declarator information
-        type_qualifier_t pointer_qualifiers;
-        ast_node_t *array_size;
-        ast_node_list_t *function_arguments;
+        type_qualifier_t pointer_qualifiers; // used by AST_POINTER
+        ast_node_t *array_size; // used by AST_ARRAY
+        struct { // used by AST_FUNCTION
+            ast_node_list_t *function_arguments;
+            function_specifier_t function_specifier;
+        };
 
-        scalar_t scalar;
+        struct { // used by AST_SCALAR
+            scalar_t scalar; // primitive scalars. structs, unions, and enums are found in the "next" field
+            type_qualifier_t type_qualifier;
+        };
+        storage_class_specifier_t storage_class; // used by AST_VARIABLE
 
         char charlit;
         string_t stringlit;
@@ -116,11 +116,14 @@ ast_node_t *ast_new_struct_or_union(int kind, char *name);
 ast_node_t *ast_new_pointer(int type_qualifier);
 ast_node_t *ast_new_array(ast_node_t *size);
 
+ast_node_t *ast_new_scalar(type_specifier_t type_specifier, type_qualifier_t type_qualifier);
+ast_node_t *ast_ident_to_variable(ast_node_t *node, storage_class_specifier_t storage_class_specifier);
+
 ast_node_list_t *ast_list_new(void);
 ast_node_list_t *ast_list_add(ast_node_list_t *list, ast_node_t *node);
 void ast_list_free(ast_node_list_t *list);
 
 void ast_free(ast_node_t *node);
-void ast_print(ast_node_t *node, const unsigned int depth);
+void ast_print_expression(ast_node_t *node, const unsigned int depth);
 
 #endif

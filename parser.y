@@ -16,6 +16,11 @@
     }
 %}
 
+%initial-action
+{
+    st_top = st_new(0);
+}
+
 %code requires{
     #include "declarations.h"
     #include "types.h"
@@ -201,7 +206,7 @@ statement:
     ;
 
 expression_statement:
-    expression ';' {ast_print($1, 0);}
+    expression ';' {ast_print_expression($1, 0);}
     | ';'
     ;
 
@@ -371,24 +376,21 @@ declaration:
                 goto ts_check_continue;
         fprintf(stderr, "%s:%d: Error: invalid combination of type specifiers\n", filename, line_num);
         exit(80);
-        ts_check_continue:
+    ts_check_continue:
 
-        // ast_node_t *end_scalar;
-        // if ($1.type_specifier.scalar.full & TS_CUSTOM)
-        //     end_scalar = $1.type_specifier.custom;
-        // else
-        //     end_scalar = ast_new_scalar($1.type_specifier.scalar);
+        ast_node_t *end_scalar = ast_new_scalar($1.type_specifier, $1.type_qualifier);
 
-        // for (int i = 0; i < $2.declarator_count ; i++)
-        // {
-        //     $2.declarators[i].ident
-        //     if (st_find())
-        //     {
-        //         fprintf(stderr, "invalid combination of type specifiers");
-        //         exit(80);
-        //     }
-        // }
-        // st_add();
+        for (int i = 0; i < $2.declarator_count ; i++)
+        {
+            ast_node_t *var = ast_ident_to_variable($2.declarators[i].oldest, $1.storage_class);   
+            if (st_find(0, var->ident))
+            {
+                fprintf(stderr, "%s:%d: Error: variable `%s` has already been declared\n", filename, line_num, var->ident);
+                exit(80);
+            }
+            st_add(var);
+            $2.declarators[i].newest->next = end_scalar;
+        }
     }
     ;
 
