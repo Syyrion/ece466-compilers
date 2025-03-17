@@ -75,7 +75,6 @@ struct ast_node
         struct ast_struct_or_union struct_or_union;
 
         // declarator information
-        type_qualifier_t pointer_qualifiers; // used by AST_POINTER
         ast_node_t *array_size; // used by AST_ARRAY
         struct { // used by AST_FUNCTION
             ast_node_list_t *function_arguments;
@@ -84,7 +83,7 @@ struct ast_node
 
         struct { // used by AST_SCALAR
             scalar_t scalar; // primitive scalars. structs, unions, and enums are found in the "next" field
-            type_qualifier_t type_qualifier;
+            type_qualifier_t type_qualifier; // used by AST_POINTER also
         };
         storage_class_specifier_t storage_class; // used by AST_VARIABLE
 
@@ -125,5 +124,6 @@ void ast_list_free(ast_node_list_t *list);
 
 void ast_free(ast_node_t *node);
 void ast_print_expression(ast_node_t *node, const unsigned int depth);
+void ast_print_variable(ast_node_t *node);
 
 #endif

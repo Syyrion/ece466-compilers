@@ -1,9 +1,21 @@
 #include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
 #include "symbol_table.h"
 #include "types.h"
 
-symbol_table_t *st_top;
+static symbol_table_t *st_root = 0;
+static symbol_table_t *st_top = 0;
+
+void st_init(void)
+{
+    if (st_root)
+    {
+        fprintf(stderr, "symbol table has already been initialized");
+        exit(89);
+    }
+    st_top = st_root = st_new(0);
+}
 
 symbol_table_t *st_new(symbol_table_t *parent)
 {
@@ -50,7 +62,6 @@ ast_node_t *st_find(symbol_table_t *st, char *name)
     {
         for (int i = 0; i < current_st->entries->node_count; i++)
         {
-            // fprintf(stderr, "h\n");
             ast_node_t *node = current_st->entries->nodes[i];
             if (strcmp(name, node->ident) == 0)
                 return node;
@@ -59,4 +70,9 @@ ast_node_t *st_find(symbol_table_t *st, char *name)
     } while (current_st != 0);
     
     return 0;
+}
+
+char st_is_at_root(void)
+{
+    return st_root == st_top;
 }

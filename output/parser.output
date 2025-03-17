@@ -18,10 +18,10 @@ Terminals unused in grammar
 
 Grammar
 
-    0 $accept: external_declaration_list $end
+    0 $accept: translation_unit $end
 
-    1 external_declaration_list: external_declaration
-    2                          | external_declaration_list external_declaration
+    1 translation_unit: external_declaration
+    2                 | translation_unit external_declaration
 
     3 external_declaration: function_definition
     4                     | declaration
@@ -376,7 +376,7 @@ Nonterminals, with rules where they appear
 
     $accept (91)
         on left: 0
-    external_declaration_list (92)
+    translation_unit (92)
         on left: 1 2
         on right: 0 2
     external_declaration (93)
@@ -566,7 +566,7 @@ Nonterminals, with rules where they appear
 
 State 0
 
-    0 $accept: • external_declaration_list $end
+    0 $accept: • translation_unit $end
 
     AUTO      shift, and go to state 1
     CHAR      shift, and go to state 2
@@ -591,7 +591,7 @@ State 0
     _BOOL     shift, and go to state 21
     _COMPLEX  shift, and go to state 22
 
-    external_declaration_list  go to state 23
+    translation_unit           go to state 23
     external_declaration       go to state 24
     function_definition        go to state 25
     declaration                go to state 26
@@ -768,8 +768,8 @@ State 22
 
 State 23
 
-    0 $accept: external_declaration_list • $end
-    2 external_declaration_list: external_declaration_list • external_declaration
+    0 $accept: translation_unit • $end
+    2 translation_unit: translation_unit • external_declaration
 
     $end      shift, and go to state 38
     AUTO      shift, and go to state 1
@@ -810,9 +810,9 @@ State 23
 
 State 24
 
-    1 external_declaration_list: external_declaration •
+    1 translation_unit: external_declaration •
 
-    $default  reduce using rule 1 (external_declaration_list)
+    $default  reduce using rule 1 (translation_unit)
 
 
 State 25
@@ -964,16 +964,16 @@ State 37
 
 State 38
 
-    0 $accept: external_declaration_list $end •
+    0 $accept: translation_unit $end •
 
     $default  accept
 
 
 State 39
 
-    2 external_declaration_list: external_declaration_list external_declaration •
+    2 translation_unit: translation_unit external_declaration •
 
-    $default  reduce using rule 2 (external_declaration_list)
+    $default  reduce using rule 2 (translation_unit)
 
 
 State 40

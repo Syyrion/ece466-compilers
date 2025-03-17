@@ -18,7 +18,7 @@
 
 %initial-action
 {
-    st_top = st_new(0);
+    st_init();
 }
 
 %code requires{
@@ -163,9 +163,10 @@
 %destructor {ast_free($$);} <node>
 
 %%
-external_declaration_list:
+translation_unit:
     external_declaration
-    | external_declaration_list external_declaration
+    | translation_unit external_declaration
+    ;
 
 external_declaration:
     function_definition
@@ -378,6 +379,14 @@ declaration:
         exit(80);
     ts_check_continue:
 
+        if (!$1.storage_class)
+        {
+            if (st_is_at_root())
+                $1.storage_class = SC_EXTERN;
+            else
+                $1.storage_class = SC_AUTO;
+        }
+
         ast_node_t *end_scalar = ast_new_scalar($1.type_specifier, $1.type_qualifier);
 
         for (int i = 0; i < $2.declarator_count ; i++)
@@ -390,6 +399,8 @@ declaration:
             }
             st_add(var);
             $2.declarators[i].newest->next = end_scalar;
+
+            ast_print_variable(var);
         }
     }
     ;
@@ -517,7 +528,7 @@ enumerator:
 
 declarator:
     direct_declarator {$$ = $1;}
-    | pointer direct_declarator {$2.newest = $1.oldest; $$.oldest = $2.oldest; $$.newest = $1.newest;}
+    | pointer direct_declarator {$2.newest->next = $1.oldest; $$.oldest = $2.oldest; $$.newest = $1.newest;}
     ;
 
 direct_declarator:
@@ -546,7 +557,7 @@ pointer:
 
 type_qualifier_list:
     type_qualifier {$$ = $1;}
-    | type_qualifier_list type_qualifier {$$ |= $1;}
+    | type_qualifier_list type_qualifier {$$ = $1 | $2;}
     ;
 
 parameter_type_list:

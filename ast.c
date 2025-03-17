@@ -85,7 +85,7 @@ ast_node_t *ast_new_pointer(int type_qualifier)
 {
     ast_node_t *new_inst = malloc(sizeof(ast_node_t));
     new_inst->kind = AST_POINTER;
-    new_inst->pointer_qualifiers.full = (char)type_qualifier;
+    new_inst->type_qualifier.full = (char)type_qualifier;
     new_inst->next = 0;
     return new_inst;
 };
@@ -190,22 +190,23 @@ void ast_free(ast_node_t *node)
     free(node);
 }
 
-void ast_print_expression(ast_node_t *node, const unsigned int depth)
-{
-#define TAB_PAD                         \
+#define TAB_PAD(depth)                  \
     {                                   \
         for (int i = 0; i < depth; i++) \
             printf("    ");             \
     }
 
-#define SUBSECTION(name, where)      \
-    {                                \
-        TAB_PAD;                     \
-        printf(".%s\n", name);       \
+void ast_print_expression(ast_node_t *node, const unsigned int depth)
+{
+
+#define SUBSECTION(name, where)                 \
+    {                                           \
+        TAB_PAD(depth);                         \
+        printf(".%s\n", name);                  \
         ast_print_expression(where, depth + 1); \
     }
 
-    TAB_PAD;
+    TAB_PAD(depth);
     switch (node->kind)
     {
     case AST_IDENT:
@@ -260,5 +261,54 @@ void ast_print_expression(ast_node_t *node, const unsigned int depth)
     }
 
 #undef SUBSECTION
-#undef TAB_PAD
+}
+
+void ast_print_variable(ast_node_t *node)
+{
+    printf("The variable `%s` has storage class ", node->ident);
+    print_storage_class(node->storage_class);
+    printf("and is a(n)\n");
+    int depth = 1;
+    ast_node_t *current_node = node->next;
+
+    while (current_node->kind != AST_SCALAR)
+    {
+        TAB_PAD(depth);
+        switch (current_node->kind)
+        {
+        case AST_POINTER:
+            print_type_qualifier(current_node->type_qualifier);
+            printf("pointer to a(n)\n");
+            /* code */
+            break;
+
+        case AST_ARRAY:
+            if (current_node->array_size)
+            {
+                printf("array with size\n");
+                TAB_PAD(depth);
+                printf("[\n");
+                ast_print_expression(current_node->array_size, depth + 1);
+                TAB_PAD(depth);
+                printf("]\n");
+                TAB_PAD(depth);
+            }
+            else
+            {
+                printf("array with unknown size ");
+            }
+            printf("containing\n");
+            break;
+
+        default:
+            printf("unknown");
+            break;
+        }
+        current_node = current_node->next;
+        depth++;
+    }
+    TAB_PAD(depth);
+    print_type_qualifier(current_node->type_qualifier);
+    print_scalar(current_node->scalar);
+    printf("\n");
 }

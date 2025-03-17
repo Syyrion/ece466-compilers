@@ -141,3 +141,67 @@ void print_operator(int op)
         break;
     }
 }
+
+void print_storage_class(storage_class_specifier_t storage_class)
+{
+    switch (storage_class)
+    {
+    case SC_EXTERN:
+        printf("EXTERN ");
+        break;
+    case SC_AUTO:
+        printf("AUTO ");
+        break;
+    case SC_STATIC:
+        printf("STATIC ");
+        break;
+    case SC_REGISTER:
+        printf("REGISTER ");
+        break;
+    default:
+        printf("unknown ");
+        break;
+    }
+}
+
+void print_type_qualifier(type_qualifier_t type_qualifier)
+{
+    if (type_qualifier.is_const)
+        printf("CONST ");
+    if (type_qualifier.is_restrict)
+        printf("RESTRICT ");
+    if (type_qualifier.is_volatile)
+        printf("VOLATILE ");
+}
+
+void print_scalar(scalar_t scalar)
+{
+    if (scalar.void_bit)
+        printf("VOID ");
+    if (scalar.char_bit)
+        printf("CHAR ");
+    if (scalar.short_bit)
+        printf("SHORT ");
+    if (scalar.int_bit)
+        printf("INT ");
+    if (scalar.long_bit)
+        printf("LONG ");
+    if (scalar.long2_bit)
+        printf("LONG ");
+    if (scalar.float_bit)
+        printf("FLOAT ");
+    if (scalar.double_bit)
+        printf("DOUBLE ");
+    if (scalar.signed_bit)
+        printf("SIGNED ");
+    if (scalar.unsigned_bit)
+        printf("UNSIGNED ");
+    if (scalar.bool_bit)
+        printf("BOOL ");
+    if (scalar.complex_bit)
+        printf("COMPLEX ");
+    if (scalar.struct_or_union_bit)
+        printf("STRUCT_OR_UNION ");
+    if (scalar.enum_bit)
+        printf("ENUM ");
+}

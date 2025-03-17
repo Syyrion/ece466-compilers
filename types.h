@@ -193,5 +193,8 @@ struct number
 void print_stringlit(string_t string);
 void print_numberlit(number_t number);
 void print_operator(int op);
+void print_storage_class(storage_class_specifier_t storage_class);
+void print_type_qualifier(type_qualifier_t type_qualifier);
+void print_scalar(scalar_t scalar);
 
 #endif

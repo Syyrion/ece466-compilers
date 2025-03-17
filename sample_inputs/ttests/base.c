@@ -18,14 +18,14 @@ long double ld;
 float f;
 const float f2;
 
-int *cc1;
+int *volatile const restrict cc1;
 int **cc2;
-
-int *cc3[];
+int **volatile const *const cc3;
+int *cc4[];
+int (*const *(*cc5)[3+5])[10];
 
 // declare x as function returning pointer to array 5 of pointer to function returning char
-char (*(**x())[5])();
-
+// char (*(**x())[5])();
 
 /*
 
@@ -39,6 +39,4 @@ function
                     void
                     char
 
-*/ 
-
-
+*/
