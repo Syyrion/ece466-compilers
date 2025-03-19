@@ -1496,15 +1496,14 @@ YY_RULE_SETUP
 /* 
         huge pain in the ass
         (this seems to work but probably will mess up in some random corner case)
-        TODO It's functional for now but probably should make better later.
     */
 case 92:
-#line 218 "lexer.l"
+#line 217 "lexer.l"
 case 93:
-#line 219 "lexer.l"
+#line 218 "lexer.l"
 case 94:
 YY_RULE_SETUP
-#line 219 "lexer.l"
+#line 218 "lexer.l"
 {
                                                                     yylval.number.type.full = get_real_type(yytext);
                                                                     yylval.number.real = strtold(yytext, NULL);
@@ -1513,7 +1512,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 95:
 YY_RULE_SETUP
-#line 225 "lexer.l"
+#line 224 "lexer.l"
 {
                                                                     yylval.number.type.full = get_int_type(yytext);
                                                                     yylval.number.integer = strtoull(yytext + 2, NULL, 16);
@@ -1522,7 +1521,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 96:
 YY_RULE_SETUP
-#line 230 "lexer.l"
+#line 229 "lexer.l"
 {   // binary too
                                                                     yylval.number.type.full = get_int_type(yytext);
                                                                     yylval.number.integer = strtoull(yytext + 2, NULL, 2);
@@ -1531,7 +1530,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 97:
 YY_RULE_SETUP
-#line 235 "lexer.l"
+#line 234 "lexer.l"
 {
                                                                     yylval.number.type.full = get_int_type(yytext);
                                                                     yylval.number.integer = strtoull(yytext, NULL, yytext[0] == '0' ? 8 : 10);
@@ -1540,77 +1539,77 @@ YY_RULE_SETUP
 	YY_BREAK
 case 98:
 YY_RULE_SETUP
-#line 241 "lexer.l"
+#line 240 "lexer.l"
 BEGIN strlit; begin_str();
 	YY_BREAK
 case 99:
 YY_RULE_SETUP
-#line 242 "lexer.l"
+#line 241 "lexer.l"
 BEGIN charlit; begin_str();
 	YY_BREAK
 case 100:
 YY_RULE_SETUP
-#line 243 "lexer.l"
+#line 242 "lexer.l"
 append_char('\x07');
 	YY_BREAK
 case 101:
 YY_RULE_SETUP
-#line 244 "lexer.l"
+#line 243 "lexer.l"
 append_char('\x08');
 	YY_BREAK
 case 102:
 YY_RULE_SETUP
-#line 245 "lexer.l"
+#line 244 "lexer.l"
 append_char('\x0c');
 	YY_BREAK
 case 103:
 YY_RULE_SETUP
-#line 246 "lexer.l"
+#line 245 "lexer.l"
 append_char('\x0a');
 	YY_BREAK
 case 104:
 YY_RULE_SETUP
-#line 247 "lexer.l"
+#line 246 "lexer.l"
 append_char('\x0d');
 	YY_BREAK
 case 105:
 YY_RULE_SETUP
-#line 248 "lexer.l"
+#line 247 "lexer.l"
 append_char('\x09');
 	YY_BREAK
 case 106:
 YY_RULE_SETUP
-#line 249 "lexer.l"
+#line 248 "lexer.l"
 append_char('\x0b');
 	YY_BREAK
 case 107:
 YY_RULE_SETUP
-#line 250 "lexer.l"
+#line 249 "lexer.l"
 append_char('\\');
 	YY_BREAK
 case 108:
 YY_RULE_SETUP
-#line 251 "lexer.l"
+#line 250 "lexer.l"
 append_char('\'');
 	YY_BREAK
 case 109:
 YY_RULE_SETUP
-#line 252 "lexer.l"
+#line 251 "lexer.l"
 append_char('"');
 	YY_BREAK
 case 110:
 YY_RULE_SETUP
-#line 253 "lexer.l"
+#line 252 "lexer.l"
 append_char('?');
 	YY_BREAK
 case 111:
 YY_RULE_SETUP
-#line 254 "lexer.l"
+#line 253 "lexer.l"
 append_char((char) strtol(yytext + 1, NULL, 8)); // this covers \0 too
 	YY_BREAK
 case 112:
 YY_RULE_SETUP
-#line 255 "lexer.l"
+#line 254 "lexer.l"
 {
                                         if (yyleng == 2)
                                         {
@@ -1634,7 +1633,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 113:
 YY_RULE_SETUP
-#line 275 "lexer.l"
+#line 274 "lexer.l"
 {
                                         fprintf(stderr, "%s:%d: Warning: unknown escape sequence %s\n", filename, line_num, yytext);
                                         append_char(yytext[1]);
@@ -1642,12 +1641,12 @@ YY_RULE_SETUP
 	YY_BREAK
 case 114:
 YY_RULE_SETUP
-#line 279 "lexer.l"
+#line 278 "lexer.l"
 BEGIN INITIAL; return STRINGLIT;
 	YY_BREAK
 case 115:
 YY_RULE_SETUP
-#line 280 "lexer.l"
+#line 279 "lexer.l"
 {
                                         BEGIN INITIAL;
                                         if (yylval.string.length == 0)
@@ -1669,20 +1668,20 @@ YY_RULE_SETUP
 	YY_BREAK
 case 116:
 YY_RULE_SETUP
-#line 298 "lexer.l"
+#line 297 "lexer.l"
 append_char(yytext[0]);
 	YY_BREAK
 case 117:
 YY_RULE_SETUP
-#line 300 "lexer.l"
+#line 299 "lexer.l"
 fprintf(stderr, "%s:%d: Error: unknown token %s\n", filename, line_num, yytext);
 	YY_BREAK
 case 118:
 YY_RULE_SETUP
-#line 301 "lexer.l"
+#line 300 "lexer.l"
 ECHO;
 	YY_BREAK
-#line 1685 "lex.yy.c"
+#line 1684 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 case YY_STATE_EOF(strlit):
 case YY_STATE_EOF(charlit):
@@ -2689,6 +2688,6 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 301 "lexer.l"
+#line 300 "lexer.l"
 
 

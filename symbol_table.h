@@ -14,11 +14,11 @@ struct symbol_table
 
 void st_init(void);
 symbol_table_t *st_new(symbol_table_t *parent);
-ast_node_list_t *st_free(symbol_table_t *st);
+ast_node_list_t *st_unpack(symbol_table_t *st);
 void st_push(void);
 ast_node_list_t *st_pop(void);
-void st_add(ast_node_t *entry);
+void st_add(symbol_table_t *st, ast_node_t *entry);
 ast_node_t *st_find(symbol_table_t *st, char *name);
-char st_is_at_root(void);
+int st_is_at_root(void);
 
 #endif

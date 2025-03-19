@@ -54,12 +54,6 @@ struct ast_function_call
     ast_node_list_t *args;
 };
 
-struct ast_struct_or_union
-{
-    char complete;
-    ast_node_list_t *members;
-};
-
 struct ast_node
 {
     ast_node_kind_t kind;
@@ -72,10 +66,13 @@ struct ast_node
         struct ast_ternary_op ternary_op;
         struct ast_function_call function_call;
 
-        struct ast_struct_or_union struct_or_union;
+        ast_node_list_t *members; // used by AST_STRUCT or AST_UNION
+        ast_node_t *bit_width; // used by AST_MEMBER
 
-        // declarator information
+        storage_class_specifier_t storage_class; // used by AST_VARIABLE
+        
         ast_node_t *array_size; // used by AST_ARRAY
+        
         struct { // used by AST_FUNCTION
             ast_node_list_t *function_arguments;
             function_specifier_t function_specifier;
@@ -83,9 +80,8 @@ struct ast_node
 
         struct { // used by AST_SCALAR
             scalar_t scalar; // primitive scalars. structs, unions, and enums are found in the "next" field
-            type_qualifier_t type_qualifier; // used by AST_POINTER also
+            type_qualifier_t type_qualifier; // used by AST_POINTER also ;)
         };
-        storage_class_specifier_t storage_class; // used by AST_VARIABLE
 
         char charlit;
         string_t stringlit;
@@ -110,13 +106,15 @@ ast_node_t *ast_new_binary_op(int kind, ast_node_t *left, ast_node_t *right);
 ast_node_t *ast_new_ternary_op(ast_node_t *condition, ast_node_t *true_branch, ast_node_t *false_branch);
 ast_node_t *ast_new_function_call(ast_node_t *name, ast_node_list_t *args);
 
-ast_node_t *ast_new_struct_or_union(int kind, char *name);
-
 ast_node_t *ast_new_pointer(int type_qualifier);
 ast_node_t *ast_new_array(ast_node_t *size);
-
 ast_node_t *ast_new_scalar(type_specifier_t type_specifier, type_qualifier_t type_qualifier);
 ast_node_t *ast_ident_to_variable(ast_node_t *node, storage_class_specifier_t storage_class_specifier);
+
+ast_node_t *ast_new_struct_or_union(int kind, char *name, ast_node_list_t *members);
+ast_node_t *ast_add_struct_or_union_members(ast_node_t *node, ast_node_list_t *members);
+ast_node_t *ast_ident_to_member(ast_node_t *node, ast_node_t *bit_width);
+ast_node_t *ast_new_padding_member(ast_node_t *bit_width);
 
 ast_node_list_t *ast_list_new(void);
 ast_node_list_t *ast_list_add(ast_node_list_t *list, ast_node_t *node);

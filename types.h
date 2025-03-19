@@ -81,6 +81,9 @@ static const unsigned short TS_VALID[] = {
     TS_FLOAT | TS_COMPLEX,
     TS_DOUBLE | TS_COMPLEX,
     TS_LONG | TS_DOUBLE | TS_COMPLEX,
+
+    TS_STRUCT_OR_UNION,
+    TS_ENUM,
 };
 
 typedef union
@@ -159,16 +162,20 @@ typedef struct
 {
     ast_node_t *oldest;      // first created declarator element
     ast_node_t *newest;      // newest created declarator element
-    ast_node_t *initializer; // declarator initializer or function definition
+    union {
+        ast_node_t *initializer;
+        ast_node_t *bit_width;
+    };
 } declarator_helper_t;
 
 // list of declarator helpers
 typedef struct
 {
+    declaration_specifiers_t declaration_specifiers;
     unsigned long capacity;
     unsigned long declarator_count;
     declarator_helper_t *declarators;
-} declarator_list_t;
+} declaration_package_t;
 
 // string literal value
 struct string

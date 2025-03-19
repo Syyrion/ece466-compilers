@@ -26,17 +26,6 @@ int (*const *(*cc5)[3+5])[10];
 
 // declare x as function returning pointer to array 5 of pointer to function returning char
 // char (*(**x())[5])();
+int;
 
-/*
-
-x is a
-function
-    void
-    pointer
-        array of 5
-            pointer
-                function
-                    void
-                    char
-
-*/
+// int f(a, b, c, c);

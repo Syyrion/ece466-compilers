@@ -4,6 +4,7 @@ main:
 	gcc lex.yy.c parser.tab.c parser_test.c ast.c symbol_table.c declarations.c types.c -o parser_test
 
 run:
-#	gcc -E sample_inputs/exprtests.c | ./parser_test > output/exprtests.txt
-	gcc -E sample_inputs/ttests/base.c | ./parser_test > output/exprtests.txt
-#	gcc -E sample_inputs/test.c | ./parser_test > output/exprtests.txt
+#	gcc -E sample_inputs/exprtests.c | ./parser_test > output/testing_out.txt
+#	gcc -E sample_inputs/ttests/base.c | ./parser_test > output/testing_out.txt
+	gcc -E sample_inputs/ttests/struct1.c | ./parser_test > output/testing_out.txt
+#	gcc -E sample_inputs/test.c | ./parser_test > output/testing_out.txt

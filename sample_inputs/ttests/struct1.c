@@ -1,4 +1,3 @@
-
 static struct str1 {
 	int a;
 	/*const*/ int i;	/*What happens when you uncomment this?*/
@@ -30,12 +29,15 @@ struct str6 {
 	int a;
 	unsigned b:2;
 	unsigned c:5;
-	int :7;
+	int :7; // !causes a segfault
 	unsigned d;
 	unsigned e:16;
 } s6;
-union u1 {
-	struct str4 str4;
-	struct str3 str3;
-} u1;
 
+// ! struct u1 doesn't conflict with u1
+// union u1 {
+// 	struct str4 str4;
+// 	struct str3 str3;
+// } u1;
+
+// ! BRUUUUUUUUUUUUUUUUUUUHHHH

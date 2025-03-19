@@ -212,7 +212,6 @@ _Imaginary      {return _IMAGINARY;}
     /* 
         huge pain in the ass
         (this seems to work but probably will mess up in some random corner case)
-        TODO It's functional for now but probably should make better later.
     */
 0[xX][0-9A-Fa-f]+p[\+\-]?[0-9]+{FLOAT_SUFFIX}                   |
 [0-9]+e[\+\-]?[0-9]+{FLOAT_SUFFIX}                              |

@@ -71,16 +71,6 @@ ast_node_t *ast_new_function_call(ast_node_t *name, ast_node_list_t *args)
     return new_inst;
 }
 
-ast_node_t *ast_new_struct_or_union(int kind, char *name)
-{
-    ast_node_t *new_inst = malloc(sizeof(ast_node_t));
-    new_inst->kind = kind;
-    new_inst->ident = name;
-    new_inst->struct_or_union.complete = 0;
-    new_inst->struct_or_union.members = ast_list_new();
-    return new_inst;
-}
-
 ast_node_t *ast_new_pointer(int type_qualifier)
 {
     ast_node_t *new_inst = malloc(sizeof(ast_node_t));
@@ -115,6 +105,38 @@ ast_node_t *ast_ident_to_variable(ast_node_t *node, storage_class_specifier_t st
     node->kind = AST_VARIABLE;
     node->storage_class = storage_class_specifier;
     return node;
+}
+
+ast_node_t *ast_new_struct_or_union(int kind, char *name, ast_node_list_t *members)
+{
+    ast_node_t *new_inst = malloc(sizeof(ast_node_t));
+    new_inst->kind = kind;
+    new_inst->ident = name;
+    new_inst->members = members;
+    return new_inst;
+}
+
+ast_node_t *ast_add_struct_or_union_members(ast_node_t *node, ast_node_list_t *members)
+{
+    node->members = members;
+    return node;
+}
+
+ast_node_t *ast_ident_to_member(ast_node_t *node, ast_node_t *bit_width)
+{
+    node->kind = AST_MEMBER;
+    node->bit_width = bit_width;
+    return node;
+}
+
+ast_node_t *ast_new_padding_member(ast_node_t *bit_width)
+{
+    ast_node_t *new_inst = malloc(sizeof(ast_node_t));
+    new_inst->kind = AST_MEMBER;
+    new_inst->ident = 0;
+    new_inst->next = 0;
+    new_inst->bit_width = bit_width;
+    return new_inst;
 }
 
 ast_node_list_t *ast_list_new(void)
@@ -310,5 +332,9 @@ void ast_print_variable(ast_node_t *node)
     TAB_PAD(depth);
     print_type_qualifier(current_node->type_qualifier);
     print_scalar(current_node->scalar);
+    if (current_node->scalar.full & TS_CUSTOM)
+        printf("with name %s (%s)",
+               current_node->next->ident,
+               current_node->next->members ? "complete" : "incomplete");
     printf("\n");
 }

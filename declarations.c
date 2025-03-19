@@ -5,16 +5,14 @@
 #include "declarations.h"
 #include "ast.h"
 
-// ## DECLARATION SPECIFIERS
-
-void ds_init(declaration_specifiers_t *ds)
+void declspec_init(declaration_specifiers_t *declspec)
 {
-    memset(ds, 0, sizeof(declaration_specifiers_t));
+    memset(declspec, 0, sizeof(declaration_specifiers_t));
 }
 
-void ds_add_type_specifier(declaration_specifiers_t *ds, type_specifier_t type_specifier)
+void declspec_add_type_specifier(declaration_specifiers_t *declspec, type_specifier_t type_specifier)
 {
-    unsigned short current_scalar = ds->type_specifier.scalar.full;
+    unsigned short current_scalar = declspec->type_specifier.scalar.full;
     unsigned short new_scalar = type_specifier.scalar.full;
 
     // if a long was already encountered, try using long2
@@ -29,49 +27,62 @@ void ds_add_type_specifier(declaration_specifiers_t *ds, type_specifier_t type_s
     }
 
     if (new_scalar & TS_CUSTOM)
-        ds->type_specifier.custom = type_specifier.custom;
+        declspec->type_specifier.custom = type_specifier.custom;
 
-    ds->type_specifier.scalar.full |= new_scalar;
+    declspec->type_specifier.scalar.full |= new_scalar;
 }
 
-void ds_add_type_qualifier(declaration_specifiers_t *ds, int type_qualifiers)
+void declspec_add_type_qualifier(declaration_specifiers_t *declspec, int type_qualifiers)
 {
-    ds->type_qualifier.full |= type_qualifiers;
+    declspec->type_qualifier.full |= type_qualifiers;
 }
 
-void ds_add_storage_class(declaration_specifiers_t *ds, int storage_class)
+void declspec_add_storage_class(declaration_specifiers_t *declspec, int storage_class)
 {
-    if (ds->storage_class)
+    if (declspec->storage_class)
     {
         fprintf(stderr, "%s:%d: Error: storage class has already been specified\n", filename, line_num);
         exit(80);
     }
-    ds->storage_class = storage_class;
+    declspec->storage_class = storage_class;
 };
 
-void ds_add_function_specifier(declaration_specifiers_t *ds, int function_specifier)
+void declspec_add_function_specifier(declaration_specifiers_t *declspec, int function_specifier)
 {
-    ds->function_specifier = function_specifier;
-};
-
-// ## DECLARATORS
-
-void dl_init(declarator_list_t *list)
-{
-    memset(list, 0, sizeof(declarator_list_t));
+    declspec->function_specifier = function_specifier;
 }
 
-void dl_add(declarator_list_t *list, declarator_helper_t declarator)
+void declspec_verify_scalar(scalar_t *scalar)
 {
-    if (list->declarators)
+    if (scalar->full == 0)
     {
-        if (list->declarator_count == list->capacity)
-            list->declarators = realloc(list->declarators, (list->capacity *= 2) * sizeof(declarator_helper_t));
+        fprintf(stderr, "%s:%d: Warning: declaration with no type specifiers treated as int\n", filename, line_num);
+        scalar->full |= TS_INT;
+        return;
+    }
+    for (int i = 0, j = sizeof(TS_VALID) / sizeof(*TS_VALID); i < j; i++)
+        if (scalar->full == TS_VALID[i])
+            return;
+    fprintf(stderr, "%s:%d: Error: invalid combination of type specifiers\n", filename, line_num);
+    exit(80);
+}
+
+void declpkg_init(declaration_package_t *declpkg)
+{
+    memset(declpkg, 0, sizeof(declaration_package_t));
+}
+
+void declpkg_add_declarator(declaration_package_t *declpkg, declarator_helper_t declarator)
+{
+    if (declpkg->declarators)
+    {
+        if (declpkg->declarator_count == declpkg->capacity)
+            declpkg->declarators = realloc(declpkg->declarators, (declpkg->capacity *= 2) * sizeof(declarator_helper_t));
     }
     else
     {
-        list->capacity = 1;
-        list->declarators = malloc(sizeof(declarator_helper_t));
+        declpkg->capacity = 1;
+        declpkg->declarators = malloc(sizeof(declarator_helper_t));
     }
-    list->declarators[list->declarator_count++] = declarator;
+    declpkg->declarators[declpkg->declarator_count++] = declarator;
 }

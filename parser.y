@@ -6,14 +6,16 @@
     #include <stdlib.h>
     #include <stdio.h>
     #include "lexer.h"
-    #include "ast.h"
     #include "location.h"
+    #include "ast.h"
     #include "symbol_table.h"
 
     void yyerror (const char *s)
     {
         fprintf (stderr, "%s:%d: %s\n", filename, line_num, s);
     }
+
+    symbol_table_t *add_members_to_symbol_table(symbol_table_t *member_table, declaration_package_t declaration_package);
 %}
 
 %initial-action
@@ -24,24 +26,29 @@
 %code requires{
     #include "declarations.h"
     #include "types.h"
+    #include "ast.h"
+    #include "symbol_table.h"
 }
 
 %union{
     int integer;
 
-    storage_class_specifier_t storage_class_specifier;
-    function_specifier_t function_specifier;
-    int type_qualifier;
-    type_specifier_t type_specifier;
-
     string_t string;
     number_t number;
+
+    type_specifier_t type_specifier;
+    int type_qualifier;
+    storage_class_specifier_t storage_class_specifier;
+    function_specifier_t function_specifier;
+
     ast_node_t *node;
     ast_node_list_t *node_list;
 
     declaration_specifiers_t declaration_specifiers;
     declarator_helper_t declarator_helper;
-    declarator_list_t declarator_list;
+    declaration_package_t declaration_package;
+
+    symbol_table_t *symbol_table;
 }
 
 %token
@@ -144,14 +151,23 @@
     <function_specifier> function_specifier
     <type_qualifier> type_qualifier
     <type_specifier> type_specifier
-    
-    <declarator_list> init_declarator_list
+
+    <declaration_package> init_declarator_list
     <declarator_helper> init_declarator
     <declarator_helper> declarator
     <declarator_helper> direct_declarator
     <declarator_helper> pointer
+
     <declarator_helper> abstract_declarator
     <declarator_helper> direct_abstract_declarator
+
+    <symbol_table> struct_declaration_list
+    <declaration_package> struct_declaration
+    <declaration_package> struct_declarator_list
+    <declaration_specifiers> specifier_qualifier_list
+    <declarator_helper> struct_declarator
+
+    <node_list> identifier_list
 
     <type_qualifier> type_qualifier_list
     <integer> struct_or_union
@@ -207,7 +223,7 @@ statement:
     ;
 
 expression_statement:
-    expression ';' {ast_print_expression($1, 0);}
+    expression ';' {ast_print_expression($1, 0);} // ! debug
     | ';'
     ;
 
@@ -366,18 +382,7 @@ constant_expression:
 declaration:
     declaration_specifiers init_declarator_list ';'
     {
-        if ($1.type_specifier.scalar.full == 0)
-        {
-            fprintf(stderr, "%s:%d: Warning: declaration with no type specifiers treated as int\n", filename, line_num);
-            $1.type_specifier.scalar.full |= TS_INT;
-            goto ts_check_continue;
-        }
-        for (int i = 0, j = sizeof(TS_VALID) / sizeof(*TS_VALID); i < j; i++)
-            if ($1.type_specifier.scalar.full == TS_VALID[i])
-                goto ts_check_continue;
-        fprintf(stderr, "%s:%d: Error: invalid combination of type specifiers\n", filename, line_num);
-        exit(80);
-    ts_check_continue:
+        declspec_verify_scalar(&$1.type_specifier.scalar);
 
         if (!$1.storage_class)
         {
@@ -391,34 +396,36 @@ declaration:
 
         for (int i = 0; i < $2.declarator_count ; i++)
         {
-            ast_node_t *var = ast_ident_to_variable($2.declarators[i].oldest, $1.storage_class);   
+            ast_node_t *var = ast_ident_to_variable($2.declarators[i].oldest, $1.storage_class);
             if (st_find(0, var->ident))
             {
                 fprintf(stderr, "%s:%d: Error: variable `%s` has already been declared\n", filename, line_num, var->ident);
                 exit(80);
             }
-            st_add(var);
+            st_add(0, var);
             $2.declarators[i].newest->next = end_scalar;
 
+            // ! debug
             ast_print_variable(var);
         }
     }
+    | declaration_specifiers ';' // this can just be tossed without issue
     ;
 
 declaration_specifiers:
-    type_specifier {ds_init(&$$); ds_add_type_specifier(&$$, $1);}
-    | type_qualifier {ds_init(&$$); ds_add_type_qualifier(&$$, $1);}
-    | storage_class_specifier {ds_init(&$$); ds_add_storage_class(&$$, $1);}
-    | function_specifier {ds_init(&$$); ds_add_function_specifier(&$$, $1);}
-    | declaration_specifiers type_specifier {ds_add_type_specifier(&$1, $2); $$ = $1;}
-    | declaration_specifiers type_qualifier {ds_add_type_qualifier(&$1, $2); $$ = $1;}
-    | declaration_specifiers storage_class_specifier {ds_add_storage_class(&$1, $2); $$ = $1;}
-    | declaration_specifiers function_specifier {ds_add_function_specifier(&$1, $2); $$ = $1;}
+    type_specifier {declspec_init(&$$); declspec_add_type_specifier(&$$, $1);}
+    | type_qualifier {declspec_init(&$$); declspec_add_type_qualifier(&$$, $1);}
+    | storage_class_specifier {declspec_init(&$$); declspec_add_storage_class(&$$, $1);}
+    | function_specifier {declspec_init(&$$); declspec_add_function_specifier(&$$, $1);}
+    | declaration_specifiers type_specifier {declspec_add_type_specifier(&$1, $2); $$ = $1;}
+    | declaration_specifiers type_qualifier {declspec_add_type_qualifier(&$1, $2); $$ = $1;}
+    | declaration_specifiers storage_class_specifier {declspec_add_storage_class(&$1, $2); $$ = $1;}
+    | declaration_specifiers function_specifier {declspec_add_function_specifier(&$1, $2); $$ = $1;}
     ;
 
 init_declarator_list:
-    init_declarator {dl_init(&$$); dl_add(&$$, $1);}
-    | init_declarator_list ',' init_declarator {dl_add(&$1, $3); $$ = $1;}
+    init_declarator {declpkg_init(&$$); declpkg_add_declarator(&$$, $1);}
+    | init_declarator_list ',' init_declarator {declpkg_add_declarator(&$1, $3); $$ = $1;}
     ;
 
 init_declarator:
@@ -467,11 +474,49 @@ function_specifier:
 
 // ## STRUCTS AND UNIONS
 struct_or_union_specifier:
-    struct_or_union //{fprintf(stderr, "begin\n");} 
-        '{' struct_declaration_list '}' //{fprintf(stderr, "end\n");}
-    | struct_or_union IDENT //{st_add($<node>$ = ast_new_struct_or_union($1, $2.buffer)); st_push();}
-        '{' struct_declaration_list '}' //{fprintf(stderr, "end2\n"); st_pop();}
-    | struct_or_union IDENT //{st_add($$ = ast_new_struct_or_union($1, $2.buffer));}
+    struct_or_union '{' struct_declaration_list '}' {$$ = ast_new_struct_or_union($1, 0, st_unpack($3));}
+    | struct_or_union IDENT '{'
+        {
+            // midrule action since the struct needs to be installed before we see the members
+            ast_node_t *node = st_find(0, $2.buffer); // check if a struct declaration already exists
+            if (node)
+            {
+                if (node->kind == AST_STRUCT || node->kind == AST_UNION)
+                {
+                    if (node->members == 0)
+                    {
+                        $<node>$ = node; // put it on the stack
+                    }
+                    else
+                    {
+                        fprintf(stderr, "%s:%d: Error: `%s` is already complete\n", filename, line_num, $2.buffer);
+                        exit(80);
+                    }
+                }
+                else
+                {
+                    fprintf(stderr, "%s:%d: Error: something named `%s` has already been declared\n", filename, line_num, $2.buffer);
+                    exit(80);
+                }
+            }
+            else
+            {
+                st_add(0, $<node>$ = ast_new_struct_or_union($1, $2.buffer, 0));
+            }
+        }
+        struct_declaration_list '}' {$$ = ast_add_struct_or_union_members($<node>4, st_unpack($5));}
+    | struct_or_union IDENT
+        {
+            ast_node_t *node = st_find(0, $2.buffer); // check if a struct declaration already exists
+            if (node)
+            {
+                $$ = node;
+            }
+            else
+            {
+                st_add(0, $$ = ast_new_struct_or_union($1, $2.buffer, 0));
+            }
+        }
     ;
 
 struct_or_union:
@@ -480,34 +525,36 @@ struct_or_union:
     ;
 
 struct_declaration_list:
-    struct_declaration //{st_add($1);}
-    | struct_declaration_list struct_declaration //{st_add($2);}
+    struct_declaration {$$ = add_members_to_symbol_table(st_new(0), $1);}
+    | struct_declaration_list struct_declaration {$$ = add_members_to_symbol_table($1, $2);}
     ;
 
 struct_declaration:
     specifier_qualifier_list struct_declarator_list ';'
+        {declspec_verify_scalar(&$1.type_specifier.scalar); $2.declaration_specifiers = $1; $$ = $2;}
     ;
 
 specifier_qualifier_list:
-    type_specifier
-    | specifier_qualifier_list type_specifier
-    | type_qualifier
-    | specifier_qualifier_list type_qualifier
+    type_specifier {declspec_init(&$$); declspec_add_type_specifier(&$$, $1);}
+    | type_qualifier {declspec_init(&$$); declspec_add_type_qualifier(&$$, $1);}
+    | specifier_qualifier_list type_specifier {declspec_add_type_specifier(&$1, $2); $$ = $1;}
+    | specifier_qualifier_list type_qualifier {declspec_add_type_qualifier(&$1, $2); $$ = $1;}
     ;
 
 struct_declarator_list:
-    struct_declarator
-    | struct_declarator_list ',' struct_declarator
+    struct_declarator {declpkg_init(&$$); declpkg_add_declarator(&$$, $1);}
+    | struct_declarator_list ',' struct_declarator {declpkg_add_declarator(&$1, $3); $$ = $1;}
     ;
 
 struct_declarator:
-    declarator
-    | ':' constant_expression 
-    | declarator ':' constant_expression
+    declarator {$1.bit_width = 0; $$ = $1;}
+    | ':' constant_expression {$$ = (declarator_helper_t){.oldest = 0, .newest = 0, .bit_width = $2};}
+    | declarator ':' constant_expression {$1.bit_width = $3; $$ = $1;}
     ;
 
 // ## ENUMS
 
+// TODO save for later
 enum_specifier:
     ENUM identifier
     | ENUM '{' enumerator_list '}'
@@ -577,8 +624,8 @@ parameter_declaration:
     ;
 
 identifier_list:
-    identifier
-    | identifier_list ',' identifier
+    identifier {$$ = ast_list_add(ast_list_new(), $1);}
+    | identifier_list ',' identifier {$$ = ast_list_add($1, $3);}
     ;
 
 type_name:
@@ -587,17 +634,17 @@ type_name:
     ;
 
 abstract_declarator:
-    pointer
-    | direct_abstract_declarator
-    | pointer direct_abstract_declarator
+    pointer {$$ = $1;}
+    | direct_abstract_declarator {$$ = $1;}
+    | pointer direct_abstract_declarator {$2.newest->next = $1.oldest; $$.oldest = $2.oldest; $$.newest = $1.newest;}
     ;
 
 direct_abstract_declarator:
     '(' abstract_declarator ')' {$$ = $2;}
     | '[' ']' {$$.oldest = $$.newest = ast_new_array(0);}
     | '[' assignment_expression ']' {$$.oldest = $$.newest = ast_new_array($2);}
-    | direct_abstract_declarator '[' ']'
-    | direct_abstract_declarator '[' assignment_expression ']'
+    | direct_abstract_declarator '[' ']' {$$.newest = $1.newest->next = ast_new_array(0); $$.oldest = $1.oldest;}
+    | direct_abstract_declarator '[' assignment_expression ']' {$$.newest = $1.newest->next = ast_new_array($3); $$.oldest = $1.oldest;}
 //  | '[' '*' ']'
 //  | direct_abstract_declarator '[' '*' ']'
     | '(' ')'
@@ -615,3 +662,50 @@ initializer:
     ;
 
 %%
+
+
+// for structs and unions only
+symbol_table_t *add_members_to_symbol_table(symbol_table_t *member_table, declaration_package_t declaration_package)
+{
+    ast_node_t *end_scalar = ast_new_scalar(
+        declaration_package.declaration_specifiers.type_specifier,
+        declaration_package.declaration_specifiers.type_qualifier);
+
+    unsigned short is_custom = end_scalar->scalar.full & TS_CUSTOM;
+
+    for (int i = 0; i < declaration_package.declarator_count; i++)
+    {
+        declarator_helper_t *declarator = &(declaration_package.declarators[i]);
+        if (!declarator->oldest)
+        {
+            // padding bit field
+            st_add(member_table, ast_new_padding_member(declarator->bit_width));
+        }
+        else
+        {
+            ast_node_t *member = ast_ident_to_member(declarator->oldest, declarator->bit_width);
+
+            if (
+                is_custom                                   // scalar is a struct or union
+                && declarator->newest == declarator->oldest // not a pointer, array, or function
+                && end_scalar->next->members == 0           // no members
+            )
+            {
+                fprintf(stderr, "%s:%d: Error: member `%s` is incomplete\n", filename, line_num, member->ident);
+                exit(81);
+            }
+
+            declarator->newest->next = end_scalar;
+
+            if (st_find(member_table, member->ident))
+            {
+                fprintf(stderr, "%s:%d: Error: member `%s` has already been declared\n", filename, line_num, member->ident);
+                exit(80);
+            }
+
+            st_add(member_table, member);
+        }
+    }
+
+    return member_table;
+}
