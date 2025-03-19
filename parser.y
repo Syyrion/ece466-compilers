@@ -397,19 +397,19 @@ declaration:
         for (int i = 0; i < $2.declarator_count ; i++)
         {
             ast_node_t *var = ast_ident_to_variable($2.declarators[i].oldest, $1.storage_class);
-            if (st_find(0, var->ident))
+            if (st_find(NS_VARIABLE, var->ident))
             {
                 fprintf(stderr, "%s:%d: Error: variable `%s` has already been declared\n", filename, line_num, var->ident);
                 exit(80);
             }
-            st_add(0, var);
+            st_add(NS_VARIABLE, var);
             $2.declarators[i].newest->next = end_scalar;
 
             // ! debug
             ast_print_variable(var);
         }
     }
-    | declaration_specifiers ';' // this can just be tossed without issue
+    | declaration_specifiers ';' // if this is a struct without a name then it goes unused (should be freed probably)
     ;
 
 declaration_specifiers:
@@ -478,10 +478,10 @@ struct_or_union_specifier:
     | struct_or_union IDENT '{'
         {
             // midrule action since the struct needs to be installed before we see the members
-            ast_node_t *node = st_find(0, $2.buffer); // check if a struct declaration already exists
+            ast_node_t *node = st_find(NS_STRUCT, $2.buffer); // check if a struct declaration already exists
             if (node)
             {
-                if (node->kind == AST_STRUCT || node->kind == AST_UNION)
+                if (node->kind == $1)
                 {
                     if (node->members == 0)
                     {
@@ -495,26 +495,27 @@ struct_or_union_specifier:
                 }
                 else
                 {
-                    fprintf(stderr, "%s:%d: Error: something named `%s` has already been declared\n", filename, line_num, $2.buffer);
+                    fprintf(stderr, "%s:%d: Error: a struct or union `%s` has already been declared\n", filename, line_num, $2.buffer);
                     exit(80);
                 }
             }
             else
             {
-                st_add(0, $<node>$ = ast_new_struct_or_union($1, $2.buffer, 0));
+                st_add(NS_STRUCT, $<node>$ = ast_new_struct_or_union($1, $2.buffer, 0));
             }
         }
-        struct_declaration_list '}' {$$ = ast_add_struct_or_union_members($<node>4, st_unpack($5));}
+        struct_declaration_list '}' {$$ = ast_add_struct_or_union_members($<node>4, st_unpack($5)); ast_print_struct_or_union($$);}
     | struct_or_union IDENT
         {
-            ast_node_t *node = st_find(0, $2.buffer); // check if a struct declaration already exists
+            ast_node_t *node = st_find(NS_STRUCT, $2.buffer); // check if a struct declaration already exists
             if (node)
             {
                 $$ = node;
             }
             else
             {
-                st_add(0, $$ = ast_new_struct_or_union($1, $2.buffer, 0));
+                st_add(NS_STRUCT, $$ = ast_new_struct_or_union($1, $2.buffer, 0));
+                ast_print_struct_or_union($$);
             }
         }
     ;
@@ -692,6 +693,12 @@ symbol_table_t *add_members_to_symbol_table(symbol_table_t *member_table, declar
             )
             {
                 fprintf(stderr, "%s:%d: Error: member `%s` is incomplete\n", filename, line_num, member->ident);
+                exit(81);
+            }
+
+            if (declarator->oldest->next && declarator->oldest->next->kind == AST_ARRAY && declarator->oldest->next->array_size == 0)
+            {
+                fprintf(stderr, "%s:%d: Error: member `%s` cannot be an array of unknown size\n", filename, line_num, member->ident);
                 exit(81);
             }
 

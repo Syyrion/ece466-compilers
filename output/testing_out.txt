@@ -1,0 +1,109 @@
+> STRUCT str2 has been declared with members
+{
+    .d with type:
+        SHORT 
+
+    .e with type:
+        SHORT 
+
+    .c with type:
+        CHAR 
+
+}
+> STRUCT str1 has been declared with members
+{
+    .a with type:
+        INT 
+
+    .i with type:
+        INT 
+
+    .str2 with type:
+        STRUCT_OR_UNION with name str2 (complete)
+
+    .c with type:
+        CHAR 
+
+}
+The variable `s1` has storage class STATIC and is a(n)
+    STRUCT_OR_UNION with name str1 (complete)
+The variable `s2` has storage class EXTERN and is a(n)
+    STRUCT_OR_UNION with name str2 (complete)
+> STRUCT str4 has been declared but is incomplete
+> STRUCT str3 has been declared with members
+{
+    .p4 with type:
+        pointer to a(n)
+            STRUCT_OR_UNION with name str4 (incomplete)
+
+}
+The variable `s3` has storage class EXTERN and is a(n)
+    STRUCT_OR_UNION with name str3 (complete)
+> STRUCT a has been declared with members
+{
+    .a with type:
+        INT 
+
+}
+> STRUCT str4 has been declared with members
+{
+    .p3 with type:
+        pointer to a(n)
+            STRUCT_OR_UNION with name str3 (complete)
+
+    .str1 with type:
+        array with size
+        [
+            NUMBERLIT    INTEGER    10    INT
+        ]
+        containing
+            STRUCT_OR_UNION with name str1 (complete)
+
+    .i with type:
+        INT 
+
+}
+The variable `s4` has storage class EXTERN and is a(n)
+    STRUCT_OR_UNION with name str4 (complete)
+The variable `s5` has storage class EXTERN and is a(n)
+    STRUCT_OR_UNION with name <unnamed> (complete)
+> STRUCT str6 has been declared with members
+{
+    .a with type:
+        INT 
+
+    .b with type:
+        UNSIGNED 
+    with bit width:
+        NUMBERLIT    INTEGER    2    INT
+
+    .c with type:
+        UNSIGNED 
+    with bit width:
+        NUMBERLIT    INTEGER    5    INT
+
+    PADDING, with bit width:
+        NUMBERLIT    INTEGER    7    INT
+
+    .d with type:
+        UNSIGNED 
+
+    .e with type:
+        UNSIGNED 
+    with bit width:
+        NUMBERLIT    INTEGER    16    INT
+
+}
+The variable `s6` has storage class EXTERN and is a(n)
+    STRUCT_OR_UNION with name str6 (complete)
+> UNION u1 has been declared with members
+{
+    .str4 with type:
+        STRUCT_OR_UNION with name str4 (complete)
+
+    .str3 with type:
+        STRUCT_OR_UNION with name str3 (complete)
+
+}
+The variable `u1` has storage class EXTERN and is a(n)
+    STRUCT_OR_UNION with name u1 (complete)

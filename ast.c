@@ -285,13 +285,9 @@ void ast_print_expression(ast_node_t *node, const unsigned int depth)
 #undef SUBSECTION
 }
 
-void ast_print_variable(ast_node_t *node)
+static void ast_print_declarator(ast_node_t *node, unsigned int depth)
 {
-    printf("The variable `%s` has storage class ", node->ident);
-    print_storage_class(node->storage_class);
-    printf("and is a(n)\n");
-    int depth = 1;
-    ast_node_t *current_node = node->next;
+    ast_node_t *current_node = node;
 
     while (current_node->kind != AST_SCALAR)
     {
@@ -301,7 +297,6 @@ void ast_print_variable(ast_node_t *node)
         case AST_POINTER:
             print_type_qualifier(current_node->type_qualifier);
             printf("pointer to a(n)\n");
-            /* code */
             break;
 
         case AST_ARRAY:
@@ -334,7 +329,63 @@ void ast_print_variable(ast_node_t *node)
     print_scalar(current_node->scalar);
     if (current_node->scalar.full & TS_CUSTOM)
         printf("with name %s (%s)",
-               current_node->next->ident,
+               current_node->next->ident ? current_node->next->ident : "<unnamed>",
                current_node->next->members ? "complete" : "incomplete");
+    printf("\n");
+}
+
+void ast_print_variable(ast_node_t *node)
+{
+    printf("The variable `%s` has storage class ", node->ident);
+    print_storage_class(node->storage_class);
+    printf("and is a(n)\n");
+    ast_print_declarator(node->next, 1);
+}
+
+static void print_member(ast_node_t *node, const unsigned int depth)
+{
+    if (node->ident)
+    {
+        TAB_PAD(depth);
+        printf(".%s ", node->ident);
+
+        printf("with type:\n");
+        ast_print_declarator(node->next, depth + 1);
+        if (node->bit_width)
+        {
+            TAB_PAD(depth);
+            printf("with bit width:\n");
+            ast_print_expression(node->bit_width, depth + 1);
+        }
+    }
+    else
+    {
+        TAB_PAD(depth);
+        printf("PADDING, with bit width:\n");
+        ast_print_expression(node->bit_width, depth + 1);
+    }
+    printf("\n");
+}
+
+void ast_print_struct_or_union(ast_node_t *node)
+{
+    printf("> %s %s has been declared ",
+           node->kind == AST_STRUCT ? "STRUCT" : "UNION",
+           node->ident);
+
+    if (node->members)
+    {
+        printf("with members\n");
+        printf("{\n");
+        for (int i = 0; i < node->members->node_count; i++)
+        {
+            print_member(node->members->nodes[i], 1);
+        }
+        printf("}");
+    }
+    else
+    {
+        printf("but is incomplete");
+    }
     printf("\n");
 }

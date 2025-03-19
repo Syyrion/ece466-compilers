@@ -66,6 +66,7 @@ struct ast_node
         struct ast_ternary_op ternary_op;
         struct ast_function_call function_call;
 
+        
         ast_node_list_t *members; // used by AST_STRUCT or AST_UNION
         ast_node_t *bit_width; // used by AST_MEMBER
 
@@ -123,5 +124,6 @@ void ast_list_free(ast_node_list_t *list);
 void ast_free(ast_node_t *node);
 void ast_print_expression(ast_node_t *node, const unsigned int depth);
 void ast_print_variable(ast_node_t *node);
+void ast_print_struct_or_union(ast_node_t *node);
 
 #endif
