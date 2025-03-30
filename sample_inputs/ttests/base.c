@@ -18,14 +18,16 @@ long double ld;
 float f;
 const float f2;
 
+// extra stuff
 int *volatile const restrict cc1;
 int **cc2;
 int **volatile const *const cc3;
 int *cc4[];
 int (*const *(*cc5)[3+5])[10];
 
-// declare x as function returning pointer to array 5 of pointer to function returning char
-// char (*(**x())[5])();
+// so that's allowed I guess
 int;
 
-// int f(a, b, c, c);
+
+int j(int, int i, int , int);
+int k(int, unsigned register o, volatile const float f(int, int **(*[10 + 7 * 6])(float, double)));

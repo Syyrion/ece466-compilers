@@ -19,7 +19,6 @@ struct a
 	int a;
 };
 
-
 struct str4 {
 	struct str3 *p3;
 	struct str1 str1[10];
@@ -43,3 +42,4 @@ union u1 {
 	struct str4 str4;
 	struct str3 str3;
 } u1;
+

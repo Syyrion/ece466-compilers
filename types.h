@@ -149,6 +149,7 @@ typedef enum
     FS_INLINE = 1,
 } function_specifier_t;
 
+// all declaration specifiers
 typedef struct
 {
     type_specifier_t type_specifier;
@@ -168,7 +169,7 @@ typedef struct
     };
 } declarator_helper_t;
 
-// list of declarator helpers
+// list of declarator helpers with declaration specifiers
 typedef struct
 {
     declaration_specifiers_t declaration_specifiers;
@@ -176,6 +177,12 @@ typedef struct
     unsigned long declarator_count;
     declarator_helper_t *declarators;
 } declaration_package_t;
+
+typedef struct
+{
+
+    
+} function_definition_t;
 
 // string literal value
 struct string

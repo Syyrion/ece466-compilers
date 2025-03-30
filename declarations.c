@@ -52,17 +52,103 @@ void declspec_add_function_specifier(declaration_specifiers_t *declspec, int fun
     declspec->function_specifier = function_specifier;
 }
 
-void declspec_verify_scalar(scalar_t *scalar)
+static scalar_t simplify_scalar(scalar_t scalar)
 {
-    if (scalar->full == 0)
+    switch (scalar.full)
+    {
+    case TS_VOID:
+        return (scalar_t){.full = TS_VOID};
+
+    case TS_CHAR:
+    case TS_SIGNED | TS_CHAR:
+    case TS_UNSIGNED | TS_CHAR:
+        return (scalar_t){.full = TS_CHAR};
+
+    case TS_SHORT:
+    case TS_SIGNED | TS_SHORT:
+    case TS_SHORT | TS_INT:
+    case TS_SIGNED | TS_SHORT | TS_INT:
+        return (scalar_t){.full = TS_SHORT};
+
+    case TS_UNSIGNED | TS_SHORT:
+    case TS_UNSIGNED | TS_SHORT | TS_INT:
+        return (scalar_t){.full = TS_UNSIGNED | TS_SHORT};
+
+    case TS_INT:
+    case TS_SIGNED:
+    case TS_SIGNED | TS_INT:
+        return (scalar_t){.full = TS_INT};
+
+    case TS_UNSIGNED:
+    case TS_UNSIGNED | TS_INT:
+        return (scalar_t){.full = TS_UNSIGNED | TS_INT};
+
+    case TS_LONG:
+    case TS_SIGNED | TS_LONG:
+    case TS_LONG | TS_INT:
+    case TS_SIGNED | TS_LONG | TS_INT:
+        return (scalar_t){.full = TS_LONG};
+
+    case TS_UNSIGNED | TS_LONG:
+    case TS_UNSIGNED | TS_LONG | TS_INT:
+        return (scalar_t){.full = TS_UNSIGNED | TS_LONG};
+
+    case TS_LONG | TS_LONG2:
+    case TS_SIGNED | TS_LONG | TS_LONG2:
+    case TS_LONG | TS_LONG2 | TS_INT:
+    case TS_SIGNED | TS_LONG | TS_LONG2 | TS_INT:
+        return (scalar_t){.full = TS_LONG | TS_LONG2};
+
+    case TS_UNSIGNED | TS_LONG | TS_LONG2:
+    case TS_UNSIGNED | TS_LONG | TS_LONG2 | TS_INT:
+        return (scalar_t){.full = TS_UNSIGNED | TS_LONG | TS_LONG2};
+
+    case TS_FLOAT:
+        return (scalar_t){.full = TS_FLOAT};
+
+    case TS_DOUBLE:
+        return (scalar_t){.full = TS_DOUBLE};
+
+    case TS_LONG | TS_DOUBLE:
+        return (scalar_t){.full = TS_LONG | TS_DOUBLE};
+
+    case TS_BOOL:
+        return (scalar_t){.full = TS_BOOL};
+
+    case TS_FLOAT | TS_COMPLEX:
+        return (scalar_t){.full = TS_FLOAT | TS_COMPLEX};
+
+    case TS_DOUBLE | TS_COMPLEX:
+        return (scalar_t){.full = TS_DOUBLE | TS_COMPLEX};
+
+    case TS_LONG | TS_DOUBLE | TS_COMPLEX:
+        return (scalar_t){.full = TS_LONG | TS_DOUBLE | TS_COMPLEX};
+
+    case TS_STRUCT_OR_UNION:
+        return (scalar_t){.full = TS_STRUCT_OR_UNION};
+
+    case TS_ENUM:
+        return (scalar_t){.full = TS_ENUM};
+
+    default:
+        fprintf(stderr, "invalid scalar");
+        break;
+    }
+}
+
+scalar_t declspec_verify_and_simplify_scalar(scalar_t scalar)
+{
+    if (scalar.full == 0)
     {
         fprintf(stderr, "%s:%d: Warning: declaration with no type specifiers treated as int\n", filename, line_num);
-        scalar->full |= TS_INT;
-        return;
+        scalar.full |= TS_INT;
+        return simplify_scalar(scalar);
     }
+
     for (int i = 0, j = sizeof(TS_VALID) / sizeof(*TS_VALID); i < j; i++)
-        if (scalar->full == TS_VALID[i])
-            return;
+        if (scalar.full == TS_VALID[i])
+            return simplify_scalar(scalar);
+
     fprintf(stderr, "%s:%d: Error: invalid combination of type specifiers\n", filename, line_num);
     exit(80);
 }

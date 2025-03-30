@@ -25,4 +25,6 @@ int f()
     *q.m++;
     s = sizeof(++a);
 
+    (unsigned long long int *)a;
+
 }
