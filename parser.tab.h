@@ -45,7 +45,7 @@
 extern int yydebug;
 #endif
 /* "%code requires" blocks.  */
-#line 27 "parser.y"
+#line 25 "parser.y"
 
     #include "declarations.h"
     #include "types.h"
@@ -135,7 +135,7 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 34 "parser.y"
+#line 32 "parser.y"
 
     // generic integer
     int integer;
@@ -143,7 +143,7 @@ union YYSTYPE
     // literal values
     string_t string;
     number_t number;
-    
+
     // ast objects
     ast_node_t *node;
     ast_node_list_t *node_list;

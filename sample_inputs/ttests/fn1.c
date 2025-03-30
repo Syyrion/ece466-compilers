@@ -1,12 +1,15 @@
 int f();
 int h(int), f();
 
+double n;
+
 // oh shit these are compatible
 int (*a())[];
 int (*volatile a(int))[10];
 int (*const a())[];
-int (*a(signed n))[]
+int (*a(int))[]
 {
+    n;
 }
 
 int k;
@@ -20,11 +23,12 @@ int (*y(int n))(int n)
 {
 }
 
-int f(i)  /* non-prototype definition should be compat with prev decl */
-double i; /* compiler shouldn't notice this error */
-{
-    int j;
-}
+// TODO this is unfinished
+// int f(i)  /* non-prototype definition should be compat with prev decl */
+// double i; /* compiler shouldn't notice this error */
+// {
+//     int j;
+// }
 
 void (*g(double d))(int, char)
 {

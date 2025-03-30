@@ -1,7 +1,7 @@
-EXTERNAL DEXLARATION: The variable `f` has storage class EXTERN and is a(n)
+EXTERNAL DECLARATION: The variable `f` has storage class EXTERN and is a(n)
     function with unknown parameters returning
         INT 
-EXTERNAL DEXLARATION: The variable `h` has storage class EXTERN and is a(n)
+EXTERNAL DECLARATION: The variable `h` has storage class EXTERN and is a(n)
     function taking parameters
     (
         The variable `<no-name>` has storage class unknown and is a(n)
@@ -9,15 +9,17 @@ EXTERNAL DEXLARATION: The variable `h` has storage class EXTERN and is a(n)
     )
     returning
         INT 
-EXTERNAL DEXLARATION: The variable `f` has storage class EXTERN and is a(n)
+EXTERNAL DECLARATION: The variable `f` has storage class EXTERN and is a(n)
     function with unknown parameters returning
         INT 
-EXTERNAL DEXLARATION: The variable `a` has storage class EXTERN and is a(n)
+EXTERNAL DECLARATION: The variable `n` has storage class EXTERN and is a(n)
+    DOUBLE 
+EXTERNAL DECLARATION: The variable `a` has storage class EXTERN and is a(n)
     function with unknown parameters returning
         pointer to a(n)
             array with unknown size containing
                 INT 
-EXTERNAL DEXLARATION: The variable `a` has storage class EXTERN and is a(n)
+EXTERNAL DECLARATION: The variable `a` has storage class EXTERN and is a(n)
     function taking parameters
     (
         The variable `<no-name>` has storage class unknown and is a(n)
@@ -31,7 +33,7 @@ EXTERNAL DEXLARATION: The variable `a` has storage class EXTERN and is a(n)
             ]
             containing
                 INT 
-EXTERNAL DEXLARATION: The variable `a` has storage class EXTERN and is a(n)
+EXTERNAL DECLARATION: The variable `a` has storage class EXTERN and is a(n)
     function taking parameters
     (
         The variable `<no-name>` has storage class unknown and is a(n)
@@ -45,11 +47,74 @@ EXTERNAL DEXLARATION: The variable `a` has storage class EXTERN and is a(n)
             ]
             containing
                 INT 
-EXTERNAL DEXLARATION: The variable `k` has storage class EXTERN and is a(n)
+EXPRESSION: IDENT "n"
+FUNCTION DEFINITION (1): The variable `a` has storage class EXTERN and is a(n)
+    function taking parameters
+    (
+        The variable `<no-name>` has storage class unknown and is a(n)
+            INT 
+    )
+    returning
+        CONST VOLATILE pointer to a(n)
+            array with size
+            [
+                NUMBERLIT    INTEGER    10    INT
+            ]
+            containing
+                INT 
+EXTERNAL DECLARATION: The variable `k` has storage class EXTERN and is a(n)
     INT 
-EXTERNAL DEXLARATION: The variable `d` has storage class EXTERN and is a(n)
+EXTERNAL DECLARATION: The variable `d` has storage class EXTERN and is a(n)
     pointer to a(n)
         INT 
-EXTERNAL DEXLARATION: The variable `d` has storage class EXTERN and is a(n)
+EXTERNAL DECLARATION: The variable `d` has storage class EXTERN and is a(n)
     pointer to a(n)
+        INT 
+FUNCTION DEFINITION (1): The variable `y` has storage class EXTERN and is a(n)
+    function taking parameters
+    (
+        The variable `n` has storage class unknown and is a(n)
+            INT 
+    )
+    returning
+        pointer to a(n)
+            function taking parameters
+            (
+                The variable `n` has storage class unknown and is a(n)
+                    INT 
+            )
+            returning
+                INT 
+DECLARATION: The variable `f` has storage class AUTO and is a(n)
+    function with unknown parameters returning
+        INT 
+DECLARATION: The variable `g` has storage class AUTO and is a(n)
+    function with unknown parameters returning
+        INT 
+FUNCTION DEFINITION (1): The variable `g` has storage class EXTERN and is a(n)
+    function taking parameters
+    (
+        The variable `d` has storage class unknown and is a(n)
+            DOUBLE 
+    )
+    returning
+        pointer to a(n)
+            function taking parameters
+            (
+                The variable `<no-name>` has storage class unknown and is a(n)
+                    INT 
+                The variable `<no-name>` has storage class unknown and is a(n)
+                    CHAR 
+            )
+            returning
+                VOID 
+DECLARATION: The variable `h` has storage class AUTO and is a(n)
+    INT 
+FUNCTION DEFINITION (1): The variable `h` has storage class EXTERN and is a(n)
+    function taking parameters
+    (
+        The variable `x` has storage class unknown and is a(n)
+            INT 
+    )
+    returning
         INT 

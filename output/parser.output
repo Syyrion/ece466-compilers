@@ -27,13 +27,13 @@ Grammar
     3 external_declaration: function_definition
     4                     | declaration
 
-    5 $@1: ε
+    5 @1: ε
 
-    6 function_definition: declaration_specifiers declarator $@1 compound_statement
+    6 function_definition: declaration_specifiers declarator @1 compound_statement
 
-    7 $@2: ε
+    7 @2: ε
 
-    8 function_definition: declaration_specifiers declarator declaration_list $@2 compound_statement
+    8 function_definition: declaration_specifiers declarator declaration_list @2 compound_statement
 
     9 declaration_list: declaration
    10                 | declaration_list declaration
@@ -396,10 +396,10 @@ Nonterminals, with rules where they appear
     function_definition (94)
         on left: 6 8
         on right: 3
-    $@1 (95)
+    @1 (95)
         on left: 5
         on right: 6
-    $@2 (96)
+    @2 (96)
         on left: 7
         on right: 8
     declaration_list (97)
@@ -854,8 +854,8 @@ State 26
 
 State 27
 
-    6 function_definition: declaration_specifiers • declarator $@1 compound_statement
-    8                    | declaration_specifiers • declarator declaration_list $@2 compound_statement
+    6 function_definition: declaration_specifiers • declarator @1 compound_statement
+    8                    | declaration_specifiers • declarator declaration_list @2 compound_statement
   100 declaration: declaration_specifiers • init_declarator_list ';'
   101            | declaration_specifiers • ';'
   106 declaration_specifiers: declaration_specifiers • type_specifier
@@ -1094,8 +1094,8 @@ State 49
 
 State 50
 
-    6 function_definition: declaration_specifiers declarator • $@1 compound_statement
-    8                    | declaration_specifiers declarator • declaration_list $@2 compound_statement
+    6 function_definition: declaration_specifiers declarator • @1 compound_statement
+    8                    | declaration_specifiers declarator • declaration_list @2 compound_statement
   133 init_declarator: declarator •
   134                | declarator • '=' initializer
 
@@ -1123,10 +1123,10 @@ State 50
     _COMPLEX  shift, and go to state 22
     '='       shift, and go to state 65
 
-    '{'       reduce using rule 5 ($@1)
+    '{'       reduce using rule 5 (@1)
     $default  reduce using rule 133 (init_declarator)
 
-    $@1                        go to state 66
+    @1                         go to state 66
     declaration_list           go to state 67
     declaration                go to state 68
     declaration_specifiers     go to state 69
@@ -1350,7 +1350,7 @@ State 65
 
 State 66
 
-    6 function_definition: declaration_specifiers declarator $@1 • compound_statement
+    6 function_definition: declaration_specifiers declarator @1 • compound_statement
 
     '{'  shift, and go to state 122
 
@@ -1359,7 +1359,7 @@ State 66
 
 State 67
 
-    8 function_definition: declaration_specifiers declarator declaration_list • $@2 compound_statement
+    8 function_definition: declaration_specifiers declarator declaration_list • @2 compound_statement
    10 declaration_list: declaration_list • declaration
 
     AUTO      shift, and go to state 1
@@ -1385,9 +1385,9 @@ State 67
     _BOOL     shift, and go to state 21
     _COMPLEX  shift, and go to state 22
 
-    $default  reduce using rule 7 ($@2)
+    $default  reduce using rule 7 (@2)
 
-    $@2                        go to state 124
+    @2                         go to state 124
     declaration                go to state 125
     declaration_specifiers     go to state 69
     storage_class_specifier    go to state 28
@@ -2450,14 +2450,14 @@ State 122
 
 State 123
 
-    6 function_definition: declaration_specifiers declarator $@1 compound_statement •
+    6 function_definition: declaration_specifiers declarator @1 compound_statement •
 
     $default  reduce using rule 6 (function_definition)
 
 
 State 124
 
-    8 function_definition: declaration_specifiers declarator declaration_list $@2 • compound_statement
+    8 function_definition: declaration_specifiers declarator declaration_list @2 • compound_statement
 
     '{'  shift, and go to state 122
 
@@ -4014,7 +4014,7 @@ State 212
 
 State 213
 
-    8 function_definition: declaration_specifiers declarator declaration_list $@2 compound_statement •
+    8 function_definition: declaration_specifiers declarator declaration_list @2 compound_statement •
 
     $default  reduce using rule 8 (function_definition)
 

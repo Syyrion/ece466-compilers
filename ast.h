@@ -102,6 +102,7 @@ struct ast_function
     ast_node_t *returns;
     ast_node_list_t *parameters;
     function_specifier_t specifier; // not fully implemented
+    function_definition_t definition;
 };
 
 struct ast_type

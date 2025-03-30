@@ -211,12 +211,12 @@ external_declaration:
         if (!ds->storage_class)
             ds->storage_class = SC_EXTERN;
 
-        ast_node_t *end_scalar = ast_new_type(ds->type_specifier, ds->type_qualifier);
+        ast_node_t *type = ast_new_type(ds->type_specifier, ds->type_qualifier);
 
         for (int i = 0; i < $1.declarator_count ; i++)
         {
             ast_node_t *var = ast_ident_to_variable($1.declarators[i].oldest, ds->storage_class);
-            $1.declarators[i].newest->next = end_scalar;
+            $1.declarators[i].newest->next = type;
 
             ast_node_t *other = st_find_local(NS_VARIABLE, var->variable.name);
 
@@ -231,14 +231,14 @@ external_declaration:
                 else
                 {
                     fprintf(stderr, "%s:%d: Error: conflicting type on already existing variable `%s`\n", filename, line_num, other->name);
-                    exit(80);
+                    exit(EXIT_FAILURE);
                 }
             }
             else
                 st_add(NS_VARIABLE, var);
 
             // ! debug
-            printf("EXTERNAL DEXLARATION: ");
+            printf("EXTERNAL DECLARATION: ");
             ast_print_variable(var, 0);
         }
     }
@@ -247,19 +247,98 @@ external_declaration:
 function_definition:
     declaration_specifiers declarator
     {
+        if (!$1.storage_class)
+            $1.storage_class = SC_EXTERN;
+
+        ast_node_t *type = ast_new_type($1.type_specifier, $1.type_qualifier);
+        ast_node_t *fn = ast_ident_to_variable($2.oldest, $1.storage_class);
+        $2.newest->next = type;
+
+        if (fn->next->kind != AST_FUNCTION)
+        {
+            fprintf(stderr, "%s:%d: Error: expected a ';'\n");
+            exit(EXIT_FAILURE);
+        }
+
+        ast_node_t *other = st_find_local(NS_VARIABLE, fn->variable.name);
+
+        if (other)
+        {
+            if (ast_are_variables_compatible(other, fn))
+            {
+                ast_merge_into_variable(other, fn);
+                fn = other;
+            }
+            else
+            {
+                fprintf(stderr, "%s:%d: Error: conflicting type on already existing variable `%s`\n", filename, line_num, other->name);
+                exit(EXIT_FAILURE);
+            }
+        }
+        else
+            st_add(NS_VARIABLE, fn);
+
         st_push();
+
+        for (int i = 0; i < fn->next->function.parameters->node_count; i++)
+            st_add(NS_VARIABLE, fn->next->function.parameters->nodes[i]);
+
+        $<node>$ = fn;
     }
     compound_statement
     {
-
+        $<node>3->next->function.definition = (function_definition_t){.namespaces = st_pop()};
+        // ! debug
+        printf("FUNCTION DEFINITION (1): ");
+        ast_print_variable($<node>3, 0);
     }
+    // TODO this is just a copy of above for now. It also needs to be fixed.
     | declaration_specifiers declarator declaration_list
     {
+        if (!$1.storage_class)
+            $1.storage_class = SC_EXTERN;
+
+        ast_node_t *type = ast_new_type($1.type_specifier, $1.type_qualifier);
+        ast_node_t *fn = ast_ident_to_variable($2.oldest, $1.storage_class);
+        $2.newest->next = type;
+
+        if (fn->next->kind != AST_FUNCTION)
+        {
+            fprintf(stderr, "%s:%d: Error: expected a ';'\n");
+            exit(EXIT_FAILURE);
+        }
+
+        ast_node_t *other = st_find_local(NS_VARIABLE, fn->variable.name);
+
+        if (other)
+        {
+            if (ast_are_variables_compatible(other, fn))
+            {
+                ast_merge_into_variable(other, fn);
+                fn = other;
+            }
+            else
+            {
+                fprintf(stderr, "%s:%d: Error: conflicting type on already existing variable `%s`\n", filename, line_num, other->name);
+                exit(EXIT_FAILURE);
+            }
+        }
+        else
+            st_add(NS_VARIABLE, fn);
+
         st_push();
+
+        for (int i = 0; i < fn->next->function.parameters->node_count; i++)
+            st_add(NS_VARIABLE, fn->next->function.parameters->nodes[i]);
+
+        $<node>$ = fn;
     }
     compound_statement
     {
-
+        $<node>3->next->function.definition = (function_definition_t){.namespaces = st_pop()};
+        // ! debug
+        printf("FUNCTION DEFINITION (2): ");
+        ast_print_variable($<node>4, 0);
     }
     ;
 
@@ -274,10 +353,51 @@ compound_statement:
     ;
 
 block_item_list:
+    block_item
+    | block_item_list block_item
+    ;
+
+block_item:
     declaration
-    statement
-    | block_item_list declaration
-    | block_item_list statement
+    {
+        // alias for declaration specs
+        declaration_specifiers_t *ds = &$1.declaration_specifiers;
+
+        // apply extern if needed since this is an external declaration
+        if (!ds->storage_class)
+            ds->storage_class = SC_AUTO;
+
+        ast_node_t *type = ast_new_type(ds->type_specifier, ds->type_qualifier);
+
+        for (int i = 0; i < $1.declarator_count ; i++)
+        {
+            ast_node_t *var = ast_ident_to_variable($1.declarators[i].oldest, ds->storage_class);
+            $1.declarators[i].newest->next = type;
+
+            ast_node_t *other = st_find_local(NS_VARIABLE, var->variable.name);
+
+            if (other)
+            {
+                if (ast_are_variables_compatible(other, var))
+                {
+                    ast_merge_into_variable(other, var);
+                    var = other;
+                }
+                else
+                {
+                    fprintf(stderr, "%s:%d: Error: conflicting type on already existing variable `%s`\n", filename, line_num, other->name);
+                    exit(EXIT_FAILURE);
+                }
+            }
+            else
+                st_add(NS_VARIABLE, var);
+
+            // ! debug
+            printf("DECLARATION: ");
+            ast_print_variable(var, 0);
+        }
+    }
+    | statement
     ;
 
 // ## STATEMENTS
@@ -460,57 +580,57 @@ declaration:
     ;
 
 
-// ## declaration_specifiers
-    declaration_specifiers:
-        type_specifier {declspec_init(&$$); declspec_add_type_specifier(&$$, $1);}
-        | type_qualifier {declspec_init(&$$); declspec_add_type_qualifier(&$$, $1);}
-        | storage_class_specifier {declspec_init(&$$); declspec_add_storage_class(&$$, $1);}
-        | function_specifier {declspec_init(&$$); declspec_add_function_specifier(&$$, $1);}
-        | declaration_specifiers type_specifier {declspec_add_type_specifier(&$1, $2); $$ = $1;}
-        | declaration_specifiers type_qualifier {declspec_add_type_qualifier(&$1, $2); $$ = $1;}
-        | declaration_specifiers storage_class_specifier {declspec_add_storage_class(&$1, $2); $$ = $1;}
-        | declaration_specifiers function_specifier {declspec_add_function_specifier(&$1, $2); $$ = $1;}
-        ;
+    // ## DECLARATION SPECIFIERS
+        declaration_specifiers:
+            type_specifier {declspec_init(&$$); declspec_add_type_specifier(&$$, $1);}
+            | type_qualifier {declspec_init(&$$); declspec_add_type_qualifier(&$$, $1);}
+            | storage_class_specifier {declspec_init(&$$); declspec_add_storage_class(&$$, $1);}
+            | function_specifier {declspec_init(&$$); declspec_add_function_specifier(&$$, $1);}
+            | declaration_specifiers type_specifier {declspec_add_type_specifier(&$1, $2); $$ = $1;}
+            | declaration_specifiers type_qualifier {declspec_add_type_qualifier(&$1, $2); $$ = $1;}
+            | declaration_specifiers storage_class_specifier {declspec_add_storage_class(&$1, $2); $$ = $1;}
+            | declaration_specifiers function_specifier {declspec_add_function_specifier(&$1, $2); $$ = $1;}
+            ;
 
-    // No more than one allowed per declaration
-    storage_class_specifier:
-        EXTERN {$$ = SC_EXTERN;}
-        | STATIC {$$ = SC_STATIC;}
-        | AUTO {$$ = SC_AUTO;}
-        | REGISTER {$$ = SC_REGISTER;}
-        // | TYPEDEF
-        ;
+        // No more than one allowed per declaration
+        storage_class_specifier:
+            EXTERN {$$ = SC_EXTERN;}
+            | STATIC {$$ = SC_STATIC;}
+            | AUTO {$$ = SC_AUTO;}
+            | REGISTER {$$ = SC_REGISTER;}
+            // | TYPEDEF
+            ;
 
-    // At least one needed per declaration
-    type_specifier:
-        VOID {$$ = (type_specifier_t){.scalar = TS_VOID};}
-        | CHAR {$$ = (type_specifier_t){.scalar = TS_CHAR};}
-        | SHORT {$$ = (type_specifier_t){.scalar = TS_SHORT};}
-        | INT {$$ = (type_specifier_t){.scalar = TS_INT};}
-        | LONG {$$ = (type_specifier_t){.scalar = TS_LONG};}
-        | FLOAT {$$ = (type_specifier_t){.scalar = TS_FLOAT};}
-        | DOUBLE {$$ = (type_specifier_t){.scalar = TS_DOUBLE};}
-        | SIGNED {$$ = (type_specifier_t){.scalar = TS_SIGNED};}
-        | UNSIGNED {$$ = (type_specifier_t){.scalar = TS_UNSIGNED};}
-        | _BOOL {$$ = (type_specifier_t){.scalar = TS_BOOL};}
-        | _COMPLEX {$$ = (type_specifier_t){.scalar = TS_COMPLEX};}
-        | struct_or_union_specifier {$$ = (type_specifier_t){.scalar = TS_STRUCT_OR_UNION, .custom = $1};}
-        | enum_specifier {$$ = (type_specifier_t){.scalar = TS_ENUM, .custom = $1};}
-        // | typedef_name
-        ;
+        // At least one needed per declaration
+        type_specifier:
+            VOID {$$ = (type_specifier_t){.scalar = TS_VOID};}
+            | CHAR {$$ = (type_specifier_t){.scalar = TS_CHAR};}
+            | SHORT {$$ = (type_specifier_t){.scalar = TS_SHORT};}
+            | INT {$$ = (type_specifier_t){.scalar = TS_INT};}
+            | LONG {$$ = (type_specifier_t){.scalar = TS_LONG};}
+            | FLOAT {$$ = (type_specifier_t){.scalar = TS_FLOAT};}
+            | DOUBLE {$$ = (type_specifier_t){.scalar = TS_DOUBLE};}
+            | SIGNED {$$ = (type_specifier_t){.scalar = TS_SIGNED};}
+            | UNSIGNED {$$ = (type_specifier_t){.scalar = TS_UNSIGNED};}
+            | _BOOL {$$ = (type_specifier_t){.scalar = TS_BOOL};}
+            | _COMPLEX {$$ = (type_specifier_t){.scalar = TS_COMPLEX};}
+            | struct_or_union_specifier {$$ = (type_specifier_t){.scalar = TS_STRUCT_OR_UNION, .custom = $1};}
+            | enum_specifier {$$ = (type_specifier_t){.scalar = TS_ENUM, .custom = $1};}
+            // | typedef_name
+            ;
 
-    // Any combination allowed. Repeated instances are treated as if there was only one.
-    type_qualifier:
-        CONST {$$ = TQ_CONST;}
-        | RESTRICT {$$ = TQ_RESTRICT;}
-        | VOLATILE {$$ = TQ_VOLATILE;}
-        ;
+        // Any combination allowed. Repeated instances are treated as if there was only one.
+        type_qualifier:
+            CONST {$$ = TQ_CONST;}
+            | RESTRICT {$$ = TQ_RESTRICT;}
+            | VOLATILE {$$ = TQ_VOLATILE;}
+            ;
 
-    // Repeated instances are treated as if there was only one.
-    function_specifier:
-        INLINE {$$ = FS_INLINE;}
-        ;
-//
+        // Repeated instances are treated as if there was only one.
+        function_specifier:
+            INLINE {$$ = FS_INLINE;}
+            ;
+    //
 
 init_declarator_list:
     init_declarator {declpkg_init(&$$); declpkg_add_declarator(&$$, $1);}
@@ -573,7 +693,7 @@ parameter_list:
         if ($3->name && st_find_local($1, $3->name))
         {
             fprintf(stderr, "%s:%d: Error: parameter %s was already declared\n", filename, line_num, $3->name);
-            exit(80);
+            exit(EXIT_FAILURE);
         }
         $$ = st_add($1, $3);
     }
@@ -585,7 +705,7 @@ parameter_declaration:
         if ($1.storage_class && $1.storage_class != SC_REGISTER)
         {
             fprintf(stderr, "%s:%d: Error: invalid parameter storage class \n", filename, line_num);
-            exit(80);
+            exit(EXIT_FAILURE);
         }
 
         ast_node_t *var = ast_ident_to_variable($2.oldest, $1.storage_class);
@@ -597,7 +717,7 @@ parameter_declaration:
         if ($1.storage_class && $1.storage_class != SC_REGISTER)
         {
             fprintf(stderr, "%s:%d: Error: invalid parameter storage class \n", filename, line_num);
-            exit(80);
+            exit(EXIT_FAILURE);
         }
 
         ast_node_t *var = ast_ident_to_variable(ast_new_ident(0), $1.storage_class);
@@ -609,7 +729,7 @@ parameter_declaration:
         if ($1.storage_class && $1.storage_class != SC_REGISTER)
         {
             fprintf(stderr, "%s:%d: Error: invalid parameter storage class \n", filename, line_num);
-            exit(80);
+            exit(EXIT_FAILURE);
         }
 
         ast_node_t *var = ast_ident_to_variable(ast_new_ident(0), $1.storage_class);
@@ -626,7 +746,7 @@ identifier_list:
         if (st_find_local($1, $3->name))
         {
             fprintf(stderr, "%s:%d: Error: parameter %s was already declared\n", filename, line_num, $3->name);
-            exit(80);
+            exit(EXIT_FAILURE);
         }
         $$ = st_add($1, $3);
     }
@@ -687,13 +807,13 @@ initializer:
                         else
                         {
                             fprintf(stderr, "%s:%d: Error: `%s` is already complete\n", filename, line_num, $2.buffer);
-                            exit(80);
+                            exit(EXIT_FAILURE);
                         }
                     }
                     else
                     {
                         fprintf(stderr, "%s:%d: Error: a struct or union `%s` has already been declared\n", filename, line_num, $2.buffer);
-                        exit(80);
+                        exit(EXIT_FAILURE);
                     }
                 }
                 else
@@ -811,13 +931,13 @@ symbol_table_t *add_members_to_symbol_table(symbol_table_t *member_table, declar
             )
             {
                 fprintf(stderr, "%s:%d: Error: member `%s` is incomplete\n", filename, line_num, member->name);
-                exit(81);
+                exit(EXIT_FAILURE);
             }
 
             if (declarator->oldest->next && declarator->oldest->next->kind == AST_ARRAY && declarator->oldest->next->array.size == 0)
             {
                 fprintf(stderr, "%s:%d: Error: member `%s` cannot be an array of unknown size\n", filename, line_num, member->name);
-                exit(81);
+                exit(EXIT_FAILURE);
             }
 
             declarator->newest->next = type;
@@ -825,7 +945,7 @@ symbol_table_t *add_members_to_symbol_table(symbol_table_t *member_table, declar
             if (st_find_local(member_table, member->name))
             {
                 fprintf(stderr, "%s:%d: Error: member `%s` has already been declared\n", filename, line_num, member->name);
-                exit(80);
+                exit(EXIT_FAILURE);
             }
 
             st_add(member_table, member);

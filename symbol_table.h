@@ -15,13 +15,6 @@ struct symbol_table
     ast_node_list_t *entries;
 };
 
-typedef struct
-{
-    ast_node_list_t *variable_list;
-    ast_node_list_t *struct_list;
-    ast_node_list_t *label_list;
-} namespace_group_t;
-
 void st_init(void);
 void st_push(void);
 namespace_group_t st_pop(void);

@@ -279,7 +279,7 @@ void ast_free_variable(ast_node_t *var)
             break;
         default:
             fprintf(stderr, "can't free node kind %d for variable\n", current->kind);
-            exit(89);
+            exit(EXIT_FAILURE);
             break;
         }
 
@@ -323,7 +323,7 @@ int ast_are_variables_compatible(ast_node_t *a, ast_node_t *b)
             break;
         default:
             fprintf(stderr, "cannot check compatibility");
-            exit(85);
+            exit(EXIT_FAILURE);
             break;
         }
         current_a = current_a->next, current_b = current_b->next;
@@ -351,8 +351,9 @@ void ast_merge_into_variable(ast_node_t *a, ast_node_t *b)
         switch (current_a->kind)
         {
         case AST_VARIABLE:
-            if (current_b->variable.name)
-                free(current_b->variable.name);
+            if (current_a->variable.name)
+                free(current_a->variable.name);
+            current_a->variable.name = current_b->variable.name;
             break;
         case AST_POINTER:
             // merge qualifiers (is this right?)
@@ -377,7 +378,7 @@ void ast_merge_into_variable(ast_node_t *a, ast_node_t *b)
             break;
         default:
             fprintf(stderr, "cannot merge");
-            exit(89);
+            exit(EXIT_FAILURE);
             break;
         }
 
@@ -462,7 +463,7 @@ void ast_print_expression(ast_node_t *node, const unsigned int depth)
         break;
     default:
         fprintf(stderr, "can't print node kind %d for expression\n", node->kind);
-        exit(88);
+        exit(EXIT_FAILURE);
         break;
     }
 

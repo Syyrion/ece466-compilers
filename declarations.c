@@ -23,7 +23,7 @@ void declspec_add_type_specifier(declaration_specifiers_t *declspec, type_specif
     if (current_scalar & new_scalar)
     {
         fprintf(stderr, "%s:%d: Error: invalid combination of type specifiers\n", filename, line_num);
-        exit(80);
+        exit(EXIT_FAILURE);
     }
 
     if (new_scalar & TS_CUSTOM)
@@ -42,7 +42,7 @@ void declspec_add_storage_class(declaration_specifiers_t *declspec, int storage_
     if (declspec->storage_class)
     {
         fprintf(stderr, "%s:%d: Error: storage class has already been specified\n", filename, line_num);
-        exit(80);
+        exit(EXIT_FAILURE);
     }
     declspec->storage_class = storage_class;
 };
@@ -150,7 +150,7 @@ scalar_t declspec_verify_and_simplify_scalar(scalar_t scalar)
             return simplify_scalar(scalar);
 
     fprintf(stderr, "%s:%d: Error: invalid combination of type specifiers\n", filename, line_num);
-    exit(80);
+    exit(EXIT_FAILURE);
 }
 
 void declpkg_init(declaration_package_t *declpkg)

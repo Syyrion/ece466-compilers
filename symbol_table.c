@@ -19,7 +19,7 @@ void st_init(void)
     if (__variable_namespace_root)
     {
         fprintf(stderr, "root symbol table has already been initialized");
-        exit(89);
+        exit(EXIT_FAILURE);
     }
     __variable_namespace_root = NS_VARIABLE = st_new(0);
     __struct_namespace_root = NS_STRUCT = st_new(0);
@@ -40,7 +40,7 @@ namespace_group_t st_pop(void)
     if (__variable_namespace_root == NS_VARIABLE)
     {
         fprintf(stderr, "cannot pop the root symbol table");
-        exit(87);
+        exit(EXIT_FAILURE);
     }
     symbol_table_t *temp_var = NS_VARIABLE;
     symbol_table_t *temp_str = NS_STRUCT;
