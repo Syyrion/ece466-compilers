@@ -80,12 +80,11 @@ void st_push(void)
 
 static void resolve_goto_statements(ast_node_t *statement)
 {
-    fprintf(stderr, "%d\n", statement->kind);
-
+    ast_node_t *label;
     switch (statement->kind)
     {
     case AST_GOTO:
-        ast_node_t *label = st_find_local(NS_LABEL, statement->goto_statement.label_name);
+        label = st_find_local(NS_LABEL, statement->goto_statement.label_name);
         if (!label)
         {
             fprintf(stderr, "undefined label\n");
@@ -113,7 +112,6 @@ static void resolve_goto_statements(ast_node_t *statement)
         resolve_goto_statements(statement->for_statement.statement);
         break;
     case AST_SWITCH:
-        fprintf(stderr, "h\n");
         resolve_goto_statements(statement->switch_statement.statement);
         break;
     case AST_EXPRESSION:

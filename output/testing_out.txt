@@ -15,18 +15,18 @@ FUNCTION DEFINITION: The variable `y` has storage class EXTERN and is a(n)
             )
             returning
                 INT 
-0xe1c1050 : compound
+0x394a6050 : compound
 {
-    0xe1be940 : expression
+    0x394a3940 : expression
         VARIABLE (resolved) "n"
-    0xe1c02c0 : if
+    0x394a52c0 : if
     (
         NUMBERLIT    INTEGER    4    INT
     )
     then
-        0xe1c0220 : compound
+        0x394a5220 : compound
         {
-            0xe1bfdf0 : for
+            0x394a4df0 : for
             (
                 BINARY_OP "="
                 .left
@@ -45,53 +45,53 @@ FUNCTION DEFINITION: The variable `y` has storage class EXTERN and is a(n)
                     VARIABLE (resolved) "i"
             )
             do
-                0xe1c0180 : compound
+                0x394a5180 : compound
                 {
-                    0xe1bfce0 : break (0xe1bfdf0)
-                    0xe1bfbd0 : for
+                    0x394a4ce0 : break (0x394a4df0)
+                    0x394a4bd0 : for
                     (
                     ;
                     ;
                     )
                     do
-                        0xe1c00b0 : compound
+                        0x394a50b0 : compound
                         {
-                            0xe1bfff0 : break (0xe1bfbd0)
-                            0xe1c0060 : continue (0xe1bfbd0)
+                            0x394a4ff0 : break (0x394a4bd0)
+                            0x394a5060 : continue (0x394a4bd0)
                         }
-                    0xe1c0100 : continue (0xe1bfdf0)
+                    0x394a5100 : continue (0x394a4df0)
                 }
         }
     else
-        0xe1c0270 : goto 0xe1c0180
-    0xe1c0360 : while
+        0x394a5270 : goto 0x394a5180
+    0x394a5360 : while
     (
         NUMBERLIT    INTEGER    0    INT
     )
     do
-        0xe1c0450 : compound
+        0x394a5450 : compound
         {
-            0xe1c03b0 : break (0xe1c0360)
-            0xe1c0400 : continue (0xe1c0360)
+            0x394a53b0 : break (0x394a5360)
+            0x394a5400 : continue (0x394a5360)
         }
-    0xe1c04d0 : do
-        0xe1c05c0 : compound
+    0x394a54d0 : do
+        0x394a55c0 : compound
         {
-            0xe1c0520 : break (0xe1c04d0)
-            0xe1c0570 : continue (0xe1c04d0)
+            0x394a5520 : break (0x394a54d0)
+            0x394a5570 : continue (0x394a54d0)
         }
     while
     (
         NUMBERLIT    INTEGER    0    INT
     )
-    0xe1c06b0 : while
+    0x394a56b0 : while
     (
         NUMBERLIT    INTEGER    0    INT
     )
     do
-        0xe1c0e70 : compound
+        0x394a5e70 : compound
         {
-            0xe1c0700 : switch
+            0x394a5700 : switch
             (
                 BINARY_OP "+"
                 .left
@@ -101,34 +101,34 @@ FUNCTION DEFINITION: The variable `y` has storage class EXTERN and is a(n)
             ) == [
                 case
                     NUMBERLIT    INTEGER    1    INT
-                : 0xe1c0880
+                : 0x394a5880
                 case
                     BINARY_OP "-"
                     .left
                         NUMBERLIT    INTEGER    5    INT
                     .right
                         NUMBERLIT    INTEGER    8    INT
-                : 0xe1c0a50
+                : 0x394a5a50
                 case
                     NUMBERLIT    INTEGER    102    INT
-                : 0xe1c0be0
+                : 0x394a5be0
                 case
                     NUMBERLIT    INTEGER    101    INT
-                : 0xe1c0be0
+                : 0x394a5be0
                 case
                     NUMBERLIT    INTEGER    100    INT
-                : 0xe1c0be0
-                default : 0xe1c0c30
+                : 0x394a5be0
+                default : 0x394a5c30
             ]
             then
-                0xe1c0e20 : compound
+                0x394a5e20 : compound
                 {
-                    0xe1c0880 : break (0xe1c0700)
-                    0xe1c0a50 : break (0xe1c0700)
-                    0xe1c0be0 : break (0xe1c0700)
+                    0x394a5880 : break (0x394a5700)
+                    0x394a5a50 : break (0x394a5700)
+                    0x394a5be0 : break (0x394a5700)
                 }
         }
-    0xe1c1000 : return
+    0x394a6000 : return
         BINARY_OP "+"
         .left
             NUMBERLIT    INTEGER    90    INT

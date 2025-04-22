@@ -225,10 +225,11 @@ static void ast_mark_variable_as_used(ast_node_t *var)
 // replaces AST_IDENT nodes in an expression with literal variables in-place
 void ast_resolve_expression_variables(ast_node_t **node)
 {
+    ast_node_t *var;
     switch ((*node)->kind)
     {
     case AST_IDENT:
-        ast_node_t *var = st_find(NS_VARIABLE, (*node)->name);
+        var = st_find(NS_VARIABLE, (*node)->name);
         if (var)
         {
             free((*node)->name);
