@@ -1,5 +1,5 @@
 main:
-	bison -d -v -Wconflicts-rr -Wcounterexamples --report-file=output/parser.output parser.y 2> output/bison_out.txt
+	bison -d -v -Wconflicts-rr --report-file=output/parser.output parser.y 2> output/bison_out.txt
 	flex lexer.l
 	gcc *.c -o parser_test
 
