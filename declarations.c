@@ -61,8 +61,10 @@ static scalar_t simplify_scalar(scalar_t scalar)
 
     case TS_CHAR:
     case TS_SIGNED | TS_CHAR:
-    case TS_UNSIGNED | TS_CHAR:
         return (scalar_t){.full = TS_CHAR};
+
+    case TS_UNSIGNED | TS_CHAR:
+        return (scalar_t){.full = TS_UNSIGNED | TS_CHAR};
 
     case TS_SHORT:
     case TS_SIGNED | TS_SHORT:
@@ -131,12 +133,13 @@ static scalar_t simplify_scalar(scalar_t scalar)
         return (scalar_t){.full = TS_ENUM};
 
     default:
-        fprintf(stderr, "invalid scalar");
+        fprintf(stderr, "cannot simplify invalid scalar");
+        exit(EXIT_FAILURE);
         break;
     }
 }
 
-scalar_t declspec_verify_and_simplify_scalar(scalar_t scalar)
+scalar_t declspec_normalize_scalar(scalar_t scalar)
 {
     if (scalar.full == 0)
     {
@@ -151,6 +154,16 @@ scalar_t declspec_verify_and_simplify_scalar(scalar_t scalar)
 
     fprintf(stderr, "%s:%d: Error: invalid combination of type specifiers\n", filename, line_num);
     exit(EXIT_FAILURE);
+}
+
+storage_class_specifier_t declspec_normalize_parameter_storage_class(storage_class_specifier_t storage_class)
+{
+    if (storage_class && storage_class != SC_REGISTER)
+    {
+        fprintf(stderr, "%s:%d: Error: invalid parameter storage class \n", filename, line_num);
+        exit(EXIT_FAILURE);
+    }
+    return SC_AUTO;
 }
 
 void declpkg_init(declaration_package_t *declpkg)

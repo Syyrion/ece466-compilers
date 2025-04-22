@@ -178,18 +178,6 @@ typedef struct
     declarator_helper_t *declarators;
 } declaration_package_t;
 
-typedef struct
-{
-    ast_node_list_t *variable_list;
-    ast_node_list_t *struct_list;
-    ast_node_list_t *label_list;
-} namespace_group_t;
-
-typedef struct
-{
-    namespace_group_t namespaces;
-} function_definition_t;
-
 // string literal value
 struct string
 {
@@ -203,6 +191,7 @@ struct number
 {
     union
     {
+        long long signed_integer;
         unsigned long long integer;
         long double real;
     };

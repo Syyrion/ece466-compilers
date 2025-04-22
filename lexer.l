@@ -13,7 +13,7 @@
     char *filename;
     int line_num = -1;
 
-    #define INITIAL_SIZE 256
+    #define INITIAL_SIZE 32
 
     // string lvalue stuff
     void begin_str()
@@ -25,11 +25,13 @@
 
     void append_char(const char c)
     {
+        // if the position of the null byte is out of bounds, reallocate
+        if (yylval.string.length + 1 == yylval.string.size)
+            yylval.string.buffer = realloc(yylval.string.buffer, yylval.string.size *= 2);
+        
         yylval.string.buffer[yylval.string.length] = c;
         yylval.string.buffer[yylval.string.length + 1] = 0;
-
-        if (++yylval.string.length == yylval.string.size - 1) // size - 1 because of null byte
-            yylval.string.buffer = realloc(yylval.string.buffer, yylval.string.size *= 2);
+        yylval.string.length++;
     }
 
     unsigned short get_real_type(char *n)

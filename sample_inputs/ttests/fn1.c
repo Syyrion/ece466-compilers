@@ -21,6 +21,32 @@ int *d;
 // this is horrifying, why is this a thing?
 int (*y(int n))(int n)
 {
+    n;
+
+    if (4)
+    {
+        int i;
+        // for (i = 0; i < 10; i++)
+        //     ;
+    }
+    else
+        goto h;
+
+    while (0)
+    {
+    }
+
+    do
+    {
+
+    } while (0);
+
+h:
+
+    return 90 + 2;
+
+    // this seems to cause a syntax error according to the spec but gcc says it's fine?
+    // end_label:
 }
 
 // TODO this is unfinished

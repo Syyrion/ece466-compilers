@@ -1,24 +1,35 @@
-parser.y:351.5-27: warning: type clash on default action: <namespace_group> != <> [-Wother]
-  351 |     '{' block_item_list '}'
-      |     ^~~~~~~~~~~~~~~~~~~~~~~
-parser.y:352.7-13: warning: type clash on default action: <namespace_group> != <> [-Wother]
-  352 |     | '{' '}'
-      |       ^~~~~~~
-parser.y:470.11-34: warning: type clash on default action: <node> != <> [-Wother]
-  470 |         | SIZEOF '(' type_name ')'
+parser.y:572.11-34: warning: type clash on default action: <node> != <> [-Wother]
+  572 |         | SIZEOF '(' type_name ')'
       |           ^~~~~~~~~~~~~~~~~~~~~~~~
-parser.y:886.9-23: warning: type clash on default action: <node> != <> [-Wother]
-  886 |         ENUM identifier
+parser.y:681.7-32: warning: type clash on default action: <declaration_package> != <declaration_specifiers> [-Wother]
+  681 |     | declaration_specifiers ';' // TODO if this is a struct without ...
+      |       ^~~~~~~~~~~~~~~~~~~~~~~~~~
+parser.y:962.9-23: warning: type clash on default action: <node> != <> [-Wother]
+  962 |         ENUM identifier
       |         ^~~~~~~~~~~~~~~
-parser.y:887.11-38: warning: type clash on default action: <node> != <> [-Wother]
-  887 |         | ENUM '{' enumerator_list '}'
+parser.y:963.11-38: warning: type clash on default action: <node> != <> [-Wother]
+  963 |         | ENUM '{' enumerator_list '}'
       |           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
-parser.y:888.11-49: warning: type clash on default action: <node> != <> [-Wother]
-  888 |         | ENUM identifier '{' enumerator_list '}'
+parser.y:964.11-49: warning: type clash on default action: <node> != <> [-Wother]
+  964 |         | ENUM identifier '{' enumerator_list '}'
       |           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-parser.y:889.11-42: warning: type clash on default action: <node> != <> [-Wother]
-  889 |         | ENUM '{' enumerator_list ',' '}'
+parser.y:965.11-42: warning: type clash on default action: <node> != <> [-Wother]
+  965 |         | ENUM '{' enumerator_list ',' '}'
       |           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-parser.y:890.11-53: warning: type clash on default action: <node> != <> [-Wother]
-  890 |         | ENUM identifier '{' enumerator_list ',' '}'
+parser.y:966.11-53: warning: type clash on default action: <node> != <> [-Wother]
+  966 |         | ENUM identifier '{' enumerator_list ',' '}'
       |           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+parser.y: warning: 4 nonterminals useless in grammar [-Wother]
+parser.y: warning: 11 rules useless in grammar [-Wother]
+parser.y:360.1-16: warning: nonterminal useless in grammar: declaration_list [-Wother]
+  360 | declaration_list:
+      | ^~~~~~~~~~~~~~~~
+parser.y:961.5-18: warning: nonterminal useless in grammar: enum_specifier [-Wother]
+  961 |     enum_specifier:
+      |     ^~~~~~~~~~~~~~
+parser.y:969.5-19: warning: nonterminal useless in grammar: enumerator_list [-Wother]
+  969 |     enumerator_list:
+      |     ^~~~~~~~~~~~~~~
+parser.y:974.5-14: warning: nonterminal useless in grammar: enumerator [-Wother]
+  974 |     enumerator:
+      |     ^~~~~~~~~~

@@ -45,7 +45,7 @@
 extern int yydebug;
 #endif
 /* "%code requires" blocks.  */
-#line 25 "parser.y"
+#line 28 "parser.y"
 
     #include "declarations.h"
     #include "types.h"
@@ -135,7 +135,7 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 32 "parser.y"
+#line 35 "parser.y"
 
     // generic integer
     int integer;
@@ -154,16 +154,13 @@ union YYSTYPE
     storage_class_specifier_t storage_class_specifier;
     function_specifier_t function_specifier;
 
-
     declaration_specifiers_t declaration_specifiers;
     declarator_helper_t declarator_helper;
     declaration_package_t declaration_package;
 
     symbol_table_t *symbol_table;
 
-    namespace_group_t namespace_group;
-
-#line 167 "parser.tab.h"
+#line 164 "parser.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

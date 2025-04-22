@@ -42,4 +42,3 @@ union u1 {
 	struct str4 str4;
 	struct str3 str3;
 } u1;
-

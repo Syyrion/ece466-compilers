@@ -1,12 +1,15 @@
 %debug
 
 %{
+    // * probably full of memory leaks *
+
     #include <stdlib.h>
     #include <stdio.h>
     #include "lexer.h"
     #include "location.h"
     #include "ast.h"
     #include "symbol_table.h"
+    #include "jump_association.h"
 
     void yyerror (const char *s)
     {
@@ -47,14 +50,11 @@
     storage_class_specifier_t storage_class_specifier;
     function_specifier_t function_specifier;
 
-
     declaration_specifiers_t declaration_specifiers;
     declarator_helper_t declarator_helper;
     declaration_package_t declaration_package;
 
     symbol_table_t *symbol_table;
-
-    namespace_group_t namespace_group;
 }
 
 %token
@@ -125,6 +125,9 @@
 
 /* postfix unary operators have priority over prefix */
 
+%left IF
+%left ELSE
+
 %type <string> IDENT STRINGLIT CHARLIT
 %type <number> NUMBERLIT
 %nterm
@@ -185,11 +188,15 @@
     <node> struct_or_union_specifier
     <node> enum_specifier
 
-    <namespace_group> compound_statement
+    <node> optional_expression
 
-// %destructor { } <number>
-// %destructor {free($$.buffer);} <string>
-// %destructor {ast_free($$);} <node>
+    <node> statement
+    <node> compound_statement
+    <node> expression_statement
+    <node> selection_statement
+    <node> iteration_statement
+    <node> jump_statement
+    <node> labeled_statement
 
 %%
 translation_unit:
@@ -198,10 +205,7 @@ translation_unit:
     ;
 
 external_declaration:
-    function_definition
-    {
-
-    }
+    function_definition // this would be a list of ast nodes 
     | declaration
     {
         // alias for declaration specs
@@ -240,6 +244,7 @@ external_declaration:
             // ! debug
             printf("EXTERNAL DECLARATION: ");
             ast_print_variable(var, 0);
+            printf("\n");
         }
     }
     ;
@@ -278,21 +283,30 @@ function_definition:
         else
             st_add(NS_VARIABLE, fn);
 
+        // push a new scope
         st_push();
-
+        
+        // add parameters as variables in the new scope
         for (int i = 0; i < fn->next->function.parameters->node_count; i++)
+        {
+            // * mark the parameters as used or else they'll get thrown away after the compound statement
+            fn->next->function.parameters->nodes[i]->variable.used = 1;
             st_add(NS_VARIABLE, fn->next->function.parameters->nodes[i]);
+        }
 
         $<node>$ = fn;
     }
     compound_statement
     {
-        $<node>3->next->function.definition = (function_definition_t){.namespaces = st_pop()};
+        $<node>3->next->function.definition = $4;
         // ! debug
-        printf("FUNCTION DEFINITION (1): ");
+        printf("FUNCTION DEFINITION: ");
         ast_print_variable($<node>3, 0);
+        ast_print_statement($4, 0);
+        printf("\n");
     }
     // TODO this is just a copy of above for now. It also needs to be fixed.
+/*
     | declaration_specifiers declarator declaration_list
     {
         if (!$1.storage_class)
@@ -335,21 +349,17 @@ function_definition:
     }
     compound_statement
     {
-        $<node>3->next->function.definition = (function_definition_t){.namespaces = st_pop()};
+        $<node>3->next->function.definition = (function_definition_t){.namespaces = st_pop();}
         // ! debug
         printf("FUNCTION DEFINITION (2): ");
         ast_print_variable($<node>4, 0);
     }
+*/
     ;
 
 declaration_list:
     declaration
     | declaration_list declaration
-    ;
-
-compound_statement:
-    '{' block_item_list '}'
-    | '{' '}'
     ;
 
 block_item_list:
@@ -363,7 +373,7 @@ block_item:
         // alias for declaration specs
         declaration_specifiers_t *ds = &$1.declaration_specifiers;
 
-        // apply extern if needed since this is an external declaration
+        // apply auto if needed
         if (!ds->storage_class)
             ds->storage_class = SC_AUTO;
 
@@ -397,25 +407,118 @@ block_item:
             ast_print_variable(var, 0);
         }
     }
-    | statement
+    | statement {st_add_statement($1);}
     ;
 
 // ## STATEMENTS
     statement:
-        {st_push();} compound_statement
-        | expression_statement
-        // TODO all other statements
+        {st_push();} compound_statement {$$ = $2;}
+        | expression_statement 
+        | selection_statement
+        | iteration_statement
+        | jump_statement
+        | labeled_statement
+        ;
+
+    compound_statement:
+        '{' optional_block_item_list '}' {$$ = st_pop();}
+        ;
+    
+    optional_block_item_list:
+        block_item_list
+        | %empty
         ;
 
     expression_statement:
-        expression ';'
-        {
-            // ! debug
-            printf("EXPRESSION: ");
-            ast_print_expression($1, 0);
-        }
-        | ';'
+        expression ';' {ast_resolve_expression_variables(&$1); $$ = ast_new_expression_statement($1);}
+        | ';' {$$ = ast_new_expression_statement(0);}
         ;
+
+    selection_statement:
+        IF '(' expression ')' statement
+        {
+            ast_resolve_expression_variables(&$3);
+            $$ = ast_new_if_statement($3, $5, 0);
+        } %prec IF
+        | IF '(' expression ')' statement ELSE statement
+        {
+            ast_resolve_expression_variables(&$3);
+            $$ = ast_new_if_statement($3, $5, $7);
+        } %prec ELSE
+        | SWITCH '(' expression ')'
+        {
+            ast_resolve_expression_variables(&$3);
+            ja_push($<node>$ = ast_new_switch_statement($3, 0));
+        }
+        statement
+        {
+            ja_pop();
+            $<node>5->switch_statement.statement = $6;
+            $$ = $<node>5;
+        }
+        ;
+
+    iteration_statement:
+        WHILE '(' expression ')'
+        {
+            ast_resolve_expression_variables(&$3);
+            ja_push($<node>$ = ast_new_while_statement(AST_WHILE, $3, 0));
+        }
+        statement
+        {
+            ja_pop();
+            $<node>5->while_statement.statement = $6;
+            $$ = $<node>5;
+        }
+        | DO
+        {
+            ja_push($<node>$ = ast_new_while_statement(AST_DO_WHILE, 0, 0));
+        }
+        statement WHILE '(' expression ')' ';'
+        {
+            ast_resolve_expression_variables(&$6);
+            ja_pop();
+            $<node>2->while_statement.condition = $6;
+            $<node>2->while_statement.statement = $3;
+            $$ = $<node>2;
+        }
+        | FOR '(' optional_expression ';' optional_expression ';' optional_expression ')'
+        {
+            if ($3)
+                ast_resolve_expression_variables(&$3);
+            if ($5)
+                ast_resolve_expression_variables(&$5);
+            if ($7)
+                ast_resolve_expression_variables(&$7);
+            ja_push($<node>$ = ast_new_for_statement($3, $5, $7, 0));
+        }
+        statement
+        {
+            ja_pop();
+            $<node>9->for_statement.statement = $10;
+            $$ = $<node>9;
+        }
+        // not going to allow declarations in the first for clause
+        ;
+
+    optional_expression:
+        expression {$$ = $1;}
+        | %empty {$$ = 0;}
+        ;
+
+    jump_statement:
+        GOTO IDENT ';' {$$ = ast_new_goto_statement($2.buffer);}
+        | CONTINUE ';' {$$ = ast_new_continue_statement(ja_get_continue_association());}
+        | BREAK ';' {$$ = ast_new_break_statement(ja_get_break_association());}
+        | RETURN optional_expression ';' {$$ = ast_new_return_statement($2);}
+        ;
+
+    labeled_statement:
+        IDENT ':' statement {st_add_label($1.buffer, $3); $$ = $3;}
+        | CASE constant_expression ':' statement {ja_add_switch_case($2, $4); $$ = $4;}
+        | DEFAULT ':' statement {ja_add_switch_default($3); $$ = $3;}
+        ;
+
 //
 
 // ## EXPRESSIONS
@@ -428,7 +531,7 @@ block_item:
         ;
 
     constant:
-        CHARLIT {$$ = ast_new_charlit($1.buffer[0]);}
+        CHARLIT {$$ = ast_new_charlit($1.buffer[0]); free($1.buffer);}
         | NUMBERLIT {$$ = ast_new_numberlit($1);}
         ;
 
@@ -439,14 +542,13 @@ block_item:
         | '(' expression ')' {$$ = $2;}
         ;
 
-
     postfix_expression:
         primary_expression
         | postfix_expression '[' expression ']' {$$ = ast_new_unary_op('*', ast_new_binary_op('+', $1, $3));}
         | postfix_expression '(' ')' {$$ = ast_new_function_call($1, ast_list_new());}
         | postfix_expression '(' argument_expression_list ')' {$$ = ast_new_function_call($1, $3);}
-        | postfix_expression '.' identifier {$$ = ast_new_binary_op('.', $1, $3);}
-        | postfix_expression "->" identifier {$$ = ast_new_binary_op('.', ast_new_unary_op('*', $1), $3);}
+        | postfix_expression '.' IDENT {$$ = ast_new_member_access($1, $3.buffer);}
+        | postfix_expression "->" IDENT {$$ = ast_new_member_access(ast_new_unary_op('*', $1), $3.buffer);}
         | postfix_expression "++" {$$ = ast_new_unary_op(PLUSPLUS, $1);}
         | postfix_expression "--" {$$ = ast_new_unary_op(MINUSMINUS, $1);}
         ;
@@ -572,11 +674,11 @@ block_item:
 declaration:
     declaration_specifiers init_declarator_list ';'
     {
-        $1.type_specifier.scalar = declspec_verify_and_simplify_scalar($1.type_specifier.scalar);
+        $1.type_specifier.scalar = declspec_normalize_scalar($1.type_specifier.scalar);
         $2.declaration_specifiers = $1;
         $$ = $2;
     }
-    | declaration_specifiers ';' {} // if this is a struct without a name then it goes unused (should be freed probably)
+    | declaration_specifiers ';' // TODO if this is a struct without a name then it goes unused (should be freed probably)
     ;
 
 
@@ -615,7 +717,7 @@ declaration:
             | _BOOL {$$ = (type_specifier_t){.scalar = TS_BOOL};}
             | _COMPLEX {$$ = (type_specifier_t){.scalar = TS_COMPLEX};}
             | struct_or_union_specifier {$$ = (type_specifier_t){.scalar = TS_STRUCT_OR_UNION, .custom = $1};}
-            | enum_specifier {$$ = (type_specifier_t){.scalar = TS_ENUM, .custom = $1};}
+            // | enum_specifier {$$ = (type_specifier_t){.scalar = TS_ENUM, .custom = $1};}
             // | typedef_name
             ;
 
@@ -639,7 +741,7 @@ init_declarator_list:
 
 init_declarator:
     declarator {$1.initializer = 0; $$ = $1;}
-    | declarator '=' initializer {$1.initializer = $3; $$ = $1;}
+    | declarator '=' initializer {$1.initializer = $3; $$ = $1;} // TODO apparently I forgot to use the initializer;
     ;
 
 declarator:
@@ -651,17 +753,7 @@ direct_declarator:
     identifier {$$.oldest = $$.newest = $1;}
     | '(' declarator ')' {$$ = $2;}
     | direct_declarator '[' ']' {$$.newest = $1.newest->next = ast_new_array(0); $$.oldest = $1.oldest;}
-    | direct_declarator '[' assignment_expression ']' {$$.newest = $1.newest->next = ast_new_array($3);
-
-        // fprintf(stderr, "%d", $$.newest->array.size->kind);
-     $$.oldest = $1.oldest;}
-//  | direct_declarator '[' type_qualifier_list ']'
-//  | direct_declarator '[' type_qualifier_list assignment_expression ']'
-//  | direct_declarator '[' STATIC assignment_expression ']'
-//  | direct_declarator '[' STATIC type_qualifier_list assignment_expression ']'
-//  | direct_declarator '[' type_qualifier_list STATIC assignment_expression ']'
-//  | direct_declarator '[' type_qualifier_list '*' ']'
-//  | direct_declarator '[' '*' ']'
+    | direct_declarator '[' constant_expression ']' {$$.newest = $1.newest->next = ast_new_array($3); $$.oldest = $1.oldest;}
     | direct_declarator '(' ')' {$$.newest = $1.newest->next = ast_new_function(0); $$.oldest = $1.oldest;}
 // TODO K&R not supported yet
     | direct_declarator '(' identifier_list ')' {$$.newest = $1.newest->next = ast_new_function(st_unpack($3)); $$.oldest = $1.oldest;}
@@ -702,23 +794,14 @@ parameter_list:
 parameter_declaration:
     declaration_specifiers declarator
     {
-        if ($1.storage_class && $1.storage_class != SC_REGISTER)
-        {
-            fprintf(stderr, "%s:%d: Error: invalid parameter storage class \n", filename, line_num);
-            exit(EXIT_FAILURE);
-        }
+        $1.storage_class = declspec_normalize_parameter_storage_class($1.storage_class);
 
         ast_node_t *var = ast_ident_to_variable($2.oldest, $1.storage_class);
-
         $2.newest->next = ast_new_type($1.type_specifier, $1.type_qualifier);
         $$ = var;
     }
     | declaration_specifiers {
-        if ($1.storage_class && $1.storage_class != SC_REGISTER)
-        {
-            fprintf(stderr, "%s:%d: Error: invalid parameter storage class \n", filename, line_num);
-            exit(EXIT_FAILURE);
-        }
+        $1.storage_class = declspec_normalize_parameter_storage_class($1.storage_class);
 
         ast_node_t *var = ast_ident_to_variable(ast_new_ident(0), $1.storage_class);
         var->next = ast_new_type($1.type_specifier, $1.type_qualifier);
@@ -726,11 +809,7 @@ parameter_declaration:
     }
     | declaration_specifiers abstract_declarator
     {
-        if ($1.storage_class && $1.storage_class != SC_REGISTER)
-        {
-            fprintf(stderr, "%s:%d: Error: invalid parameter storage class \n", filename, line_num);
-            exit(EXIT_FAILURE);
-        }
+        $1.storage_class = declspec_normalize_parameter_storage_class($1.storage_class);
 
         ast_node_t *var = ast_ident_to_variable(ast_new_ident(0), $1.storage_class);
         var->next = $2.oldest;
@@ -770,11 +849,9 @@ abstract_declarator:
 direct_abstract_declarator:
     '(' abstract_declarator ')' {$$ = $2;}
     | '[' ']' {$$.oldest = $$.newest = ast_new_array(0);}
-    | '[' assignment_expression ']' {$$.oldest = $$.newest = ast_new_array($2);}
+    | '[' constant_expression ']' {$$.oldest = $$.newest = ast_new_array($2);}
     | direct_abstract_declarator '[' ']' {$$.newest = $1.newest->next = ast_new_array(0); $$.oldest = $1.oldest;}
-    | direct_abstract_declarator '[' assignment_expression ']' {$$.newest = $1.newest->next = ast_new_array($3); $$.oldest = $1.oldest;}
-//  | '[' '*' ']'
-//  | direct_abstract_declarator '[' '*' ']'
+    | direct_abstract_declarator '[' constant_expression ']' {$$.newest = $1.newest->next = ast_new_array($3); $$.oldest = $1.oldest;}
     | '(' ')' {$$.oldest = $$.newest = ast_new_function(0);}
     | direct_abstract_declarator '(' ')' {$$.newest = $1.newest->next = ast_new_function(0); $$.oldest = $1.oldest;}
     | '(' parameter_type_list ')' {$$.oldest = $$.newest = ast_new_function(st_unpack($2));}
@@ -824,7 +901,6 @@ initializer:
             struct_declaration_list '}'
             {
                 $$ = ast_add_struct_or_union_members($<node>4, st_unpack($5));
-
                 ast_print_struct_or_union($$); // ! debug
             }
         | struct_or_union IDENT
@@ -855,7 +931,7 @@ initializer:
     struct_declaration:
         specifier_qualifier_list struct_declarator_list ';'
         {
-            $1.type_specifier.scalar = declspec_verify_and_simplify_scalar($1.type_specifier.scalar);
+            $1.type_specifier.scalar = declspec_normalize_scalar($1.type_specifier.scalar);
             $2.declaration_specifiers = $1;
             $$ = $2;
         }
@@ -927,7 +1003,7 @@ symbol_table_t *add_members_to_symbol_table(symbol_table_t *member_table, declar
             if (
                 is_custom                                               // scalar is a struct or union
                 && declarator->newest == declarator->oldest             // not a pointer, array, or function
-                && type->type.specifier.custom->structure.members == 0     // no members
+                && type->type.specifier.custom->structure.members == 0  // no members
             )
             {
                 fprintf(stderr, "%s:%d: Error: member `%s` is incomplete\n", filename, line_num, member->name);

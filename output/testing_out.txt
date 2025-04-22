@@ -1,120 +1,138 @@
-EXTERNAL DECLARATION: The variable `f` has storage class EXTERN and is a(n)
-    function with unknown parameters returning
-        INT 
-EXTERNAL DECLARATION: The variable `h` has storage class EXTERN and is a(n)
-    function taking parameters
-    (
-        The variable `<no-name>` has storage class unknown and is a(n)
-            INT 
-    )
-    returning
-        INT 
-EXTERNAL DECLARATION: The variable `f` has storage class EXTERN and is a(n)
-    function with unknown parameters returning
-        INT 
-EXTERNAL DECLARATION: The variable `n` has storage class EXTERN and is a(n)
-    DOUBLE 
-EXTERNAL DECLARATION: The variable `a` has storage class EXTERN and is a(n)
-    function with unknown parameters returning
-        pointer to a(n)
-            array with unknown size containing
-                INT 
-EXTERNAL DECLARATION: The variable `a` has storage class EXTERN and is a(n)
-    function taking parameters
-    (
-        The variable `<no-name>` has storage class unknown and is a(n)
-            INT 
-    )
-    returning
-        VOLATILE pointer to a(n)
-            array with size
-            [
-                NUMBERLIT    INTEGER    10    INT
-            ]
-            containing
-                INT 
-EXTERNAL DECLARATION: The variable `a` has storage class EXTERN and is a(n)
-    function taking parameters
-    (
-        The variable `<no-name>` has storage class unknown and is a(n)
-            INT 
-    )
-    returning
-        CONST VOLATILE pointer to a(n)
-            array with size
-            [
-                NUMBERLIT    INTEGER    10    INT
-            ]
-            containing
-                INT 
-EXPRESSION: IDENT "n"
-FUNCTION DEFINITION (1): The variable `a` has storage class EXTERN and is a(n)
-    function taking parameters
-    (
-        The variable `<no-name>` has storage class unknown and is a(n)
-            INT 
-    )
-    returning
-        CONST VOLATILE pointer to a(n)
-            array with size
-            [
-                NUMBERLIT    INTEGER    10    INT
-            ]
-            containing
-                INT 
-EXTERNAL DECLARATION: The variable `k` has storage class EXTERN and is a(n)
+DECLARATION: The variable `i` has storage class AUTO and is a(n)
     INT 
-EXTERNAL DECLARATION: The variable `d` has storage class EXTERN and is a(n)
-    pointer to a(n)
-        INT 
-EXTERNAL DECLARATION: The variable `d` has storage class EXTERN and is a(n)
-    pointer to a(n)
-        INT 
-FUNCTION DEFINITION (1): The variable `y` has storage class EXTERN and is a(n)
+FUNCTION DEFINITION: The variable `y` has storage class EXTERN and is a(n)
     function taking parameters
     (
-        The variable `n` has storage class unknown and is a(n)
+        The variable `n` has storage class AUTO and is a(n)
             INT 
     )
     returning
         pointer to a(n)
             function taking parameters
             (
-                The variable `n` has storage class unknown and is a(n)
+                The variable `n` has storage class AUTO and is a(n)
                     INT 
             )
             returning
                 INT 
-DECLARATION: The variable `f` has storage class AUTO and is a(n)
-    function with unknown parameters returning
-        INT 
-DECLARATION: The variable `g` has storage class AUTO and is a(n)
-    function with unknown parameters returning
-        INT 
-FUNCTION DEFINITION (1): The variable `g` has storage class EXTERN and is a(n)
-    function taking parameters
+0xe1c1050 : compound
+{
+    0xe1be940 : expression
+        VARIABLE (resolved) "n"
+    0xe1c02c0 : if
     (
-        The variable `d` has storage class unknown and is a(n)
-            DOUBLE 
+        NUMBERLIT    INTEGER    4    INT
     )
-    returning
-        pointer to a(n)
-            function taking parameters
+    then
+        0xe1c0220 : compound
+        {
+            0xe1bfdf0 : for
             (
-                The variable `<no-name>` has storage class unknown and is a(n)
-                    INT 
-                The variable `<no-name>` has storage class unknown and is a(n)
-                    CHAR 
+                BINARY_OP "="
+                .left
+                    VARIABLE (resolved) "i"
+                .right
+                    NUMBERLIT    INTEGER    0    INT
+            ;
+                BINARY_OP "<"
+                .left
+                    VARIABLE (resolved) "i"
+                .right
+                    NUMBERLIT    INTEGER    10    INT
+            ;
+                UNARY_OP "++"
+                .operand
+                    VARIABLE (resolved) "i"
             )
-            returning
-                VOID 
-DECLARATION: The variable `h` has storage class AUTO and is a(n)
-    INT 
-FUNCTION DEFINITION (1): The variable `h` has storage class EXTERN and is a(n)
-    function taking parameters
+            do
+                0xe1c0180 : compound
+                {
+                    0xe1bfce0 : break (0xe1bfdf0)
+                    0xe1bfbd0 : for
+                    (
+                    ;
+                    ;
+                    )
+                    do
+                        0xe1c00b0 : compound
+                        {
+                            0xe1bfff0 : break (0xe1bfbd0)
+                            0xe1c0060 : continue (0xe1bfbd0)
+                        }
+                    0xe1c0100 : continue (0xe1bfdf0)
+                }
+        }
+    else
+        0xe1c0270 : goto 0xe1c0180
+    0xe1c0360 : while
     (
-        The variable `x` has storage class unknown and is a(n)
-            INT 
+        NUMBERLIT    INTEGER    0    INT
     )
-    returning
-        INT 
+    do
+        0xe1c0450 : compound
+        {
+            0xe1c03b0 : break (0xe1c0360)
+            0xe1c0400 : continue (0xe1c0360)
+        }
+    0xe1c04d0 : do
+        0xe1c05c0 : compound
+        {
+            0xe1c0520 : break (0xe1c04d0)
+            0xe1c0570 : continue (0xe1c04d0)
+        }
+    while
+    (
+        NUMBERLIT    INTEGER    0    INT
+    )
+    0xe1c06b0 : while
+    (
+        NUMBERLIT    INTEGER    0    INT
+    )
+    do
+        0xe1c0e70 : compound
+        {
+            0xe1c0700 : switch
+            (
+                BINARY_OP "+"
+                .left
+                    VARIABLE (resolved) "n"
+                .right
+                    NUMBERLIT    INTEGER    8    INT
+            ) == [
+                case
+                    NUMBERLIT    INTEGER    1    INT
+                : 0xe1c0880
+                case
+                    BINARY_OP "-"
+                    .left
+                        NUMBERLIT    INTEGER    5    INT
+                    .right
+                        NUMBERLIT    INTEGER    8    INT
+                : 0xe1c0a50
+                case
+                    NUMBERLIT    INTEGER    102    INT
+                : 0xe1c0be0
+                case
+                    NUMBERLIT    INTEGER    101    INT
+                : 0xe1c0be0
+                case
+                    NUMBERLIT    INTEGER    100    INT
+                : 0xe1c0be0
+                default : 0xe1c0c30
+            ]
+            then
+                0xe1c0e20 : compound
+                {
+                    0xe1c0880 : break (0xe1c0700)
+                    0xe1c0a50 : break (0xe1c0700)
+                    0xe1c0be0 : break (0xe1c0700)
+                }
+        }
+    0xe1c1000 : return
+        BINARY_OP "+"
+        .left
+            NUMBERLIT    INTEGER    90    INT
+        .right
+            NUMBERLIT    INTEGER    2    INT
+}
+
