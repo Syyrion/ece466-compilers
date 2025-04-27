@@ -129,7 +129,7 @@ ast_node_t *ast_new_type_cast(ast_node_t *operand, ast_node_t *type)
     ast_node_t *new_inst = malloc(sizeof(ast_node_t));
     new_inst->kind = AST_TYPE_CAST;
     new_inst->type_cast.operand = operand;
-    new_inst->type_cast.type;
+    new_inst->type_cast.type=type;
     return new_inst;
 }
 

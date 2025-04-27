@@ -1,17 +1,17 @@
 Nonterminals useless in grammar
 
-    declaration_list
-    enum_specifier
-    enumerator_list
-    enumerator
+   enum_specifier
+   declaration_list
+   enumerator_list
+   enumerator
 
 
 Terminals unused in grammar
 
-    "..."
-    ENUM
-    TYPEDEF
-    _IMAGINARY
+   "..."
+   ENUM
+   TYPEDEF
+   _IMAGINARY
 
 
 Rules useless in grammar
@@ -42,7 +42,7 @@ Grammar
     3 external_declaration: function_definition
     4                     | declaration
 
-    5 @1: ε
+    5 @1: %empty
 
     6 function_definition: declaration_specifiers declarator @1 compound_statement
 
@@ -52,7 +52,7 @@ Grammar
     9 block_item: declaration
    10           | statement
 
-   11 $@2: ε
+   11 $@2: %empty
 
    12 statement: $@2 compound_statement
    13          | expression_statement
@@ -64,7 +64,7 @@ Grammar
    18 compound_statement: '{' optional_block_item_list '}'
 
    19 optional_block_item_list: block_item_list
-   20                         | ε
+   20                         | %empty
 
    21 expression_statement: expression ';'
    22                     | ';'
@@ -72,24 +72,24 @@ Grammar
    23 selection_statement: IF '(' expression ')' statement
    24                    | IF '(' expression ')' statement ELSE statement
 
-   25 @3: ε
+   25 @3: %empty
 
    26 selection_statement: SWITCH '(' expression ')' @3 statement
 
-   27 @4: ε
+   27 @4: %empty
 
    28 iteration_statement: WHILE '(' expression ')' @4 statement
 
-   29 @5: ε
+   29 @5: %empty
 
    30 iteration_statement: DO @5 statement WHILE '(' expression ')' ';'
 
-   31 @6: ε
+   31 @6: %empty
 
    32 iteration_statement: FOR '(' optional_expression ';' optional_expression ';' optional_expression ')' @6 statement
 
    33 optional_expression: expression
-   34                    | ε
+   34                    | %empty
 
    35 jump_statement: GOTO IDENT ';'
    36               | CONTINUE ';'
@@ -295,7 +295,7 @@ Grammar
 
   192 struct_or_union_specifier: struct_or_union '{' struct_declaration_list '}'
 
-  193 @7: ε
+  193 @7: %empty
 
   194 struct_or_union_specifier: struct_or_union IDENT '{' @7 struct_declaration_list '}'
   195                          | struct_or_union IDENT
@@ -323,320 +323,259 @@ Grammar
 
 Terminals, with rules where they appear
 
-    $end (0) 0
-    '!' (33) 68
-    '%' (37) 77
-    '&' (38) 63 93
-    '(' (40) 23 24 26 28 30 32 49 52 53 70 73 157 160 161 162 182 187 188 189 190
-    ')' (41) 23 24 26 28 30 32 49 52 53 70 73 157 160 161 162 182 187 188 189 190
-    '*' (42) 64 75 163 164 165 166
-    '+' (43) 65 79
-    ',' (44) 59 118 151 171 176 206
-    '-' (45) 66 80
-    '.' (46) 54
-    '/' (47) 76
-    ':' (58) 39 40 41 103 208 209
-    ';' (59) 21 22 30 32 35 36 37 38 120 121 200
-    '<' (60) 85
-    '=' (61) 106 153
-    '>' (62) 87
-    '?' (63) 103
-    '[' (91) 51 158 159 183 184 185 186
-    ']' (93) 51 158 159 183 184 185 186
-    '^' (94) 95
-    '{' (123) 18 192 194
-    '|' (124) 97
-    '}' (125) 18 192 194
-    '~' (126) 67
-    error (256)
-    IDENT <string> (258) 35 39 42 54 55 194 195
-    CHARLIT <string> (259) 44
-    STRINGLIT <string> (260) 43
-    NUMBERLIT <number> (261) 45
-    "->" (262) 55
-    "++" (263) 56 61
-    "--" (264) 57 62
-    "<<" (265) 82
-    ">>" (266) 83
-    "<=" (267) 86
-    ">=" (268) 88
-    "==" (269) 90
-    "!=" (270) 91
-    "&&" (271) 99
-    "||" (272) 101
-    "..." (273)
-    "*=" (274) 107
-    "/=" (275) 108
-    "%=" (276) 109
-    "+=" (277) 110
-    "-=" (278) 111
-    "<<=" (279) 112
-    ">>=" (280) 113
-    "&=" (281) 114
-    "|=" (282) 116
-    "^=" (283) 115
-    AUTO (284) 132
-    ALIGNOF (285) 71
-    BREAK (286) 37
-    CASE (287) 40
-    CHAR (288) 135
-    CONST (289) 146
-    CONTINUE (290) 36
-    DEFAULT (291) 41
-    DO (292) 30
-    DOUBLE (293) 140
-    ELSE (294) 24
-    ENUM (295)
-    EXTERN (296) 130
-    FLOAT (297) 139
-    FOR (298) 32
-    GOTO (299) 35
-    IF (300) 23 24
-    INLINE (301) 149
-    INT (302) 137
-    LONG (303) 138
-    REGISTER (304) 133
-    RESTRICT (305) 147
-    RETURN (306) 38
-    SHORT (307) 136
-    SIGNED (308) 141
-    SIZEOF (309) 69 70
-    STATIC (310) 131
-    STRUCT (311) 196
-    SWITCH (312) 26
-    TYPEDEF (313)
-    UNION (314) 197
-    UNSIGNED (315) 142
-    VOID (316) 134
-    VOLATILE (317) 148
-    WHILE (318) 28 30
-    _BOOL (319) 143
-    _COMPLEX (320) 144
-    _IMAGINARY (321)
+$end (0) 0
+'!' (33) 68
+'%' (37) 77
+'&' (38) 63 93
+'(' (40) 23 24 26 28 30 32 49 52 53 70 73 157 160 161 162 182 187 188
+    189 190
+')' (41) 23 24 26 28 30 32 49 52 53 70 73 157 160 161 162 182 187 188
+    189 190
+'*' (42) 64 75 163 164 165 166
+'+' (43) 65 79
+',' (44) 59 118 151 171 176 206
+'-' (45) 66 80
+'.' (46) 54
+'/' (47) 76
+':' (58) 39 40 41 103 208 209
+';' (59) 21 22 30 32 35 36 37 38 120 121 200
+'<' (60) 85
+'=' (61) 106 153
+'>' (62) 87
+'?' (63) 103
+'[' (91) 51 158 159 183 184 185 186
+']' (93) 51 158 159 183 184 185 186
+'^' (94) 95
+'{' (123) 18 192 194
+'|' (124) 97
+'}' (125) 18 192 194
+'~' (126) 67
+error (256)
+IDENT (258) 35 39 42 54 55 194 195
+CHARLIT (259) 44
+STRINGLIT (260) 43
+NUMBERLIT (261) 45
+"->" (262) 55
+"++" (263) 56 61
+"--" (264) 57 62
+"<<" (265) 82
+">>" (266) 83
+"<=" (267) 86
+">=" (268) 88
+"==" (269) 90
+"!=" (270) 91
+"&&" (271) 99
+"||" (272) 101
+"..." (273)
+"*=" (274) 107
+"/=" (275) 108
+"%=" (276) 109
+"+=" (277) 110
+"-=" (278) 111
+"<<=" (279) 112
+">>=" (280) 113
+"&=" (281) 114
+"|=" (282) 116
+"^=" (283) 115
+AUTO (284) 132
+ALIGNOF (285) 71
+BREAK (286) 37
+CASE (287) 40
+CHAR (288) 135
+CONST (289) 146
+CONTINUE (290) 36
+DEFAULT (291) 41
+DO (292) 30
+DOUBLE (293) 140
+ELSE (294) 24
+ENUM (295)
+EXTERN (296) 130
+FLOAT (297) 139
+FOR (298) 32
+GOTO (299) 35
+IF (300) 23 24
+INLINE (301) 149
+INT (302) 137
+LONG (303) 138
+REGISTER (304) 133
+RESTRICT (305) 147
+RETURN (306) 38
+SHORT (307) 136
+SIGNED (308) 141
+SIZEOF (309) 69 70
+STATIC (310) 131
+STRUCT (311) 196
+SWITCH (312) 26
+TYPEDEF (313)
+UNION (314) 197
+UNSIGNED (315) 142
+VOID (316) 134
+VOLATILE (317) 148
+WHILE (318) 28 30
+_BOOL (319) 143
+_COMPLEX (320) 144
+_IMAGINARY (321)
 
 
 Nonterminals, with rules where they appear
 
-    $accept (91)
-        on left: 0
-    translation_unit (92)
-        on left: 1 2
-        on right: 0 2
-    external_declaration (93)
-        on left: 3 4
-        on right: 1 2
-    function_definition (94)
-        on left: 6
-        on right: 3
-    @1 (95)
-        on left: 5
-        on right: 6
-    block_item_list (96)
-        on left: 7 8
-        on right: 8 19
-    block_item (97)
-        on left: 9 10
-        on right: 7 8
-    statement <node> (98)
-        on left: 12 13 14 15 16 17
-        on right: 10 23 24 26 28 30 32 39 40 41
-    $@2 (99)
-        on left: 11
-        on right: 12
-    compound_statement <node> (100)
-        on left: 18
-        on right: 6 12
-    optional_block_item_list (101)
-        on left: 19 20
-        on right: 18
-    expression_statement <node> (102)
-        on left: 21 22
-        on right: 13
-    selection_statement <node> (103)
-        on left: 23 24 26
-        on right: 14
-    @3 (104)
-        on left: 25
-        on right: 26
-    iteration_statement <node> (105)
-        on left: 28 30 32
-        on right: 15
-    @4 (106)
-        on left: 27
-        on right: 28
-    @5 (107)
-        on left: 29
-        on right: 30
-    @6 (108)
-        on left: 31
-        on right: 32
-    optional_expression <node> (109)
-        on left: 33 34
-        on right: 32 38
-    jump_statement <node> (110)
-        on left: 35 36 37 38
-        on right: 16
-    labeled_statement <node> (111)
-        on left: 39 40 41
-        on right: 17
-    identifier <node> (112)
-        on left: 42
-        on right: 46 156 175 176
-    string_literal <node> (113)
-        on left: 43
-        on right: 48
-    constant <node> (114)
-        on left: 44 45
-        on right: 47
-    primary_expression <node> (115)
-        on left: 46 47 48 49
-        on right: 50
-    postfix_expression <node> (116)
-        on left: 50 51 52 53 54 55 56 57
-        on right: 51 52 53 54 55 56 57 60
-    argument_expression_list <node_list> (117)
-        on left: 58 59
-        on right: 53 59
-    unary_expression <node> (118)
-        on left: 60 61 62 63 64 65 66 67 68 69 70 71
-        on right: 61 62 69 71 72 105
-    cast_expression <node> (119)
-        on left: 72 73
-        on right: 63 64 65 66 67 68 73 74 75 76 77
-    multiplicative_expression <node> (120)
-        on left: 74 75 76 77
-        on right: 75 76 77 78 79 80
-    additive_expression <node> (121)
-        on left: 78 79 80
-        on right: 79 80 81 82 83
-    shift_expression <node> (122)
-        on left: 81 82 83
-        on right: 82 83 84 85 86 87 88
-    relational_expression <node> (123)
-        on left: 84 85 86 87 88
-        on right: 85 86 87 88 89 90 91
-    equality_expression <node> (124)
-        on left: 89 90 91
-        on right: 90 91 92 93
-    and_expression <node> (125)
-        on left: 92 93
-        on right: 93 94 95
-    xor_expression <node> (126)
-        on left: 94 95
-        on right: 95 96 97
-    or_expression <node> (127)
-        on left: 96 97
-        on right: 97 98 99
-    logical_and_expression <node> (128)
-        on left: 98 99
-        on right: 99 100 101
-    logical_or_expression <node> (129)
-        on left: 100 101
-        on right: 101 102 103
-    conditional_expression <node> (130)
-        on left: 102 103
-        on right: 103 104 119
-    assignment_expression <node> (131)
-        on left: 104 105
-        on right: 58 59 105 117 118 191
-    assignment_operator <integer> (132)
-        on left: 106 107 108 109 110 111 112 113 114 115 116
-        on right: 105
-    expression <node> (133)
-        on left: 117 118
-        on right: 21 23 24 26 28 30 33 49 51 103 118
-    constant_expression <node> (134)
-        on left: 119
-        on right: 40 159 184 186 208 209
-    declaration <declaration_package> (135)
-        on left: 120 121
-        on right: 4 9
-    declaration_specifiers <declaration_specifiers> (136)
-        on left: 122 123 124 125 126 127 128 129
-        on right: 6 120 121 126 127 128 129 172 173 174
-    storage_class_specifier <storage_class_specifier> (137)
-        on left: 130 131 132 133
-        on right: 124 128
-    type_specifier <type_specifier> (138)
-        on left: 134 135 136 137 138 139 140 141 142 143 144 145
-        on right: 122 126 201 203
-    type_qualifier <type_qualifier> (139)
-        on left: 146 147 148
-        on right: 123 127 167 168 202 204
-    function_specifier <function_specifier> (140)
-        on left: 149
-        on right: 125 129
-    init_declarator_list <declaration_package> (141)
-        on left: 150 151
-        on right: 120 151
-    init_declarator <declarator_helper> (142)
-        on left: 152 153
-        on right: 150 151
-    declarator <declarator_helper> (143)
-        on left: 154 155
-        on right: 6 152 153 157 172 207 209
-    direct_declarator <declarator_helper> (144)
-        on left: 156 157 158 159 160 161 162
-        on right: 154 155 158 159 160 161 162
-    pointer <declarator_helper> (145)
-        on left: 163 164 165 166
-        on right: 155 165 166 179 181
-    type_qualifier_list <type_qualifier> (146)
-        on left: 167 168
-        on right: 164 166 168
-    parameter_type_list <symbol_table> (147)
-        on left: 169
-        on right: 162 189 190
-    parameter_list <symbol_table> (148)
-        on left: 170 171
-        on right: 169 171
-    parameter_declaration <node> (149)
-        on left: 172 173 174
-        on right: 170 171
-    identifier_list <symbol_table> (150)
-        on left: 175 176
-        on right: 161 176
-    type_name <node> (151)
-        on left: 177 178
-        on right: 70 73
-    abstract_declarator <declarator_helper> (152)
-        on left: 179 180 181
-        on right: 174 178 182
-    direct_abstract_declarator <declarator_helper> (153)
-        on left: 182 183 184 185 186 187 188 189 190
-        on right: 180 181 185 186 188 190
-    initializer <node> (154)
-        on left: 191
-        on right: 153
-    struct_or_union_specifier <node> (155)
-        on left: 192 194 195
-        on right: 145
-    @7 (156)
-        on left: 193
-        on right: 194
-    struct_or_union <integer> (157)
-        on left: 196 197
-        on right: 192 194 195
-    struct_declaration_list <symbol_table> (158)
-        on left: 198 199
-        on right: 192 194 199
-    struct_declaration <declaration_package> (159)
-        on left: 200
-        on right: 198 199
-    specifier_qualifier_list <declaration_specifiers> (160)
-        on left: 201 202 203 204
-        on right: 177 178 200 203 204
-    struct_declarator_list <declaration_package> (161)
-        on left: 205 206
-        on right: 200 206
-    struct_declarator <declarator_helper> (162)
-        on left: 207 208 209
-        on right: 205 206
+$accept (91)
+    on left: 0
+identifier (92)
+    on left: 42, on right: 46 156 175 176
+string_literal (93)
+    on left: 43, on right: 48
+constant (94)
+    on left: 44 45, on right: 47
+primary_expression (95)
+    on left: 46 47 48 49, on right: 50
+postfix_expression (96)
+    on left: 50 51 52 53 54 55 56 57, on right: 51 52 53 54 55 56 57
+    60
+argument_expression_list (97)
+    on left: 58 59, on right: 53 59
+unary_expression (98)
+    on left: 60 61 62 63 64 65 66 67 68 69 70 71, on right: 61 62 69
+    71 72 105
+cast_expression (99)
+    on left: 72 73, on right: 63 64 65 66 67 68 73 74 75 76 77
+multiplicative_expression (100)
+    on left: 74 75 76 77, on right: 75 76 77 78 79 80
+additive_expression (101)
+    on left: 78 79 80, on right: 79 80 81 82 83
+shift_expression (102)
+    on left: 81 82 83, on right: 82 83 84 85 86 87 88
+relational_expression (103)
+    on left: 84 85 86 87 88, on right: 85 86 87 88 89 90 91
+equality_expression (104)
+    on left: 89 90 91, on right: 90 91 92 93
+and_expression (105)
+    on left: 92 93, on right: 93 94 95
+xor_expression (106)
+    on left: 94 95, on right: 95 96 97
+or_expression (107)
+    on left: 96 97, on right: 97 98 99
+logical_and_expression (108)
+    on left: 98 99, on right: 99 100 101
+logical_or_expression (109)
+    on left: 100 101, on right: 101 102 103
+conditional_expression (110)
+    on left: 102 103, on right: 103 104 119
+assignment_expression (111)
+    on left: 104 105, on right: 58 59 105 117 118 191
+assignment_operator (112)
+    on left: 106 107 108 109 110 111 112 113 114 115 116, on right:
+    105
+expression (113)
+    on left: 117 118, on right: 21 23 24 26 28 30 33 49 51 103 118
+constant_expression (114)
+    on left: 119, on right: 40 159 184 186 208 209
+initializer (115)
+    on left: 191, on right: 153
+declaration_specifiers (116)
+    on left: 122 123 124 125 126 127 128 129, on right: 6 120 121 126
+    127 128 129 172 173 174
+storage_class_specifier (117)
+    on left: 130 131 132 133, on right: 124 128
+function_specifier (118)
+    on left: 149, on right: 125 129
+type_qualifier (119)
+    on left: 146 147 148, on right: 123 127 167 168 202 204
+type_specifier (120)
+    on left: 134 135 136 137 138 139 140 141 142 143 144 145, on right:
+    122 126 201 203
+declaration (121)
+    on left: 120 121, on right: 4 9
+init_declarator_list (122)
+    on left: 150 151, on right: 120 151
+init_declarator (123)
+    on left: 152 153, on right: 150 151
+declarator (124)
+    on left: 154 155, on right: 6 152 153 157 172 207 209
+direct_declarator (125)
+    on left: 156 157 158 159 160 161 162, on right: 154 155 158 159
+    160 161 162
+pointer (126)
+    on left: 163 164 165 166, on right: 155 165 166 179 181
+type_name (127)
+    on left: 177 178, on right: 70 73
+abstract_declarator (128)
+    on left: 179 180 181, on right: 174 178 182
+direct_abstract_declarator (129)
+    on left: 182 183 184 185 186 187 188 189 190, on right: 180 181
+    185 186 188 190
+struct_declaration_list (130)
+    on left: 198 199, on right: 192 194 199
+struct_declaration (131)
+    on left: 200, on right: 198 199
+struct_declarator_list (132)
+    on left: 205 206, on right: 200 206
+specifier_qualifier_list (133)
+    on left: 201 202 203 204, on right: 177 178 200 203 204
+struct_declarator (134)
+    on left: 207 208 209, on right: 205 206
+identifier_list (135)
+    on left: 175 176, on right: 161 176
+parameter_type_list (136)
+    on left: 169, on right: 162 189 190
+parameter_list (137)
+    on left: 170 171, on right: 169 171
+parameter_declaration (138)
+    on left: 172 173 174, on right: 170 171
+type_qualifier_list (139)
+    on left: 167 168, on right: 164 166 168
+struct_or_union (140)
+    on left: 196 197, on right: 192 194 195
+struct_or_union_specifier (141)
+    on left: 192 194 195, on right: 145
+optional_expression (142)
+    on left: 33 34, on right: 32 38
+statement (143)
+    on left: 12 13 14 15 16 17, on right: 10 23 24 26 28 30 32 39 40
+    41
+compound_statement (144)
+    on left: 18, on right: 6 12
+expression_statement (145)
+    on left: 21 22, on right: 13
+selection_statement (146)
+    on left: 23 24 26, on right: 14
+iteration_statement (147)
+    on left: 28 30 32, on right: 15
+jump_statement (148)
+    on left: 35 36 37 38, on right: 16
+labeled_statement (149)
+    on left: 39 40 41, on right: 17
+translation_unit (150)
+    on left: 1 2, on right: 0 2
+external_declaration (151)
+    on left: 3 4, on right: 1 2
+function_definition (152)
+    on left: 6, on right: 3
+@1 (153)
+    on left: 5, on right: 6
+block_item_list (154)
+    on left: 7 8, on right: 8 19
+block_item (155)
+    on left: 9 10, on right: 7 8
+$@2 (156)
+    on left: 11, on right: 12
+optional_block_item_list (157)
+    on left: 19 20, on right: 18
+@3 (158)
+    on left: 25, on right: 26
+@4 (159)
+    on left: 27, on right: 28
+@5 (160)
+    on left: 29, on right: 30
+@6 (161)
+    on left: 31, on right: 32
+@7 (162)
+    on left: 193, on right: 194
 
 
 State 0
 
-    0 $accept: • translation_unit $end
+    0 $accept: . translation_unit $end
 
     AUTO      shift, and go to state 1
     CHAR      shift, and go to state 2
@@ -660,172 +599,177 @@ State 0
     _BOOL     shift, and go to state 20
     _COMPLEX  shift, and go to state 21
 
-    translation_unit           go to state 22
-    external_declaration       go to state 23
-    function_definition        go to state 24
-    declaration                go to state 25
-    declaration_specifiers     go to state 26
-    storage_class_specifier    go to state 27
-    type_specifier             go to state 28
-    type_qualifier             go to state 29
-    function_specifier         go to state 30
-    struct_or_union_specifier  go to state 31
-    struct_or_union            go to state 32
+    declaration_specifiers     go to state 22
+    storage_class_specifier    go to state 23
+    function_specifier         go to state 24
+    type_qualifier             go to state 25
+    type_specifier             go to state 26
+    declaration                go to state 27
+    struct_or_union            go to state 28
+    struct_or_union_specifier  go to state 29
+    translation_unit           go to state 30
+    external_declaration       go to state 31
+    function_definition        go to state 32
 
 
 State 1
 
-  132 storage_class_specifier: AUTO •
+  132 storage_class_specifier: AUTO .
 
     $default  reduce using rule 132 (storage_class_specifier)
 
 
 State 2
 
-  135 type_specifier: CHAR •
+  135 type_specifier: CHAR .
 
     $default  reduce using rule 135 (type_specifier)
 
 
 State 3
 
-  146 type_qualifier: CONST •
+  146 type_qualifier: CONST .
 
     $default  reduce using rule 146 (type_qualifier)
 
 
 State 4
 
-  140 type_specifier: DOUBLE •
+  140 type_specifier: DOUBLE .
 
     $default  reduce using rule 140 (type_specifier)
 
 
 State 5
 
-  130 storage_class_specifier: EXTERN •
+  130 storage_class_specifier: EXTERN .
 
     $default  reduce using rule 130 (storage_class_specifier)
 
 
 State 6
 
-  139 type_specifier: FLOAT •
+  139 type_specifier: FLOAT .
 
     $default  reduce using rule 139 (type_specifier)
 
 
 State 7
 
-  149 function_specifier: INLINE •
+  149 function_specifier: INLINE .
 
     $default  reduce using rule 149 (function_specifier)
 
 
 State 8
 
-  137 type_specifier: INT •
+  137 type_specifier: INT .
 
     $default  reduce using rule 137 (type_specifier)
 
 
 State 9
 
-  138 type_specifier: LONG •
+  138 type_specifier: LONG .
 
     $default  reduce using rule 138 (type_specifier)
 
 
 State 10
 
-  133 storage_class_specifier: REGISTER •
+  133 storage_class_specifier: REGISTER .
 
     $default  reduce using rule 133 (storage_class_specifier)
 
 
 State 11
 
-  147 type_qualifier: RESTRICT •
+  147 type_qualifier: RESTRICT .
 
     $default  reduce using rule 147 (type_qualifier)
 
 
 State 12
 
-  136 type_specifier: SHORT •
+  136 type_specifier: SHORT .
 
     $default  reduce using rule 136 (type_specifier)
 
 
 State 13
 
-  141 type_specifier: SIGNED •
+  141 type_specifier: SIGNED .
 
     $default  reduce using rule 141 (type_specifier)
 
 
 State 14
 
-  131 storage_class_specifier: STATIC •
+  131 storage_class_specifier: STATIC .
 
     $default  reduce using rule 131 (storage_class_specifier)
 
 
 State 15
 
-  196 struct_or_union: STRUCT •
+  196 struct_or_union: STRUCT .
 
     $default  reduce using rule 196 (struct_or_union)
 
 
 State 16
 
-  197 struct_or_union: UNION •
+  197 struct_or_union: UNION .
 
     $default  reduce using rule 197 (struct_or_union)
 
 
 State 17
 
-  142 type_specifier: UNSIGNED •
+  142 type_specifier: UNSIGNED .
 
     $default  reduce using rule 142 (type_specifier)
 
 
 State 18
 
-  134 type_specifier: VOID •
+  134 type_specifier: VOID .
 
     $default  reduce using rule 134 (type_specifier)
 
 
 State 19
 
-  148 type_qualifier: VOLATILE •
+  148 type_qualifier: VOLATILE .
 
     $default  reduce using rule 148 (type_qualifier)
 
 
 State 20
 
-  143 type_specifier: _BOOL •
+  143 type_specifier: _BOOL .
 
     $default  reduce using rule 143 (type_specifier)
 
 
 State 21
 
-  144 type_specifier: _COMPLEX •
+  144 type_specifier: _COMPLEX .
 
     $default  reduce using rule 144 (type_specifier)
 
 
 State 22
 
-    0 $accept: translation_unit • $end
-    2 translation_unit: translation_unit • external_declaration
+    6 function_definition: declaration_specifiers . declarator @1 compound_statement
+  120 declaration: declaration_specifiers . init_declarator_list ';'
+  121            | declaration_specifiers . ';'
+  126 declaration_specifiers: declaration_specifiers . type_specifier
+  127                       | declaration_specifiers . type_qualifier
+  128                       | declaration_specifiers . storage_class_specifier
+  129                       | declaration_specifiers . function_specifier
 
-    $end      shift, and go to state 33
+    IDENT     shift, and go to state 33
     AUTO      shift, and go to state 1
     CHAR      shift, and go to state 2
     CONST     shift, and go to state 3
@@ -847,51 +791,82 @@ State 22
     VOLATILE  shift, and go to state 19
     _BOOL     shift, and go to state 20
     _COMPLEX  shift, and go to state 21
+    ';'       shift, and go to state 34
+    '('       shift, and go to state 35
+    '*'       shift, and go to state 36
 
-    external_declaration       go to state 34
-    function_definition        go to state 24
-    declaration                go to state 25
-    declaration_specifiers     go to state 26
-    storage_class_specifier    go to state 27
-    type_specifier             go to state 28
-    type_qualifier             go to state 29
-    function_specifier         go to state 30
-    struct_or_union_specifier  go to state 31
-    struct_or_union            go to state 32
+    identifier                 go to state 37
+    storage_class_specifier    go to state 38
+    function_specifier         go to state 39
+    type_qualifier             go to state 40
+    type_specifier             go to state 41
+    init_declarator_list       go to state 42
+    init_declarator            go to state 43
+    declarator                 go to state 44
+    direct_declarator          go to state 45
+    pointer                    go to state 46
+    struct_or_union            go to state 28
+    struct_or_union_specifier  go to state 29
 
 
 State 23
 
-    1 translation_unit: external_declaration •
+  124 declaration_specifiers: storage_class_specifier .
 
-    $default  reduce using rule 1 (translation_unit)
+    $default  reduce using rule 124 (declaration_specifiers)
 
 
 State 24
 
-    3 external_declaration: function_definition •
+  125 declaration_specifiers: function_specifier .
 
-    $default  reduce using rule 3 (external_declaration)
+    $default  reduce using rule 125 (declaration_specifiers)
 
 
 State 25
 
-    4 external_declaration: declaration •
+  123 declaration_specifiers: type_qualifier .
 
-    $default  reduce using rule 4 (external_declaration)
+    $default  reduce using rule 123 (declaration_specifiers)
 
 
 State 26
 
-    6 function_definition: declaration_specifiers • declarator @1 compound_statement
-  120 declaration: declaration_specifiers • init_declarator_list ';'
-  121            | declaration_specifiers • ';'
-  126 declaration_specifiers: declaration_specifiers • type_specifier
-  127                       | declaration_specifiers • type_qualifier
-  128                       | declaration_specifiers • storage_class_specifier
-  129                       | declaration_specifiers • function_specifier
+  122 declaration_specifiers: type_specifier .
 
-    IDENT     shift, and go to state 35
+    $default  reduce using rule 122 (declaration_specifiers)
+
+
+State 27
+
+    4 external_declaration: declaration .
+
+    $default  reduce using rule 4 (external_declaration)
+
+
+State 28
+
+  192 struct_or_union_specifier: struct_or_union . '{' struct_declaration_list '}'
+  194                          | struct_or_union . IDENT '{' @7 struct_declaration_list '}'
+  195                          | struct_or_union . IDENT
+
+    IDENT  shift, and go to state 47
+    '{'    shift, and go to state 48
+
+
+State 29
+
+  145 type_specifier: struct_or_union_specifier .
+
+    $default  reduce using rule 145 (type_specifier)
+
+
+State 30
+
+    0 $accept: translation_unit . $end
+    2 translation_unit: translation_unit . external_declaration
+
+    $end      shift, and go to state 49
     AUTO      shift, and go to state 1
     CHAR      shift, and go to state 2
     CONST     shift, and go to state 3
@@ -913,122 +888,72 @@ State 26
     VOLATILE  shift, and go to state 19
     _BOOL     shift, and go to state 20
     _COMPLEX  shift, and go to state 21
-    ';'       shift, and go to state 36
-    '('       shift, and go to state 37
-    '*'       shift, and go to state 38
 
-    identifier                 go to state 39
-    storage_class_specifier    go to state 40
-    type_specifier             go to state 41
-    type_qualifier             go to state 42
-    function_specifier         go to state 43
-    init_declarator_list       go to state 44
-    init_declarator            go to state 45
-    declarator                 go to state 46
-    direct_declarator          go to state 47
-    pointer                    go to state 48
-    struct_or_union_specifier  go to state 31
-    struct_or_union            go to state 32
-
-
-State 27
-
-  124 declaration_specifiers: storage_class_specifier •
-
-    $default  reduce using rule 124 (declaration_specifiers)
-
-
-State 28
-
-  122 declaration_specifiers: type_specifier •
-
-    $default  reduce using rule 122 (declaration_specifiers)
-
-
-State 29
-
-  123 declaration_specifiers: type_qualifier •
-
-    $default  reduce using rule 123 (declaration_specifiers)
-
-
-State 30
-
-  125 declaration_specifiers: function_specifier •
-
-    $default  reduce using rule 125 (declaration_specifiers)
+    declaration_specifiers     go to state 22
+    storage_class_specifier    go to state 23
+    function_specifier         go to state 24
+    type_qualifier             go to state 25
+    type_specifier             go to state 26
+    declaration                go to state 27
+    struct_or_union            go to state 28
+    struct_or_union_specifier  go to state 29
+    external_declaration       go to state 50
+    function_definition        go to state 32
 
 
 State 31
 
-  145 type_specifier: struct_or_union_specifier •
+    1 translation_unit: external_declaration .
 
-    $default  reduce using rule 145 (type_specifier)
+    $default  reduce using rule 1 (translation_unit)
 
 
 State 32
 
-  192 struct_or_union_specifier: struct_or_union • '{' struct_declaration_list '}'
-  194                          | struct_or_union • IDENT '{' @7 struct_declaration_list '}'
-  195                          | struct_or_union • IDENT
+    3 external_declaration: function_definition .
 
-    IDENT  shift, and go to state 49
-    '{'    shift, and go to state 50
+    $default  reduce using rule 3 (external_declaration)
 
 
 State 33
 
-    0 $accept: translation_unit $end •
-
-    $default  accept
-
-
-State 34
-
-    2 translation_unit: translation_unit external_declaration •
-
-    $default  reduce using rule 2 (translation_unit)
-
-
-State 35
-
-   42 identifier: IDENT •
+   42 identifier: IDENT .
 
     $default  reduce using rule 42 (identifier)
 
 
-State 36
+State 34
 
-  121 declaration: declaration_specifiers ';' •
+  121 declaration: declaration_specifiers ';' .
 
     $default  reduce using rule 121 (declaration)
 
 
-State 37
+State 35
 
-  157 direct_declarator: '(' • declarator ')'
+  157 direct_declarator: '(' . declarator ')'
 
-    IDENT  shift, and go to state 35
-    '('    shift, and go to state 37
-    '*'    shift, and go to state 38
+    IDENT  shift, and go to state 33
+    '('    shift, and go to state 35
+    '*'    shift, and go to state 36
 
-    identifier         go to state 39
+    identifier         go to state 37
     declarator         go to state 51
-    direct_declarator  go to state 47
-    pointer            go to state 48
+    direct_declarator  go to state 45
+    pointer            go to state 46
 
 
-State 38
+State 36
 
-  163 pointer: '*' •
-  164        | '*' • type_qualifier_list
-  165        | '*' • pointer
-  166        | '*' • type_qualifier_list pointer
+  163 pointer: '*' .
+  164        | '*' . type_qualifier_list
+  165        | '*' . pointer
+  166        | '*' . type_qualifier_list pointer
 
     CONST     shift, and go to state 3
     RESTRICT  shift, and go to state 11
     VOLATILE  shift, and go to state 19
-    '*'       shift, and go to state 38
+    '*'       shift, and go to state 36
 
     $default  reduce using rule 163 (pointer)
 
@@ -1037,62 +962,62 @@ State 38
     type_qualifier_list  go to state 54
 
 
-State 39
+State 37
 
-  156 direct_declarator: identifier •
+  156 direct_declarator: identifier .
 
     $default  reduce using rule 156 (direct_declarator)
 
 
-State 40
+State 38
 
-  128 declaration_specifiers: declaration_specifiers storage_class_specifier •
+  128 declaration_specifiers: declaration_specifiers storage_class_specifier .
 
     $default  reduce using rule 128 (declaration_specifiers)
 
 
+State 39
+
+  129 declaration_specifiers: declaration_specifiers function_specifier .
+
+    $default  reduce using rule 129 (declaration_specifiers)
+
+
+State 40
+
+  127 declaration_specifiers: declaration_specifiers type_qualifier .
+
+    $default  reduce using rule 127 (declaration_specifiers)
+
+
 State 41
 
-  126 declaration_specifiers: declaration_specifiers type_specifier •
+  126 declaration_specifiers: declaration_specifiers type_specifier .
 
     $default  reduce using rule 126 (declaration_specifiers)
 
 
 State 42
 
-  127 declaration_specifiers: declaration_specifiers type_qualifier •
-
-    $default  reduce using rule 127 (declaration_specifiers)
-
-
-State 43
-
-  129 declaration_specifiers: declaration_specifiers function_specifier •
-
-    $default  reduce using rule 129 (declaration_specifiers)
-
-
-State 44
-
-  120 declaration: declaration_specifiers init_declarator_list • ';'
-  151 init_declarator_list: init_declarator_list • ',' init_declarator
+  120 declaration: declaration_specifiers init_declarator_list . ';'
+  151 init_declarator_list: init_declarator_list . ',' init_declarator
 
     ';'  shift, and go to state 55
     ','  shift, and go to state 56
 
 
-State 45
+State 43
 
-  150 init_declarator_list: init_declarator •
+  150 init_declarator_list: init_declarator .
 
     $default  reduce using rule 150 (init_declarator_list)
 
 
-State 46
+State 44
 
-    6 function_definition: declaration_specifiers declarator • @1 compound_statement
-  152 init_declarator: declarator •
-  153                | declarator • '=' initializer
+    6 function_definition: declaration_specifiers declarator . @1 compound_statement
+  152 init_declarator: declarator .
+  153                | declarator . '=' initializer
 
     '='  shift, and go to state 57
 
@@ -1102,14 +1027,14 @@ State 46
     @1  go to state 58
 
 
-State 47
+State 45
 
-  154 declarator: direct_declarator •
-  158 direct_declarator: direct_declarator • '[' ']'
-  159                  | direct_declarator • '[' constant_expression ']'
-  160                  | direct_declarator • '(' ')'
-  161                  | direct_declarator • '(' identifier_list ')'
-  162                  | direct_declarator • '(' parameter_type_list ')'
+  154 declarator: direct_declarator .
+  158 direct_declarator: direct_declarator . '[' ']'
+  159                  | direct_declarator . '[' constant_expression ']'
+  160                  | direct_declarator . '(' ')'
+  161                  | direct_declarator . '(' identifier_list ')'
+  162                  | direct_declarator . '(' parameter_type_list ')'
 
     '('  shift, and go to state 59
     '['  shift, and go to state 60
@@ -1117,30 +1042,30 @@ State 47
     $default  reduce using rule 154 (declarator)
 
 
-State 48
+State 46
 
-  155 declarator: pointer • direct_declarator
+  155 declarator: pointer . direct_declarator
 
-    IDENT  shift, and go to state 35
-    '('    shift, and go to state 37
+    IDENT  shift, and go to state 33
+    '('    shift, and go to state 35
 
-    identifier         go to state 39
+    identifier         go to state 37
     direct_declarator  go to state 61
 
 
-State 49
+State 47
 
-  194 struct_or_union_specifier: struct_or_union IDENT • '{' @7 struct_declaration_list '}'
-  195                          | struct_or_union IDENT •
+  194 struct_or_union_specifier: struct_or_union IDENT . '{' @7 struct_declaration_list '}'
+  195                          | struct_or_union IDENT .
 
     '{'  shift, and go to state 62
 
     $default  reduce using rule 195 (struct_or_union_specifier)
 
 
-State 50
+State 48
 
-  192 struct_or_union_specifier: struct_or_union '{' • struct_declaration_list '}'
+  192 struct_or_union_specifier: struct_or_union '{' . struct_declaration_list '}'
 
     CHAR      shift, and go to state 2
     CONST     shift, and go to state 3
@@ -1159,46 +1084,60 @@ State 50
     _BOOL     shift, and go to state 20
     _COMPLEX  shift, and go to state 21
 
-    type_specifier             go to state 63
-    type_qualifier             go to state 64
-    struct_or_union_specifier  go to state 31
-    struct_or_union            go to state 32
+    type_qualifier             go to state 63
+    type_specifier             go to state 64
     struct_declaration_list    go to state 65
     struct_declaration         go to state 66
     specifier_qualifier_list   go to state 67
+    struct_or_union            go to state 28
+    struct_or_union_specifier  go to state 29
+
+
+State 49
+
+    0 $accept: translation_unit $end .
+
+    $default  accept
+
+
+State 50
+
+    2 translation_unit: translation_unit external_declaration .
+
+    $default  reduce using rule 2 (translation_unit)
 
 
 State 51
 
-  157 direct_declarator: '(' declarator • ')'
+  157 direct_declarator: '(' declarator . ')'
 
     ')'  shift, and go to state 68
 
 
 State 52
 
-  167 type_qualifier_list: type_qualifier •
+  167 type_qualifier_list: type_qualifier .
 
     $default  reduce using rule 167 (type_qualifier_list)
 
 
 State 53
 
-  165 pointer: '*' pointer •
+  165 pointer: '*' pointer .
 
     $default  reduce using rule 165 (pointer)
 
 
 State 54
 
-  164 pointer: '*' type_qualifier_list •
-  166        | '*' type_qualifier_list • pointer
-  168 type_qualifier_list: type_qualifier_list • type_qualifier
+  164 pointer: '*' type_qualifier_list .
+  166        | '*' type_qualifier_list . pointer
+  168 type_qualifier_list: type_qualifier_list . type_qualifier
 
     CONST     shift, and go to state 3
     RESTRICT  shift, and go to state 11
     VOLATILE  shift, and go to state 19
-    '*'       shift, and go to state 38
+    '*'       shift, and go to state 36
 
     $default  reduce using rule 164 (pointer)
 
@@ -1208,31 +1147,31 @@ State 54
 
 State 55
 
-  120 declaration: declaration_specifiers init_declarator_list ';' •
+  120 declaration: declaration_specifiers init_declarator_list ';' .
 
     $default  reduce using rule 120 (declaration)
 
 
 State 56
 
-  151 init_declarator_list: init_declarator_list ',' • init_declarator
+  151 init_declarator_list: init_declarator_list ',' . init_declarator
 
-    IDENT  shift, and go to state 35
-    '('    shift, and go to state 37
-    '*'    shift, and go to state 38
+    IDENT  shift, and go to state 33
+    '('    shift, and go to state 35
+    '*'    shift, and go to state 36
 
-    identifier         go to state 39
+    identifier         go to state 37
     init_declarator    go to state 71
     declarator         go to state 72
-    direct_declarator  go to state 47
-    pointer            go to state 48
+    direct_declarator  go to state 45
+    pointer            go to state 46
 
 
 State 57
 
-  153 init_declarator: declarator '=' • initializer
+  153 init_declarator: declarator '=' . initializer
 
-    IDENT      shift, and go to state 35
+    IDENT      shift, and go to state 33
     CHARLIT    shift, and go to state 73
     STRINGLIT  shift, and go to state 74
     NUMBERLIT  shift, and go to state 75
@@ -1272,7 +1211,7 @@ State 57
 
 State 58
 
-    6 function_definition: declaration_specifiers declarator @1 • compound_statement
+    6 function_definition: declaration_specifiers declarator @1 . compound_statement
 
     '{'  shift, and go to state 107
 
@@ -1281,11 +1220,11 @@ State 58
 
 State 59
 
-  160 direct_declarator: direct_declarator '(' • ')'
-  161                  | direct_declarator '(' • identifier_list ')'
-  162                  | direct_declarator '(' • parameter_type_list ')'
+  160 direct_declarator: direct_declarator '(' . ')'
+  161                  | direct_declarator '(' . identifier_list ')'
+  162                  | direct_declarator '(' . parameter_type_list ')'
 
-    IDENT     shift, and go to state 35
+    IDENT     shift, and go to state 33
     AUTO      shift, and go to state 1
     CHAR      shift, and go to state 2
     CONST     shift, and go to state 3
@@ -1311,24 +1250,24 @@ State 59
 
     identifier                 go to state 110
     declaration_specifiers     go to state 111
-    storage_class_specifier    go to state 27
-    type_specifier             go to state 28
-    type_qualifier             go to state 29
-    function_specifier         go to state 30
-    parameter_type_list        go to state 112
-    parameter_list             go to state 113
-    parameter_declaration      go to state 114
-    identifier_list            go to state 115
-    struct_or_union_specifier  go to state 31
-    struct_or_union            go to state 32
+    storage_class_specifier    go to state 23
+    function_specifier         go to state 24
+    type_qualifier             go to state 25
+    type_specifier             go to state 26
+    identifier_list            go to state 112
+    parameter_type_list        go to state 113
+    parameter_list             go to state 114
+    parameter_declaration      go to state 115
+    struct_or_union            go to state 28
+    struct_or_union_specifier  go to state 29
 
 
 State 60
 
-  158 direct_declarator: direct_declarator '[' • ']'
-  159                  | direct_declarator '[' • constant_expression ']'
+  158 direct_declarator: direct_declarator '[' . ']'
+  159                  | direct_declarator '[' . constant_expression ']'
 
-    IDENT      shift, and go to state 35
+    IDENT      shift, and go to state 33
     CHARLIT    shift, and go to state 73
     STRINGLIT  shift, and go to state 74
     NUMBERLIT  shift, and go to state 75
@@ -1368,12 +1307,12 @@ State 60
 
 State 61
 
-  155 declarator: pointer direct_declarator •
-  158 direct_declarator: direct_declarator • '[' ']'
-  159                  | direct_declarator • '[' constant_expression ']'
-  160                  | direct_declarator • '(' ')'
-  161                  | direct_declarator • '(' identifier_list ')'
-  162                  | direct_declarator • '(' parameter_type_list ')'
+  155 declarator: pointer direct_declarator .
+  158 direct_declarator: direct_declarator . '[' ']'
+  159                  | direct_declarator . '[' constant_expression ']'
+  160                  | direct_declarator . '(' ')'
+  161                  | direct_declarator . '(' identifier_list ')'
+  162                  | direct_declarator . '(' parameter_type_list ')'
 
     '('  shift, and go to state 59
     '['  shift, and go to state 60
@@ -1383,7 +1322,7 @@ State 61
 
 State 62
 
-  194 struct_or_union_specifier: struct_or_union IDENT '{' • @7 struct_declaration_list '}'
+  194 struct_or_union_specifier: struct_or_union IDENT '{' . @7 struct_declaration_list '}'
 
     $default  reduce using rule 193 (@7)
 
@@ -1392,22 +1331,22 @@ State 62
 
 State 63
 
-  201 specifier_qualifier_list: type_specifier •
-
-    $default  reduce using rule 201 (specifier_qualifier_list)
-
-
-State 64
-
-  202 specifier_qualifier_list: type_qualifier •
+  202 specifier_qualifier_list: type_qualifier .
 
     $default  reduce using rule 202 (specifier_qualifier_list)
 
 
+State 64
+
+  201 specifier_qualifier_list: type_specifier .
+
+    $default  reduce using rule 201 (specifier_qualifier_list)
+
+
 State 65
 
-  192 struct_or_union_specifier: struct_or_union '{' struct_declaration_list • '}'
-  199 struct_declaration_list: struct_declaration_list • struct_declaration
+  192 struct_or_union_specifier: struct_or_union '{' struct_declaration_list . '}'
+  199 struct_declaration_list: struct_declaration_list . struct_declaration
 
     CHAR      shift, and go to state 2
     CONST     shift, and go to state 3
@@ -1427,28 +1366,28 @@ State 65
     _COMPLEX  shift, and go to state 21
     '}'       shift, and go to state 121
 
-    type_specifier             go to state 63
-    type_qualifier             go to state 64
-    struct_or_union_specifier  go to state 31
-    struct_or_union            go to state 32
+    type_qualifier             go to state 63
+    type_specifier             go to state 64
     struct_declaration         go to state 122
     specifier_qualifier_list   go to state 67
+    struct_or_union            go to state 28
+    struct_or_union_specifier  go to state 29
 
 
 State 66
 
-  198 struct_declaration_list: struct_declaration •
+  198 struct_declaration_list: struct_declaration .
 
     $default  reduce using rule 198 (struct_declaration_list)
 
 
 State 67
 
-  200 struct_declaration: specifier_qualifier_list • struct_declarator_list ';'
-  203 specifier_qualifier_list: specifier_qualifier_list • type_specifier
-  204                         | specifier_qualifier_list • type_qualifier
+  200 struct_declaration: specifier_qualifier_list . struct_declarator_list ';'
+  203 specifier_qualifier_list: specifier_qualifier_list . type_specifier
+  204                         | specifier_qualifier_list . type_qualifier
 
-    IDENT     shift, and go to state 35
+    IDENT     shift, and go to state 33
     CHAR      shift, and go to state 2
     CONST     shift, and go to state 3
     DOUBLE    shift, and go to state 4
@@ -1465,54 +1404,54 @@ State 67
     VOLATILE  shift, and go to state 19
     _BOOL     shift, and go to state 20
     _COMPLEX  shift, and go to state 21
-    '('       shift, and go to state 37
+    '('       shift, and go to state 35
     ':'       shift, and go to state 123
-    '*'       shift, and go to state 38
+    '*'       shift, and go to state 36
 
-    identifier                 go to state 39
-    type_specifier             go to state 124
-    type_qualifier             go to state 125
+    identifier                 go to state 37
+    type_qualifier             go to state 124
+    type_specifier             go to state 125
     declarator                 go to state 126
-    direct_declarator          go to state 47
-    pointer                    go to state 48
-    struct_or_union_specifier  go to state 31
-    struct_or_union            go to state 32
+    direct_declarator          go to state 45
+    pointer                    go to state 46
     struct_declarator_list     go to state 127
     struct_declarator          go to state 128
+    struct_or_union            go to state 28
+    struct_or_union_specifier  go to state 29
 
 
 State 68
 
-  157 direct_declarator: '(' declarator ')' •
+  157 direct_declarator: '(' declarator ')' .
 
     $default  reduce using rule 157 (direct_declarator)
 
 
 State 69
 
-  168 type_qualifier_list: type_qualifier_list type_qualifier •
+  168 type_qualifier_list: type_qualifier_list type_qualifier .
 
     $default  reduce using rule 168 (type_qualifier_list)
 
 
 State 70
 
-  166 pointer: '*' type_qualifier_list pointer •
+  166 pointer: '*' type_qualifier_list pointer .
 
     $default  reduce using rule 166 (pointer)
 
 
 State 71
 
-  151 init_declarator_list: init_declarator_list ',' init_declarator •
+  151 init_declarator_list: init_declarator_list ',' init_declarator .
 
     $default  reduce using rule 151 (init_declarator_list)
 
 
 State 72
 
-  152 init_declarator: declarator •
-  153                | declarator • '=' initializer
+  152 init_declarator: declarator .
+  153                | declarator . '=' initializer
 
     '='  shift, and go to state 57
 
@@ -1521,30 +1460,30 @@ State 72
 
 State 73
 
-   44 constant: CHARLIT •
+   44 constant: CHARLIT .
 
     $default  reduce using rule 44 (constant)
 
 
 State 74
 
-   43 string_literal: STRINGLIT •
+   43 string_literal: STRINGLIT .
 
     $default  reduce using rule 43 (string_literal)
 
 
 State 75
 
-   45 constant: NUMBERLIT •
+   45 constant: NUMBERLIT .
 
     $default  reduce using rule 45 (constant)
 
 
 State 76
 
-   61 unary_expression: "++" • unary_expression
+   61 unary_expression: "++" . unary_expression
 
-    IDENT      shift, and go to state 35
+    IDENT      shift, and go to state 33
     CHARLIT    shift, and go to state 73
     STRINGLIT  shift, and go to state 74
     NUMBERLIT  shift, and go to state 75
@@ -1570,9 +1509,9 @@ State 76
 
 State 77
 
-   62 unary_expression: "--" • unary_expression
+   62 unary_expression: "--" . unary_expression
 
-    IDENT      shift, and go to state 35
+    IDENT      shift, and go to state 33
     CHARLIT    shift, and go to state 73
     STRINGLIT  shift, and go to state 74
     NUMBERLIT  shift, and go to state 75
@@ -1598,9 +1537,9 @@ State 77
 
 State 78
 
-   71 unary_expression: ALIGNOF • unary_expression
+   71 unary_expression: ALIGNOF . unary_expression
 
-    IDENT      shift, and go to state 35
+    IDENT      shift, and go to state 33
     CHARLIT    shift, and go to state 73
     STRINGLIT  shift, and go to state 74
     NUMBERLIT  shift, and go to state 75
@@ -1626,10 +1565,10 @@ State 78
 
 State 79
 
-   69 unary_expression: SIZEOF • unary_expression
-   70                 | SIZEOF • '(' type_name ')'
+   69 unary_expression: SIZEOF . unary_expression
+   70                 | SIZEOF . '(' type_name ')'
 
-    IDENT      shift, and go to state 35
+    IDENT      shift, and go to state 33
     CHARLIT    shift, and go to state 73
     STRINGLIT  shift, and go to state 74
     NUMBERLIT  shift, and go to state 75
@@ -1655,10 +1594,10 @@ State 79
 
 State 80
 
-   49 primary_expression: '(' • expression ')'
-   73 cast_expression: '(' • type_name ')' cast_expression
+   49 primary_expression: '(' . expression ')'
+   73 cast_expression: '(' . type_name ')' cast_expression
 
-    IDENT      shift, and go to state 35
+    IDENT      shift, and go to state 33
     CHARLIT    shift, and go to state 73
     STRINGLIT  shift, and go to state 74
     NUMBERLIT  shift, and go to state 75
@@ -1710,19 +1649,19 @@ State 80
     conditional_expression     go to state 104
     assignment_expression      go to state 135
     expression                 go to state 136
-    type_specifier             go to state 63
-    type_qualifier             go to state 64
+    type_qualifier             go to state 63
+    type_specifier             go to state 64
     type_name                  go to state 137
-    struct_or_union_specifier  go to state 31
-    struct_or_union            go to state 32
     specifier_qualifier_list   go to state 138
+    struct_or_union            go to state 28
+    struct_or_union_specifier  go to state 29
 
 
 State 81
 
-   63 unary_expression: '&' • cast_expression
+   63 unary_expression: '&' . cast_expression
 
-    IDENT      shift, and go to state 35
+    IDENT      shift, and go to state 33
     CHARLIT    shift, and go to state 73
     STRINGLIT  shift, and go to state 74
     NUMBERLIT  shift, and go to state 75
@@ -1749,9 +1688,9 @@ State 81
 
 State 82
 
-   64 unary_expression: '*' • cast_expression
+   64 unary_expression: '*' . cast_expression
 
-    IDENT      shift, and go to state 35
+    IDENT      shift, and go to state 33
     CHARLIT    shift, and go to state 73
     STRINGLIT  shift, and go to state 74
     NUMBERLIT  shift, and go to state 75
@@ -1778,9 +1717,9 @@ State 82
 
 State 83
 
-   65 unary_expression: '+' • cast_expression
+   65 unary_expression: '+' . cast_expression
 
-    IDENT      shift, and go to state 35
+    IDENT      shift, and go to state 33
     CHARLIT    shift, and go to state 73
     STRINGLIT  shift, and go to state 74
     NUMBERLIT  shift, and go to state 75
@@ -1807,9 +1746,9 @@ State 83
 
 State 84
 
-   66 unary_expression: '-' • cast_expression
+   66 unary_expression: '-' . cast_expression
 
-    IDENT      shift, and go to state 35
+    IDENT      shift, and go to state 33
     CHARLIT    shift, and go to state 73
     STRINGLIT  shift, and go to state 74
     NUMBERLIT  shift, and go to state 75
@@ -1836,9 +1775,9 @@ State 84
 
 State 85
 
-   67 unary_expression: '~' • cast_expression
+   67 unary_expression: '~' . cast_expression
 
-    IDENT      shift, and go to state 35
+    IDENT      shift, and go to state 33
     CHARLIT    shift, and go to state 73
     STRINGLIT  shift, and go to state 74
     NUMBERLIT  shift, and go to state 75
@@ -1865,9 +1804,9 @@ State 85
 
 State 86
 
-   68 unary_expression: '!' • cast_expression
+   68 unary_expression: '!' . cast_expression
 
-    IDENT      shift, and go to state 35
+    IDENT      shift, and go to state 33
     CHARLIT    shift, and go to state 73
     STRINGLIT  shift, and go to state 74
     NUMBERLIT  shift, and go to state 75
@@ -1894,42 +1833,42 @@ State 86
 
 State 87
 
-   46 primary_expression: identifier •
+   46 primary_expression: identifier .
 
     $default  reduce using rule 46 (primary_expression)
 
 
 State 88
 
-   48 primary_expression: string_literal •
+   48 primary_expression: string_literal .
 
     $default  reduce using rule 48 (primary_expression)
 
 
 State 89
 
-   47 primary_expression: constant •
+   47 primary_expression: constant .
 
     $default  reduce using rule 47 (primary_expression)
 
 
 State 90
 
-   50 postfix_expression: primary_expression •
+   50 postfix_expression: primary_expression .
 
     $default  reduce using rule 50 (postfix_expression)
 
 
 State 91
 
-   51 postfix_expression: postfix_expression • '[' expression ']'
-   52                   | postfix_expression • '(' ')'
-   53                   | postfix_expression • '(' argument_expression_list ')'
-   54                   | postfix_expression • '.' IDENT
-   55                   | postfix_expression • "->" IDENT
-   56                   | postfix_expression • "++"
-   57                   | postfix_expression • "--"
-   60 unary_expression: postfix_expression •
+   51 postfix_expression: postfix_expression . '[' expression ']'
+   52                   | postfix_expression . '(' ')'
+   53                   | postfix_expression . '(' argument_expression_list ')'
+   54                   | postfix_expression . '.' IDENT
+   55                   | postfix_expression . "->" IDENT
+   56                   | postfix_expression . "++"
+   57                   | postfix_expression . "--"
+   60 unary_expression: postfix_expression .
 
     "->"  shift, and go to state 145
     "++"  shift, and go to state 146
@@ -1943,8 +1882,8 @@ State 91
 
 State 92
 
-   72 cast_expression: unary_expression •
-  105 assignment_expression: unary_expression • assignment_operator assignment_expression
+   72 cast_expression: unary_expression .
+  105 assignment_expression: unary_expression . assignment_operator assignment_expression
 
     "*="   shift, and go to state 151
     "/="   shift, and go to state 152
@@ -1965,17 +1904,17 @@ State 92
 
 State 93
 
-   74 multiplicative_expression: cast_expression •
+   74 multiplicative_expression: cast_expression .
 
     $default  reduce using rule 74 (multiplicative_expression)
 
 
 State 94
 
-   75 multiplicative_expression: multiplicative_expression • '*' cast_expression
-   76                          | multiplicative_expression • '/' cast_expression
-   77                          | multiplicative_expression • '%' cast_expression
-   78 additive_expression: multiplicative_expression •
+   75 multiplicative_expression: multiplicative_expression . '*' cast_expression
+   76                          | multiplicative_expression . '/' cast_expression
+   77                          | multiplicative_expression . '%' cast_expression
+   78 additive_expression: multiplicative_expression .
 
     '*'  shift, and go to state 163
     '/'  shift, and go to state 164
@@ -1986,9 +1925,9 @@ State 94
 
 State 95
 
-   79 additive_expression: additive_expression • '+' multiplicative_expression
-   80                    | additive_expression • '-' multiplicative_expression
-   81 shift_expression: additive_expression •
+   79 additive_expression: additive_expression . '+' multiplicative_expression
+   80                    | additive_expression . '-' multiplicative_expression
+   81 shift_expression: additive_expression .
 
     '+'  shift, and go to state 166
     '-'  shift, and go to state 167
@@ -1998,9 +1937,9 @@ State 95
 
 State 96
 
-   82 shift_expression: shift_expression • "<<" additive_expression
-   83                 | shift_expression • ">>" additive_expression
-   84 relational_expression: shift_expression •
+   82 shift_expression: shift_expression . "<<" additive_expression
+   83                 | shift_expression . ">>" additive_expression
+   84 relational_expression: shift_expression .
 
     "<<"  shift, and go to state 168
     ">>"  shift, and go to state 169
@@ -2010,11 +1949,11 @@ State 96
 
 State 97
 
-   85 relational_expression: relational_expression • '<' shift_expression
-   86                      | relational_expression • "<=" shift_expression
-   87                      | relational_expression • '>' shift_expression
-   88                      | relational_expression • ">=" shift_expression
-   89 equality_expression: relational_expression •
+   85 relational_expression: relational_expression . '<' shift_expression
+   86                      | relational_expression . "<=" shift_expression
+   87                      | relational_expression . '>' shift_expression
+   88                      | relational_expression . ">=" shift_expression
+   89 equality_expression: relational_expression .
 
     "<="  shift, and go to state 170
     ">="  shift, and go to state 171
@@ -2026,9 +1965,9 @@ State 97
 
 State 98
 
-   90 equality_expression: equality_expression • "==" relational_expression
-   91                    | equality_expression • "!=" relational_expression
-   92 and_expression: equality_expression •
+   90 equality_expression: equality_expression . "==" relational_expression
+   91                    | equality_expression . "!=" relational_expression
+   92 and_expression: equality_expression .
 
     "=="  shift, and go to state 174
     "!="  shift, and go to state 175
@@ -2038,8 +1977,8 @@ State 98
 
 State 99
 
-   93 and_expression: and_expression • '&' equality_expression
-   94 xor_expression: and_expression •
+   93 and_expression: and_expression . '&' equality_expression
+   94 xor_expression: and_expression .
 
     '&'  shift, and go to state 176
 
@@ -2048,8 +1987,8 @@ State 99
 
 State 100
 
-   95 xor_expression: xor_expression • '^' and_expression
-   96 or_expression: xor_expression •
+   95 xor_expression: xor_expression . '^' and_expression
+   96 or_expression: xor_expression .
 
     '^'  shift, and go to state 177
 
@@ -2058,8 +1997,8 @@ State 100
 
 State 101
 
-   97 or_expression: or_expression • '|' xor_expression
-   98 logical_and_expression: or_expression •
+   97 or_expression: or_expression . '|' xor_expression
+   98 logical_and_expression: or_expression .
 
     '|'  shift, and go to state 178
 
@@ -2068,8 +2007,8 @@ State 101
 
 State 102
 
-   99 logical_and_expression: logical_and_expression • "&&" or_expression
-  100 logical_or_expression: logical_and_expression •
+   99 logical_and_expression: logical_and_expression . "&&" or_expression
+  100 logical_or_expression: logical_and_expression .
 
     "&&"  shift, and go to state 179
 
@@ -2078,9 +2017,9 @@ State 102
 
 State 103
 
-  101 logical_or_expression: logical_or_expression • "||" logical_and_expression
-  102 conditional_expression: logical_or_expression •
-  103                       | logical_or_expression • '?' expression ':' conditional_expression
+  101 logical_or_expression: logical_or_expression . "||" logical_and_expression
+  102 conditional_expression: logical_or_expression .
+  103                       | logical_or_expression . '?' expression ':' conditional_expression
 
     "||"  shift, and go to state 180
     '?'   shift, and go to state 181
@@ -2090,28 +2029,28 @@ State 103
 
 State 104
 
-  104 assignment_expression: conditional_expression •
+  104 assignment_expression: conditional_expression .
 
     $default  reduce using rule 104 (assignment_expression)
 
 
 State 105
 
-  191 initializer: assignment_expression •
+  191 initializer: assignment_expression .
 
     $default  reduce using rule 191 (initializer)
 
 
 State 106
 
-  153 init_declarator: declarator '=' initializer •
+  153 init_declarator: declarator '=' initializer .
 
     $default  reduce using rule 153 (init_declarator)
 
 
 State 107
 
-   18 compound_statement: '{' • optional_block_item_list '}'
+   18 compound_statement: '{' . optional_block_item_list '}'
 
     IDENT      shift, and go to state 182
     CHARLIT    shift, and go to state 73
@@ -2165,16 +2104,6 @@ State 107
     '}'       reduce using rule 20 (optional_block_item_list)
     $default  reduce using rule 11 ($@2)
 
-    block_item_list            go to state 195
-    block_item                 go to state 196
-    statement                  go to state 197
-    $@2                        go to state 198
-    optional_block_item_list   go to state 199
-    expression_statement       go to state 200
-    selection_statement        go to state 201
-    iteration_statement        go to state 202
-    jump_statement             go to state 203
-    labeled_statement          go to state 204
     identifier                 go to state 87
     string_literal             go to state 88
     constant                   go to state 89
@@ -2194,49 +2123,59 @@ State 107
     logical_or_expression      go to state 103
     conditional_expression     go to state 104
     assignment_expression      go to state 135
-    expression                 go to state 205
-    declaration                go to state 206
-    declaration_specifiers     go to state 207
-    storage_class_specifier    go to state 27
-    type_specifier             go to state 28
-    type_qualifier             go to state 29
-    function_specifier         go to state 30
-    struct_or_union_specifier  go to state 31
-    struct_or_union            go to state 32
+    expression                 go to state 195
+    declaration_specifiers     go to state 196
+    storage_class_specifier    go to state 23
+    function_specifier         go to state 24
+    type_qualifier             go to state 25
+    type_specifier             go to state 26
+    declaration                go to state 197
+    struct_or_union            go to state 28
+    struct_or_union_specifier  go to state 29
+    statement                  go to state 198
+    expression_statement       go to state 199
+    selection_statement        go to state 200
+    iteration_statement        go to state 201
+    jump_statement             go to state 202
+    labeled_statement          go to state 203
+    block_item_list            go to state 204
+    block_item                 go to state 205
+    $@2                        go to state 206
+    optional_block_item_list   go to state 207
 
 
 State 108
 
-    6 function_definition: declaration_specifiers declarator @1 compound_statement •
+    6 function_definition: declaration_specifiers declarator @1 compound_statement .
 
     $default  reduce using rule 6 (function_definition)
 
 
 State 109
 
-  160 direct_declarator: direct_declarator '(' ')' •
+  160 direct_declarator: direct_declarator '(' ')' .
 
     $default  reduce using rule 160 (direct_declarator)
 
 
 State 110
 
-  175 identifier_list: identifier •
+  175 identifier_list: identifier .
 
     $default  reduce using rule 175 (identifier_list)
 
 
 State 111
 
-  126 declaration_specifiers: declaration_specifiers • type_specifier
-  127                       | declaration_specifiers • type_qualifier
-  128                       | declaration_specifiers • storage_class_specifier
-  129                       | declaration_specifiers • function_specifier
-  172 parameter_declaration: declaration_specifiers • declarator
-  173                      | declaration_specifiers •
-  174                      | declaration_specifiers • abstract_declarator
+  126 declaration_specifiers: declaration_specifiers . type_specifier
+  127                       | declaration_specifiers . type_qualifier
+  128                       | declaration_specifiers . storage_class_specifier
+  129                       | declaration_specifiers . function_specifier
+  172 parameter_declaration: declaration_specifiers . declarator
+  173                      | declaration_specifiers .
+  174                      | declaration_specifiers . abstract_declarator
 
-    IDENT     shift, and go to state 35
+    IDENT     shift, and go to state 33
     AUTO      shift, and go to state 1
     CHAR      shift, and go to state 2
     CONST     shift, and go to state 3
@@ -2260,88 +2199,88 @@ State 111
     _COMPLEX  shift, and go to state 21
     '('       shift, and go to state 208
     '['       shift, and go to state 209
-    '*'       shift, and go to state 38
+    '*'       shift, and go to state 36
 
     $default  reduce using rule 173 (parameter_declaration)
 
-    identifier                  go to state 39
-    storage_class_specifier     go to state 40
+    identifier                  go to state 37
+    storage_class_specifier     go to state 38
+    function_specifier          go to state 39
+    type_qualifier              go to state 40
     type_specifier              go to state 41
-    type_qualifier              go to state 42
-    function_specifier          go to state 43
     declarator                  go to state 210
-    direct_declarator           go to state 47
+    direct_declarator           go to state 45
     pointer                     go to state 211
     abstract_declarator         go to state 212
     direct_abstract_declarator  go to state 213
-    struct_or_union_specifier   go to state 31
-    struct_or_union             go to state 32
+    struct_or_union             go to state 28
+    struct_or_union_specifier   go to state 29
 
 
 State 112
 
-  162 direct_declarator: direct_declarator '(' parameter_type_list • ')'
+  161 direct_declarator: direct_declarator '(' identifier_list . ')'
+  176 identifier_list: identifier_list . ',' identifier
 
     ')'  shift, and go to state 214
+    ','  shift, and go to state 215
 
 
 State 113
 
-  169 parameter_type_list: parameter_list •
-  171 parameter_list: parameter_list • ',' parameter_declaration
+  162 direct_declarator: direct_declarator '(' parameter_type_list . ')'
 
-    ','  shift, and go to state 215
-
-    $default  reduce using rule 169 (parameter_type_list)
+    ')'  shift, and go to state 216
 
 
 State 114
 
-  170 parameter_list: parameter_declaration •
+  169 parameter_type_list: parameter_list .
+  171 parameter_list: parameter_list . ',' parameter_declaration
 
-    $default  reduce using rule 170 (parameter_list)
+    ','  shift, and go to state 217
+
+    $default  reduce using rule 169 (parameter_type_list)
 
 
 State 115
 
-  161 direct_declarator: direct_declarator '(' identifier_list • ')'
-  176 identifier_list: identifier_list • ',' identifier
+  170 parameter_list: parameter_declaration .
 
-    ')'  shift, and go to state 216
-    ','  shift, and go to state 217
+    $default  reduce using rule 170 (parameter_list)
 
 
 State 116
 
-  158 direct_declarator: direct_declarator '[' ']' •
+  158 direct_declarator: direct_declarator '[' ']' .
 
     $default  reduce using rule 158 (direct_declarator)
 
 
 State 117
 
-   72 cast_expression: unary_expression •
+   72 cast_expression: unary_expression .
 
     $default  reduce using rule 72 (cast_expression)
 
 
 State 118
 
-  119 constant_expression: conditional_expression •
+  119 constant_expression: conditional_expression .
 
     $default  reduce using rule 119 (constant_expression)
 
 
 State 119
 
-  159 direct_declarator: direct_declarator '[' constant_expression • ']'
+  159 direct_declarator: direct_declarator '[' constant_expression . ']'
 
     ']'  shift, and go to state 218
 
 
 State 120
 
-  194 struct_or_union_specifier: struct_or_union IDENT '{' @7 • struct_declaration_list '}'
+  194 struct_or_union_specifier: struct_or_union IDENT '{' @7 . struct_declaration_list '}'
 
     CHAR      shift, and go to state 2
     CONST     shift, and go to state 3
@@ -2360,34 +2299,34 @@ State 120
     _BOOL     shift, and go to state 20
     _COMPLEX  shift, and go to state 21
 
-    type_specifier             go to state 63
-    type_qualifier             go to state 64
-    struct_or_union_specifier  go to state 31
-    struct_or_union            go to state 32
+    type_qualifier             go to state 63
+    type_specifier             go to state 64
     struct_declaration_list    go to state 219
     struct_declaration         go to state 66
     specifier_qualifier_list   go to state 67
+    struct_or_union            go to state 28
+    struct_or_union_specifier  go to state 29
 
 
 State 121
 
-  192 struct_or_union_specifier: struct_or_union '{' struct_declaration_list '}' •
+  192 struct_or_union_specifier: struct_or_union '{' struct_declaration_list '}' .
 
     $default  reduce using rule 192 (struct_or_union_specifier)
 
 
 State 122
 
-  199 struct_declaration_list: struct_declaration_list struct_declaration •
+  199 struct_declaration_list: struct_declaration_list struct_declaration .
 
     $default  reduce using rule 199 (struct_declaration_list)
 
 
 State 123
 
-  208 struct_declarator: ':' • constant_expression
+  208 struct_declarator: ':' . constant_expression
 
-    IDENT      shift, and go to state 35
+    IDENT      shift, and go to state 33
     CHARLIT    shift, and go to state 73
     STRINGLIT  shift, and go to state 74
     NUMBERLIT  shift, and go to state 75
@@ -2426,22 +2365,22 @@ State 123
 
 State 124
 
-  203 specifier_qualifier_list: specifier_qualifier_list type_specifier •
-
-    $default  reduce using rule 203 (specifier_qualifier_list)
-
-
-State 125
-
-  204 specifier_qualifier_list: specifier_qualifier_list type_qualifier •
+  204 specifier_qualifier_list: specifier_qualifier_list type_qualifier .
 
     $default  reduce using rule 204 (specifier_qualifier_list)
 
 
+State 125
+
+  203 specifier_qualifier_list: specifier_qualifier_list type_specifier .
+
+    $default  reduce using rule 203 (specifier_qualifier_list)
+
+
 State 126
 
-  207 struct_declarator: declarator •
-  209                  | declarator • ':' constant_expression
+  207 struct_declarator: declarator .
+  209                  | declarator . ':' constant_expression
 
     ':'  shift, and go to state 221
 
@@ -2450,8 +2389,8 @@ State 126
 
 State 127
 
-  200 struct_declaration: specifier_qualifier_list struct_declarator_list • ';'
-  206 struct_declarator_list: struct_declarator_list • ',' struct_declarator
+  200 struct_declaration: specifier_qualifier_list struct_declarator_list . ';'
+  206 struct_declarator_list: struct_declarator_list . ',' struct_declarator
 
     ';'  shift, and go to state 222
     ','  shift, and go to state 223
@@ -2459,16 +2398,16 @@ State 127
 
 State 128
 
-  205 struct_declarator_list: struct_declarator •
+  205 struct_declarator_list: struct_declarator .
 
     $default  reduce using rule 205 (struct_declarator_list)
 
 
 State 129
 
-   49 primary_expression: '(' • expression ')'
+   49 primary_expression: '(' . expression ')'
 
-    IDENT      shift, and go to state 35
+    IDENT      shift, and go to state 33
     CHARLIT    shift, and go to state 73
     STRINGLIT  shift, and go to state 74
     NUMBERLIT  shift, and go to state 75
@@ -2508,31 +2447,31 @@ State 129
 
 State 130
 
-   61 unary_expression: "++" unary_expression •
+   61 unary_expression: "++" unary_expression .
 
     $default  reduce using rule 61 (unary_expression)
 
 
 State 131
 
-   62 unary_expression: "--" unary_expression •
+   62 unary_expression: "--" unary_expression .
 
     $default  reduce using rule 62 (unary_expression)
 
 
 State 132
 
-   71 unary_expression: ALIGNOF unary_expression •
+   71 unary_expression: ALIGNOF unary_expression .
 
     $default  reduce using rule 71 (unary_expression)
 
 
 State 133
 
-   49 primary_expression: '(' • expression ')'
-   70 unary_expression: SIZEOF '(' • type_name ')'
+   49 primary_expression: '(' . expression ')'
+   70 unary_expression: SIZEOF '(' . type_name ')'
 
-    IDENT      shift, and go to state 35
+    IDENT      shift, and go to state 33
     CHARLIT    shift, and go to state 73
     STRINGLIT  shift, and go to state 74
     NUMBERLIT  shift, and go to state 75
@@ -2584,32 +2523,32 @@ State 133
     conditional_expression     go to state 104
     assignment_expression      go to state 135
     expression                 go to state 136
-    type_specifier             go to state 63
-    type_qualifier             go to state 64
+    type_qualifier             go to state 63
+    type_specifier             go to state 64
     type_name                  go to state 224
-    struct_or_union_specifier  go to state 31
-    struct_or_union            go to state 32
     specifier_qualifier_list   go to state 138
+    struct_or_union            go to state 28
+    struct_or_union_specifier  go to state 29
 
 
 State 134
 
-   69 unary_expression: SIZEOF unary_expression •
+   69 unary_expression: SIZEOF unary_expression .
 
     $default  reduce using rule 69 (unary_expression)
 
 
 State 135
 
-  117 expression: assignment_expression •
+  117 expression: assignment_expression .
 
     $default  reduce using rule 117 (expression)
 
 
 State 136
 
-   49 primary_expression: '(' expression • ')'
-  118 expression: expression • ',' assignment_expression
+   49 primary_expression: '(' expression . ')'
+  118 expression: expression . ',' assignment_expression
 
     ')'  shift, and go to state 225
     ','  shift, and go to state 226
@@ -2617,17 +2556,17 @@ State 136
 
 State 137
 
-   73 cast_expression: '(' type_name • ')' cast_expression
+   73 cast_expression: '(' type_name . ')' cast_expression
 
     ')'  shift, and go to state 227
 
 
 State 138
 
-  177 type_name: specifier_qualifier_list •
-  178          | specifier_qualifier_list • abstract_declarator
-  203 specifier_qualifier_list: specifier_qualifier_list • type_specifier
-  204                         | specifier_qualifier_list • type_qualifier
+  177 type_name: specifier_qualifier_list .
+  178          | specifier_qualifier_list . abstract_declarator
+  203 specifier_qualifier_list: specifier_qualifier_list . type_specifier
+  204                         | specifier_qualifier_list . type_qualifier
 
     CHAR      shift, and go to state 2
     CONST     shift, and go to state 3
@@ -2647,88 +2586,88 @@ State 138
     _COMPLEX  shift, and go to state 21
     '('       shift, and go to state 228
     '['       shift, and go to state 209
-    '*'       shift, and go to state 38
+    '*'       shift, and go to state 36
 
     $default  reduce using rule 177 (type_name)
 
-    type_specifier              go to state 124
-    type_qualifier              go to state 125
+    type_qualifier              go to state 124
+    type_specifier              go to state 125
     pointer                     go to state 229
     abstract_declarator         go to state 230
     direct_abstract_declarator  go to state 213
-    struct_or_union_specifier   go to state 31
-    struct_or_union             go to state 32
+    struct_or_union             go to state 28
+    struct_or_union_specifier   go to state 29
 
 
 State 139
 
-   63 unary_expression: '&' cast_expression •
+   63 unary_expression: '&' cast_expression .
 
     $default  reduce using rule 63 (unary_expression)
 
 
 State 140
 
-   64 unary_expression: '*' cast_expression •
+   64 unary_expression: '*' cast_expression .
 
     $default  reduce using rule 64 (unary_expression)
 
 
 State 141
 
-   65 unary_expression: '+' cast_expression •
+   65 unary_expression: '+' cast_expression .
 
     $default  reduce using rule 65 (unary_expression)
 
 
 State 142
 
-   66 unary_expression: '-' cast_expression •
+   66 unary_expression: '-' cast_expression .
 
     $default  reduce using rule 66 (unary_expression)
 
 
 State 143
 
-   67 unary_expression: '~' cast_expression •
+   67 unary_expression: '~' cast_expression .
 
     $default  reduce using rule 67 (unary_expression)
 
 
 State 144
 
-   68 unary_expression: '!' cast_expression •
+   68 unary_expression: '!' cast_expression .
 
     $default  reduce using rule 68 (unary_expression)
 
 
 State 145
 
-   55 postfix_expression: postfix_expression "->" • IDENT
+   55 postfix_expression: postfix_expression "->" . IDENT
 
     IDENT  shift, and go to state 231
 
 
 State 146
 
-   56 postfix_expression: postfix_expression "++" •
+   56 postfix_expression: postfix_expression "++" .
 
     $default  reduce using rule 56 (postfix_expression)
 
 
 State 147
 
-   57 postfix_expression: postfix_expression "--" •
+   57 postfix_expression: postfix_expression "--" .
 
     $default  reduce using rule 57 (postfix_expression)
 
 
 State 148
 
-   52 postfix_expression: postfix_expression '(' • ')'
-   53                   | postfix_expression '(' • argument_expression_list ')'
+   52 postfix_expression: postfix_expression '(' . ')'
+   53                   | postfix_expression '(' . argument_expression_list ')'
 
-    IDENT      shift, and go to state 35
+    IDENT      shift, and go to state 33
     CHARLIT    shift, and go to state 73
     STRINGLIT  shift, and go to state 74
     NUMBERLIT  shift, and go to state 75
@@ -2769,9 +2708,9 @@ State 148
 
 State 149
 
-   51 postfix_expression: postfix_expression '[' • expression ']'
+   51 postfix_expression: postfix_expression '[' . expression ']'
 
-    IDENT      shift, and go to state 35
+    IDENT      shift, and go to state 33
     CHARLIT    shift, and go to state 73
     STRINGLIT  shift, and go to state 74
     NUMBERLIT  shift, and go to state 75
@@ -2811,93 +2750,93 @@ State 149
 
 State 150
 
-   54 postfix_expression: postfix_expression '.' • IDENT
+   54 postfix_expression: postfix_expression '.' . IDENT
 
     IDENT  shift, and go to state 236
 
 
 State 151
 
-  107 assignment_operator: "*=" •
+  107 assignment_operator: "*=" .
 
     $default  reduce using rule 107 (assignment_operator)
 
 
 State 152
 
-  108 assignment_operator: "/=" •
+  108 assignment_operator: "/=" .
 
     $default  reduce using rule 108 (assignment_operator)
 
 
 State 153
 
-  109 assignment_operator: "%=" •
+  109 assignment_operator: "%=" .
 
     $default  reduce using rule 109 (assignment_operator)
 
 
 State 154
 
-  110 assignment_operator: "+=" •
+  110 assignment_operator: "+=" .
 
     $default  reduce using rule 110 (assignment_operator)
 
 
 State 155
 
-  111 assignment_operator: "-=" •
+  111 assignment_operator: "-=" .
 
     $default  reduce using rule 111 (assignment_operator)
 
 
 State 156
 
-  112 assignment_operator: "<<=" •
+  112 assignment_operator: "<<=" .
 
     $default  reduce using rule 112 (assignment_operator)
 
 
 State 157
 
-  113 assignment_operator: ">>=" •
+  113 assignment_operator: ">>=" .
 
     $default  reduce using rule 113 (assignment_operator)
 
 
 State 158
 
-  114 assignment_operator: "&=" •
+  114 assignment_operator: "&=" .
 
     $default  reduce using rule 114 (assignment_operator)
 
 
 State 159
 
-  116 assignment_operator: "|=" •
+  116 assignment_operator: "|=" .
 
     $default  reduce using rule 116 (assignment_operator)
 
 
 State 160
 
-  115 assignment_operator: "^=" •
+  115 assignment_operator: "^=" .
 
     $default  reduce using rule 115 (assignment_operator)
 
 
 State 161
 
-  106 assignment_operator: '=' •
+  106 assignment_operator: '=' .
 
     $default  reduce using rule 106 (assignment_operator)
 
 
 State 162
 
-  105 assignment_expression: unary_expression assignment_operator • assignment_expression
+  105 assignment_expression: unary_expression assignment_operator . assignment_expression
 
-    IDENT      shift, and go to state 35
+    IDENT      shift, and go to state 33
     CHARLIT    shift, and go to state 73
     STRINGLIT  shift, and go to state 74
     NUMBERLIT  shift, and go to state 75
@@ -2936,9 +2875,9 @@ State 162
 
 State 163
 
-   75 multiplicative_expression: multiplicative_expression '*' • cast_expression
+   75 multiplicative_expression: multiplicative_expression '*' . cast_expression
 
-    IDENT      shift, and go to state 35
+    IDENT      shift, and go to state 33
     CHARLIT    shift, and go to state 73
     STRINGLIT  shift, and go to state 74
     NUMBERLIT  shift, and go to state 75
@@ -2965,9 +2904,9 @@ State 163
 
 State 164
 
-   76 multiplicative_expression: multiplicative_expression '/' • cast_expression
+   76 multiplicative_expression: multiplicative_expression '/' . cast_expression
 
-    IDENT      shift, and go to state 35
+    IDENT      shift, and go to state 33
     CHARLIT    shift, and go to state 73
     STRINGLIT  shift, and go to state 74
     NUMBERLIT  shift, and go to state 75
@@ -2994,9 +2933,9 @@ State 164
 
 State 165
 
-   77 multiplicative_expression: multiplicative_expression '%' • cast_expression
+   77 multiplicative_expression: multiplicative_expression '%' . cast_expression
 
-    IDENT      shift, and go to state 35
+    IDENT      shift, and go to state 33
     CHARLIT    shift, and go to state 73
     STRINGLIT  shift, and go to state 74
     NUMBERLIT  shift, and go to state 75
@@ -3023,9 +2962,9 @@ State 165
 
 State 166
 
-   79 additive_expression: additive_expression '+' • multiplicative_expression
+   79 additive_expression: additive_expression '+' . multiplicative_expression
 
-    IDENT      shift, and go to state 35
+    IDENT      shift, and go to state 33
     CHARLIT    shift, and go to state 73
     STRINGLIT  shift, and go to state 74
     NUMBERLIT  shift, and go to state 75
@@ -3053,9 +2992,9 @@ State 166
 
 State 167
 
-   80 additive_expression: additive_expression '-' • multiplicative_expression
+   80 additive_expression: additive_expression '-' . multiplicative_expression
 
-    IDENT      shift, and go to state 35
+    IDENT      shift, and go to state 33
     CHARLIT    shift, and go to state 73
     STRINGLIT  shift, and go to state 74
     NUMBERLIT  shift, and go to state 75
@@ -3083,9 +3022,9 @@ State 167
 
 State 168
 
-   82 shift_expression: shift_expression "<<" • additive_expression
+   82 shift_expression: shift_expression "<<" . additive_expression
 
-    IDENT      shift, and go to state 35
+    IDENT      shift, and go to state 33
     CHARLIT    shift, and go to state 73
     STRINGLIT  shift, and go to state 74
     NUMBERLIT  shift, and go to state 75
@@ -3114,9 +3053,9 @@ State 168
 
 State 169
 
-   83 shift_expression: shift_expression ">>" • additive_expression
+   83 shift_expression: shift_expression ">>" . additive_expression
 
-    IDENT      shift, and go to state 35
+    IDENT      shift, and go to state 33
     CHARLIT    shift, and go to state 73
     STRINGLIT  shift, and go to state 74
     NUMBERLIT  shift, and go to state 75
@@ -3145,9 +3084,9 @@ State 169
 
 State 170
 
-   86 relational_expression: relational_expression "<=" • shift_expression
+   86 relational_expression: relational_expression "<=" . shift_expression
 
-    IDENT      shift, and go to state 35
+    IDENT      shift, and go to state 33
     CHARLIT    shift, and go to state 73
     STRINGLIT  shift, and go to state 74
     NUMBERLIT  shift, and go to state 75
@@ -3177,9 +3116,9 @@ State 170
 
 State 171
 
-   88 relational_expression: relational_expression ">=" • shift_expression
+   88 relational_expression: relational_expression ">=" . shift_expression
 
-    IDENT      shift, and go to state 35
+    IDENT      shift, and go to state 33
     CHARLIT    shift, and go to state 73
     STRINGLIT  shift, and go to state 74
     NUMBERLIT  shift, and go to state 75
@@ -3209,9 +3148,9 @@ State 171
 
 State 172
 
-   85 relational_expression: relational_expression '<' • shift_expression
+   85 relational_expression: relational_expression '<' . shift_expression
 
-    IDENT      shift, and go to state 35
+    IDENT      shift, and go to state 33
     CHARLIT    shift, and go to state 73
     STRINGLIT  shift, and go to state 74
     NUMBERLIT  shift, and go to state 75
@@ -3241,9 +3180,9 @@ State 172
 
 State 173
 
-   87 relational_expression: relational_expression '>' • shift_expression
+   87 relational_expression: relational_expression '>' . shift_expression
 
-    IDENT      shift, and go to state 35
+    IDENT      shift, and go to state 33
     CHARLIT    shift, and go to state 73
     STRINGLIT  shift, and go to state 74
     NUMBERLIT  shift, and go to state 75
@@ -3273,9 +3212,9 @@ State 173
 
 State 174
 
-   90 equality_expression: equality_expression "==" • relational_expression
+   90 equality_expression: equality_expression "==" . relational_expression
 
-    IDENT      shift, and go to state 35
+    IDENT      shift, and go to state 33
     CHARLIT    shift, and go to state 73
     STRINGLIT  shift, and go to state 74
     NUMBERLIT  shift, and go to state 75
@@ -3306,9 +3245,9 @@ State 174
 
 State 175
 
-   91 equality_expression: equality_expression "!=" • relational_expression
+   91 equality_expression: equality_expression "!=" . relational_expression
 
-    IDENT      shift, and go to state 35
+    IDENT      shift, and go to state 33
     CHARLIT    shift, and go to state 73
     STRINGLIT  shift, and go to state 74
     NUMBERLIT  shift, and go to state 75
@@ -3339,9 +3278,9 @@ State 175
 
 State 176
 
-   93 and_expression: and_expression '&' • equality_expression
+   93 and_expression: and_expression '&' . equality_expression
 
-    IDENT      shift, and go to state 35
+    IDENT      shift, and go to state 33
     CHARLIT    shift, and go to state 73
     STRINGLIT  shift, and go to state 74
     NUMBERLIT  shift, and go to state 75
@@ -3373,9 +3312,9 @@ State 176
 
 State 177
 
-   95 xor_expression: xor_expression '^' • and_expression
+   95 xor_expression: xor_expression '^' . and_expression
 
-    IDENT      shift, and go to state 35
+    IDENT      shift, and go to state 33
     CHARLIT    shift, and go to state 73
     STRINGLIT  shift, and go to state 74
     NUMBERLIT  shift, and go to state 75
@@ -3408,9 +3347,9 @@ State 177
 
 State 178
 
-   97 or_expression: or_expression '|' • xor_expression
+   97 or_expression: or_expression '|' . xor_expression
 
-    IDENT      shift, and go to state 35
+    IDENT      shift, and go to state 33
     CHARLIT    shift, and go to state 73
     STRINGLIT  shift, and go to state 74
     NUMBERLIT  shift, and go to state 75
@@ -3444,9 +3383,9 @@ State 178
 
 State 179
 
-   99 logical_and_expression: logical_and_expression "&&" • or_expression
+   99 logical_and_expression: logical_and_expression "&&" . or_expression
 
-    IDENT      shift, and go to state 35
+    IDENT      shift, and go to state 33
     CHARLIT    shift, and go to state 73
     STRINGLIT  shift, and go to state 74
     NUMBERLIT  shift, and go to state 75
@@ -3481,9 +3420,9 @@ State 179
 
 State 180
 
-  101 logical_or_expression: logical_or_expression "||" • logical_and_expression
+  101 logical_or_expression: logical_or_expression "||" . logical_and_expression
 
-    IDENT      shift, and go to state 35
+    IDENT      shift, and go to state 33
     CHARLIT    shift, and go to state 73
     STRINGLIT  shift, and go to state 74
     NUMBERLIT  shift, and go to state 75
@@ -3519,9 +3458,9 @@ State 180
 
 State 181
 
-  103 conditional_expression: logical_or_expression '?' • expression ':' conditional_expression
+  103 conditional_expression: logical_or_expression '?' . expression ':' conditional_expression
 
-    IDENT      shift, and go to state 35
+    IDENT      shift, and go to state 33
     CHARLIT    shift, and go to state 73
     STRINGLIT  shift, and go to state 74
     NUMBERLIT  shift, and go to state 75
@@ -3561,8 +3500,8 @@ State 181
 
 State 182
 
-   39 labeled_statement: IDENT • ':' statement
-   42 identifier: IDENT •
+   39 labeled_statement: IDENT . ':' statement
+   42 identifier: IDENT .
 
     ':'  shift, and go to state 257
 
@@ -3571,16 +3510,16 @@ State 182
 
 State 183
 
-   37 jump_statement: BREAK • ';'
+   37 jump_statement: BREAK . ';'
 
     ';'  shift, and go to state 258
 
 
 State 184
 
-   40 labeled_statement: CASE • constant_expression ':' statement
+   40 labeled_statement: CASE . constant_expression ':' statement
 
-    IDENT      shift, and go to state 35
+    IDENT      shift, and go to state 33
     CHARLIT    shift, and go to state 73
     STRINGLIT  shift, and go to state 74
     NUMBERLIT  shift, and go to state 75
@@ -3619,21 +3558,21 @@ State 184
 
 State 185
 
-   36 jump_statement: CONTINUE • ';'
+   36 jump_statement: CONTINUE . ';'
 
     ';'  shift, and go to state 260
 
 
 State 186
 
-   41 labeled_statement: DEFAULT • ':' statement
+   41 labeled_statement: DEFAULT . ':' statement
 
     ':'  shift, and go to state 261
 
 
 State 187
 
-   30 iteration_statement: DO • @5 statement WHILE '(' expression ')' ';'
+   30 iteration_statement: DO . @5 statement WHILE '(' expression ')' ';'
 
     $default  reduce using rule 29 (@5)
 
@@ -3642,31 +3581,31 @@ State 187
 
 State 188
 
-   32 iteration_statement: FOR • '(' optional_expression ';' optional_expression ';' optional_expression ')' @6 statement
+   32 iteration_statement: FOR . '(' optional_expression ';' optional_expression ';' optional_expression ')' @6 statement
 
     '('  shift, and go to state 263
 
 
 State 189
 
-   35 jump_statement: GOTO • IDENT ';'
+   35 jump_statement: GOTO . IDENT ';'
 
     IDENT  shift, and go to state 264
 
 
 State 190
 
-   23 selection_statement: IF • '(' expression ')' statement
-   24                    | IF • '(' expression ')' statement ELSE statement
+   23 selection_statement: IF . '(' expression ')' statement
+   24                    | IF . '(' expression ')' statement ELSE statement
 
     '('  shift, and go to state 265
 
 
 State 191
 
-   38 jump_statement: RETURN • optional_expression ';'
+   38 jump_statement: RETURN . optional_expression ';'
 
-    IDENT      shift, and go to state 35
+    IDENT      shift, and go to state 33
     CHARLIT    shift, and go to state 73
     STRINGLIT  shift, and go to state 74
     NUMBERLIT  shift, and go to state 75
@@ -3684,7 +3623,6 @@ State 191
 
     $default  reduce using rule 34 (optional_expression)
 
-    optional_expression        go to state 266
     identifier                 go to state 87
     string_literal             go to state 88
     constant                   go to state 89
@@ -3704,34 +3642,142 @@ State 191
     logical_or_expression      go to state 103
     conditional_expression     go to state 104
     assignment_expression      go to state 135
-    expression                 go to state 267
+    expression                 go to state 266
+    optional_expression        go to state 267
 
 
 State 192
 
-   26 selection_statement: SWITCH • '(' expression ')' @3 statement
+   26 selection_statement: SWITCH . '(' expression ')' @3 statement
 
     '('  shift, and go to state 268
 
 
 State 193
 
-   28 iteration_statement: WHILE • '(' expression ')' @4 statement
+   28 iteration_statement: WHILE . '(' expression ')' @4 statement
 
     '('  shift, and go to state 269
 
 
 State 194
 
-   22 expression_statement: ';' •
+   22 expression_statement: ';' .
 
     $default  reduce using rule 22 (expression_statement)
 
 
 State 195
 
-    8 block_item_list: block_item_list • block_item
-   19 optional_block_item_list: block_item_list •
+   21 expression_statement: expression . ';'
+  118 expression: expression . ',' assignment_expression
+
+    ';'  shift, and go to state 270
+    ','  shift, and go to state 226
+
+
+State 196
+
+  120 declaration: declaration_specifiers . init_declarator_list ';'
+  121            | declaration_specifiers . ';'
+  126 declaration_specifiers: declaration_specifiers . type_specifier
+  127                       | declaration_specifiers . type_qualifier
+  128                       | declaration_specifiers . storage_class_specifier
+  129                       | declaration_specifiers . function_specifier
+
+    IDENT     shift, and go to state 33
+    AUTO      shift, and go to state 1
+    CHAR      shift, and go to state 2
+    CONST     shift, and go to state 3
+    DOUBLE    shift, and go to state 4
+    EXTERN    shift, and go to state 5
+    FLOAT     shift, and go to state 6
+    INLINE    shift, and go to state 7
+    INT       shift, and go to state 8
+    LONG      shift, and go to state 9
+    REGISTER  shift, and go to state 10
+    RESTRICT  shift, and go to state 11
+    SHORT     shift, and go to state 12
+    SIGNED    shift, and go to state 13
+    STATIC    shift, and go to state 14
+    STRUCT    shift, and go to state 15
+    UNION     shift, and go to state 16
+    UNSIGNED  shift, and go to state 17
+    VOID      shift, and go to state 18
+    VOLATILE  shift, and go to state 19
+    _BOOL     shift, and go to state 20
+    _COMPLEX  shift, and go to state 21
+    ';'       shift, and go to state 34
+    '('       shift, and go to state 35
+    '*'       shift, and go to state 36
+
+    identifier                 go to state 37
+    storage_class_specifier    go to state 38
+    function_specifier         go to state 39
+    type_qualifier             go to state 40
+    type_specifier             go to state 41
+    init_declarator_list       go to state 42
+    init_declarator            go to state 43
+    declarator                 go to state 72
+    direct_declarator          go to state 45
+    pointer                    go to state 46
+    struct_or_union            go to state 28
+    struct_or_union_specifier  go to state 29
+
+
+State 197
+
+    9 block_item: declaration .
+
+    $default  reduce using rule 9 (block_item)
+
+
+State 198
+
+   10 block_item: statement .
+
+    $default  reduce using rule 10 (block_item)
+
+
+State 199
+
+   13 statement: expression_statement .
+
+    $default  reduce using rule 13 (statement)
+
+
+State 200
+
+   14 statement: selection_statement .
+
+    $default  reduce using rule 14 (statement)
+
+
+State 201
+
+   15 statement: iteration_statement .
+
+    $default  reduce using rule 15 (statement)
+
+
+State 202
+
+   16 statement: jump_statement .
+
+    $default  reduce using rule 16 (statement)
+
+
+State 203
+
+   17 statement: labeled_statement .
+
+    $default  reduce using rule 17 (statement)
+
+
+State 204
+
+    8 block_item_list: block_item_list . block_item
+   19 optional_block_item_list: block_item_list .
 
     IDENT      shift, and go to state 182
     CHARLIT    shift, and go to state 73
@@ -3785,14 +3831,6 @@ State 195
     '}'       reduce using rule 19 (optional_block_item_list)
     $default  reduce using rule 11 ($@2)
 
-    block_item                 go to state 270
-    statement                  go to state 197
-    $@2                        go to state 198
-    expression_statement       go to state 200
-    selection_statement        go to state 201
-    iteration_statement        go to state 202
-    jump_statement             go to state 203
-    labeled_statement          go to state 204
     identifier                 go to state 87
     string_literal             go to state 88
     constant                   go to state 89
@@ -3812,155 +3850,56 @@ State 195
     logical_or_expression      go to state 103
     conditional_expression     go to state 104
     assignment_expression      go to state 135
-    expression                 go to state 205
-    declaration                go to state 206
-    declaration_specifiers     go to state 207
-    storage_class_specifier    go to state 27
-    type_specifier             go to state 28
-    type_qualifier             go to state 29
-    function_specifier         go to state 30
-    struct_or_union_specifier  go to state 31
-    struct_or_union            go to state 32
-
-
-State 196
-
-    7 block_item_list: block_item •
-
-    $default  reduce using rule 7 (block_item_list)
-
-
-State 197
-
-   10 block_item: statement •
-
-    $default  reduce using rule 10 (block_item)
-
-
-State 198
-
-   12 statement: $@2 • compound_statement
-
-    '{'  shift, and go to state 107
-
-    compound_statement  go to state 271
-
-
-State 199
-
-   18 compound_statement: '{' optional_block_item_list • '}'
-
-    '}'  shift, and go to state 272
-
-
-State 200
-
-   13 statement: expression_statement •
-
-    $default  reduce using rule 13 (statement)
-
-
-State 201
-
-   14 statement: selection_statement •
-
-    $default  reduce using rule 14 (statement)
-
-
-State 202
-
-   15 statement: iteration_statement •
-
-    $default  reduce using rule 15 (statement)
-
-
-State 203
-
-   16 statement: jump_statement •
-
-    $default  reduce using rule 16 (statement)
-
-
-State 204
-
-   17 statement: labeled_statement •
-
-    $default  reduce using rule 17 (statement)
+    expression                 go to state 195
+    declaration_specifiers     go to state 196
+    storage_class_specifier    go to state 23
+    function_specifier         go to state 24
+    type_qualifier             go to state 25
+    type_specifier             go to state 26
+    declaration                go to state 197
+    struct_or_union            go to state 28
+    struct_or_union_specifier  go to state 29
+    statement                  go to state 198
+    expression_statement       go to state 199
+    selection_statement        go to state 200
+    iteration_statement        go to state 201
+    jump_statement             go to state 202
+    labeled_statement          go to state 203
+    block_item                 go to state 271
+    $@2                        go to state 206
 
 
 State 205
 
-   21 expression_statement: expression • ';'
-  118 expression: expression • ',' assignment_expression
+    7 block_item_list: block_item .
 
-    ';'  shift, and go to state 273
-    ','  shift, and go to state 226
+    $default  reduce using rule 7 (block_item_list)
 
 
 State 206
 
-    9 block_item: declaration •
+   12 statement: $@2 . compound_statement
 
-    $default  reduce using rule 9 (block_item)
+    '{'  shift, and go to state 107
+
+    compound_statement  go to state 272
 
 
 State 207
 
-  120 declaration: declaration_specifiers • init_declarator_list ';'
-  121            | declaration_specifiers • ';'
-  126 declaration_specifiers: declaration_specifiers • type_specifier
-  127                       | declaration_specifiers • type_qualifier
-  128                       | declaration_specifiers • storage_class_specifier
-  129                       | declaration_specifiers • function_specifier
+   18 compound_statement: '{' optional_block_item_list . '}'
 
-    IDENT     shift, and go to state 35
-    AUTO      shift, and go to state 1
-    CHAR      shift, and go to state 2
-    CONST     shift, and go to state 3
-    DOUBLE    shift, and go to state 4
-    EXTERN    shift, and go to state 5
-    FLOAT     shift, and go to state 6
-    INLINE    shift, and go to state 7
-    INT       shift, and go to state 8
-    LONG      shift, and go to state 9
-    REGISTER  shift, and go to state 10
-    RESTRICT  shift, and go to state 11
-    SHORT     shift, and go to state 12
-    SIGNED    shift, and go to state 13
-    STATIC    shift, and go to state 14
-    STRUCT    shift, and go to state 15
-    UNION     shift, and go to state 16
-    UNSIGNED  shift, and go to state 17
-    VOID      shift, and go to state 18
-    VOLATILE  shift, and go to state 19
-    _BOOL     shift, and go to state 20
-    _COMPLEX  shift, and go to state 21
-    ';'       shift, and go to state 36
-    '('       shift, and go to state 37
-    '*'       shift, and go to state 38
-
-    identifier                 go to state 39
-    storage_class_specifier    go to state 40
-    type_specifier             go to state 41
-    type_qualifier             go to state 42
-    function_specifier         go to state 43
-    init_declarator_list       go to state 44
-    init_declarator            go to state 45
-    declarator                 go to state 72
-    direct_declarator          go to state 47
-    pointer                    go to state 48
-    struct_or_union_specifier  go to state 31
-    struct_or_union            go to state 32
+    '}'  shift, and go to state 273
 
 
 State 208
 
-  157 direct_declarator: '(' • declarator ')'
-  182 direct_abstract_declarator: '(' • abstract_declarator ')'
-  187                           | '(' • ')'
-  189                           | '(' • parameter_type_list ')'
+  157 direct_declarator: '(' . declarator ')'
+  182 direct_abstract_declarator: '(' . abstract_declarator ')'
+  187                           | '(' . ')'
+  189                           | '(' . parameter_type_list ')'
 
-    IDENT     shift, and go to state 35
+    IDENT     shift, and go to state 33
     AUTO      shift, and go to state 1
     CHAR      shift, and go to state 2
     CONST     shift, and go to state 3
@@ -3985,32 +3924,32 @@ State 208
     '('       shift, and go to state 208
     ')'       shift, and go to state 274
     '['       shift, and go to state 209
-    '*'       shift, and go to state 38
+    '*'       shift, and go to state 36
 
-    identifier                  go to state 39
+    identifier                  go to state 37
     declaration_specifiers      go to state 111
-    storage_class_specifier     go to state 27
-    type_specifier              go to state 28
-    type_qualifier              go to state 29
-    function_specifier          go to state 30
+    storage_class_specifier     go to state 23
+    function_specifier          go to state 24
+    type_qualifier              go to state 25
+    type_specifier              go to state 26
     declarator                  go to state 51
-    direct_declarator           go to state 47
+    direct_declarator           go to state 45
     pointer                     go to state 211
-    parameter_type_list         go to state 275
-    parameter_list              go to state 113
-    parameter_declaration       go to state 114
-    abstract_declarator         go to state 276
+    abstract_declarator         go to state 275
     direct_abstract_declarator  go to state 213
-    struct_or_union_specifier   go to state 31
-    struct_or_union             go to state 32
+    parameter_type_list         go to state 276
+    parameter_list              go to state 114
+    parameter_declaration       go to state 115
+    struct_or_union             go to state 28
+    struct_or_union_specifier   go to state 29
 
 
 State 209
 
-  183 direct_abstract_declarator: '[' • ']'
-  184                           | '[' • constant_expression ']'
+  183 direct_abstract_declarator: '[' . ']'
+  184                           | '[' . constant_expression ']'
 
-    IDENT      shift, and go to state 35
+    IDENT      shift, and go to state 33
     CHARLIT    shift, and go to state 73
     STRINGLIT  shift, and go to state 74
     NUMBERLIT  shift, and go to state 75
@@ -4050,42 +3989,42 @@ State 209
 
 State 210
 
-  172 parameter_declaration: declaration_specifiers declarator •
+  172 parameter_declaration: declaration_specifiers declarator .
 
     $default  reduce using rule 172 (parameter_declaration)
 
 
 State 211
 
-  155 declarator: pointer • direct_declarator
-  179 abstract_declarator: pointer •
-  181                    | pointer • direct_abstract_declarator
+  155 declarator: pointer . direct_declarator
+  179 abstract_declarator: pointer .
+  181                    | pointer . direct_abstract_declarator
 
-    IDENT  shift, and go to state 35
+    IDENT  shift, and go to state 33
     '('    shift, and go to state 208
     '['    shift, and go to state 209
 
     $default  reduce using rule 179 (abstract_declarator)
 
-    identifier                  go to state 39
+    identifier                  go to state 37
     direct_declarator           go to state 61
     direct_abstract_declarator  go to state 279
 
 
 State 212
 
-  174 parameter_declaration: declaration_specifiers abstract_declarator •
+  174 parameter_declaration: declaration_specifiers abstract_declarator .
 
     $default  reduce using rule 174 (parameter_declaration)
 
 
 State 213
 
-  180 abstract_declarator: direct_abstract_declarator •
-  185 direct_abstract_declarator: direct_abstract_declarator • '[' ']'
-  186                           | direct_abstract_declarator • '[' constant_expression ']'
-  188                           | direct_abstract_declarator • '(' ')'
-  190                           | direct_abstract_declarator • '(' parameter_type_list ')'
+  180 abstract_declarator: direct_abstract_declarator .
+  185 direct_abstract_declarator: direct_abstract_declarator . '[' ']'
+  186                           | direct_abstract_declarator . '[' constant_expression ']'
+  188                           | direct_abstract_declarator . '(' ')'
+  190                           | direct_abstract_declarator . '(' parameter_type_list ')'
 
     '('  shift, and go to state 280
     '['  shift, and go to state 281
@@ -4095,14 +4034,30 @@ State 213
 
 State 214
 
-  162 direct_declarator: direct_declarator '(' parameter_type_list ')' •
+  161 direct_declarator: direct_declarator '(' identifier_list ')' .
 
-    $default  reduce using rule 162 (direct_declarator)
+    $default  reduce using rule 161 (direct_declarator)
 
 
 State 215
 
-  171 parameter_list: parameter_list ',' • parameter_declaration
+  176 identifier_list: identifier_list ',' . identifier
+
+    IDENT  shift, and go to state 33
+
+    identifier  go to state 282
+
+
+State 216
+
+  162 direct_declarator: direct_declarator '(' parameter_type_list ')' .
+
+    $default  reduce using rule 162 (direct_declarator)
+
+
+State 217
+
+  171 parameter_list: parameter_list ',' . parameter_declaration
 
     AUTO      shift, and go to state 1
     CHAR      shift, and go to state 2
@@ -4127,42 +4082,26 @@ State 215
     _COMPLEX  shift, and go to state 21
 
     declaration_specifiers     go to state 111
-    storage_class_specifier    go to state 27
-    type_specifier             go to state 28
-    type_qualifier             go to state 29
-    function_specifier         go to state 30
-    parameter_declaration      go to state 282
-    struct_or_union_specifier  go to state 31
-    struct_or_union            go to state 32
-
-
-State 216
-
-  161 direct_declarator: direct_declarator '(' identifier_list ')' •
-
-    $default  reduce using rule 161 (direct_declarator)
-
-
-State 217
-
-  176 identifier_list: identifier_list ',' • identifier
-
-    IDENT  shift, and go to state 35
-
-    identifier  go to state 283
+    storage_class_specifier    go to state 23
+    function_specifier         go to state 24
+    type_qualifier             go to state 25
+    type_specifier             go to state 26
+    parameter_declaration      go to state 283
+    struct_or_union            go to state 28
+    struct_or_union_specifier  go to state 29
 
 
 State 218
 
-  159 direct_declarator: direct_declarator '[' constant_expression ']' •
+  159 direct_declarator: direct_declarator '[' constant_expression ']' .
 
     $default  reduce using rule 159 (direct_declarator)
 
 
 State 219
 
-  194 struct_or_union_specifier: struct_or_union IDENT '{' @7 struct_declaration_list • '}'
-  199 struct_declaration_list: struct_declaration_list • struct_declaration
+  194 struct_or_union_specifier: struct_or_union IDENT '{' @7 struct_declaration_list . '}'
+  199 struct_declaration_list: struct_declaration_list . struct_declaration
 
     CHAR      shift, and go to state 2
     CONST     shift, and go to state 3
@@ -4182,26 +4121,26 @@ State 219
     _COMPLEX  shift, and go to state 21
     '}'       shift, and go to state 284
 
-    type_specifier             go to state 63
-    type_qualifier             go to state 64
-    struct_or_union_specifier  go to state 31
-    struct_or_union            go to state 32
+    type_qualifier             go to state 63
+    type_specifier             go to state 64
     struct_declaration         go to state 122
     specifier_qualifier_list   go to state 67
+    struct_or_union            go to state 28
+    struct_or_union_specifier  go to state 29
 
 
 State 220
 
-  208 struct_declarator: ':' constant_expression •
+  208 struct_declarator: ':' constant_expression .
 
     $default  reduce using rule 208 (struct_declarator)
 
 
 State 221
 
-  209 struct_declarator: declarator ':' • constant_expression
+  209 struct_declarator: declarator ':' . constant_expression
 
-    IDENT      shift, and go to state 35
+    IDENT      shift, and go to state 33
     CHARLIT    shift, and go to state 73
     STRINGLIT  shift, and go to state 74
     NUMBERLIT  shift, and go to state 75
@@ -4240,46 +4179,46 @@ State 221
 
 State 222
 
-  200 struct_declaration: specifier_qualifier_list struct_declarator_list ';' •
+  200 struct_declaration: specifier_qualifier_list struct_declarator_list ';' .
 
     $default  reduce using rule 200 (struct_declaration)
 
 
 State 223
 
-  206 struct_declarator_list: struct_declarator_list ',' • struct_declarator
+  206 struct_declarator_list: struct_declarator_list ',' . struct_declarator
 
-    IDENT  shift, and go to state 35
-    '('    shift, and go to state 37
+    IDENT  shift, and go to state 33
+    '('    shift, and go to state 35
     ':'    shift, and go to state 123
-    '*'    shift, and go to state 38
+    '*'    shift, and go to state 36
 
-    identifier         go to state 39
+    identifier         go to state 37
     declarator         go to state 126
-    direct_declarator  go to state 47
-    pointer            go to state 48
+    direct_declarator  go to state 45
+    pointer            go to state 46
     struct_declarator  go to state 286
 
 
 State 224
 
-   70 unary_expression: SIZEOF '(' type_name • ')'
+   70 unary_expression: SIZEOF '(' type_name . ')'
 
     ')'  shift, and go to state 287
 
 
 State 225
 
-   49 primary_expression: '(' expression ')' •
+   49 primary_expression: '(' expression ')' .
 
     $default  reduce using rule 49 (primary_expression)
 
 
 State 226
 
-  118 expression: expression ',' • assignment_expression
+  118 expression: expression ',' . assignment_expression
 
-    IDENT      shift, and go to state 35
+    IDENT      shift, and go to state 33
     CHARLIT    shift, and go to state 73
     STRINGLIT  shift, and go to state 74
     NUMBERLIT  shift, and go to state 75
@@ -4318,9 +4257,9 @@ State 226
 
 State 227
 
-   73 cast_expression: '(' type_name ')' • cast_expression
+   73 cast_expression: '(' type_name ')' . cast_expression
 
-    IDENT      shift, and go to state 35
+    IDENT      shift, and go to state 33
     CHARLIT    shift, and go to state 73
     STRINGLIT  shift, and go to state 74
     NUMBERLIT  shift, and go to state 75
@@ -4347,9 +4286,9 @@ State 227
 
 State 228
 
-  182 direct_abstract_declarator: '(' • abstract_declarator ')'
-  187                           | '(' • ')'
-  189                           | '(' • parameter_type_list ')'
+  182 direct_abstract_declarator: '(' . abstract_declarator ')'
+  187                           | '(' . ')'
+  189                           | '(' . parameter_type_list ')'
 
     AUTO      shift, and go to state 1
     CHAR      shift, and go to state 2
@@ -4375,27 +4314,27 @@ State 228
     '('       shift, and go to state 228
     ')'       shift, and go to state 274
     '['       shift, and go to state 209
-    '*'       shift, and go to state 38
+    '*'       shift, and go to state 36
 
     declaration_specifiers      go to state 111
-    storage_class_specifier     go to state 27
-    type_specifier              go to state 28
-    type_qualifier              go to state 29
-    function_specifier          go to state 30
+    storage_class_specifier     go to state 23
+    function_specifier          go to state 24
+    type_qualifier              go to state 25
+    type_specifier              go to state 26
     pointer                     go to state 229
-    parameter_type_list         go to state 275
-    parameter_list              go to state 113
-    parameter_declaration       go to state 114
-    abstract_declarator         go to state 276
+    abstract_declarator         go to state 275
     direct_abstract_declarator  go to state 213
-    struct_or_union_specifier   go to state 31
-    struct_or_union             go to state 32
+    parameter_type_list         go to state 276
+    parameter_list              go to state 114
+    parameter_declaration       go to state 115
+    struct_or_union             go to state 28
+    struct_or_union_specifier   go to state 29
 
 
 State 229
 
-  179 abstract_declarator: pointer •
-  181                    | pointer • direct_abstract_declarator
+  179 abstract_declarator: pointer .
+  181                    | pointer . direct_abstract_declarator
 
     '('  shift, and go to state 228
     '['  shift, and go to state 209
@@ -4407,29 +4346,29 @@ State 229
 
 State 230
 
-  178 type_name: specifier_qualifier_list abstract_declarator •
+  178 type_name: specifier_qualifier_list abstract_declarator .
 
     $default  reduce using rule 178 (type_name)
 
 
 State 231
 
-   55 postfix_expression: postfix_expression "->" IDENT •
+   55 postfix_expression: postfix_expression "->" IDENT .
 
     $default  reduce using rule 55 (postfix_expression)
 
 
 State 232
 
-   52 postfix_expression: postfix_expression '(' ')' •
+   52 postfix_expression: postfix_expression '(' ')' .
 
     $default  reduce using rule 52 (postfix_expression)
 
 
 State 233
 
-   53 postfix_expression: postfix_expression '(' argument_expression_list • ')'
-   59 argument_expression_list: argument_expression_list • ',' assignment_expression
+   53 postfix_expression: postfix_expression '(' argument_expression_list . ')'
+   59 argument_expression_list: argument_expression_list . ',' assignment_expression
 
     ')'  shift, and go to state 290
     ','  shift, and go to state 291
@@ -4437,15 +4376,15 @@ State 233
 
 State 234
 
-   58 argument_expression_list: assignment_expression •
+   58 argument_expression_list: assignment_expression .
 
     $default  reduce using rule 58 (argument_expression_list)
 
 
 State 235
 
-   51 postfix_expression: postfix_expression '[' expression • ']'
-  118 expression: expression • ',' assignment_expression
+   51 postfix_expression: postfix_expression '[' expression . ']'
+  118 expression: expression . ',' assignment_expression
 
     ']'  shift, and go to state 292
     ','  shift, and go to state 226
@@ -4453,45 +4392,45 @@ State 235
 
 State 236
 
-   54 postfix_expression: postfix_expression '.' IDENT •
+   54 postfix_expression: postfix_expression '.' IDENT .
 
     $default  reduce using rule 54 (postfix_expression)
 
 
 State 237
 
-  105 assignment_expression: unary_expression assignment_operator assignment_expression •
+  105 assignment_expression: unary_expression assignment_operator assignment_expression .
 
     $default  reduce using rule 105 (assignment_expression)
 
 
 State 238
 
-   75 multiplicative_expression: multiplicative_expression '*' cast_expression •
+   75 multiplicative_expression: multiplicative_expression '*' cast_expression .
 
     $default  reduce using rule 75 (multiplicative_expression)
 
 
 State 239
 
-   76 multiplicative_expression: multiplicative_expression '/' cast_expression •
+   76 multiplicative_expression: multiplicative_expression '/' cast_expression .
 
     $default  reduce using rule 76 (multiplicative_expression)
 
 
 State 240
 
-   77 multiplicative_expression: multiplicative_expression '%' cast_expression •
+   77 multiplicative_expression: multiplicative_expression '%' cast_expression .
 
     $default  reduce using rule 77 (multiplicative_expression)
 
 
 State 241
 
-   75 multiplicative_expression: multiplicative_expression • '*' cast_expression
-   76                          | multiplicative_expression • '/' cast_expression
-   77                          | multiplicative_expression • '%' cast_expression
-   79 additive_expression: additive_expression '+' multiplicative_expression •
+   75 multiplicative_expression: multiplicative_expression . '*' cast_expression
+   76                          | multiplicative_expression . '/' cast_expression
+   77                          | multiplicative_expression . '%' cast_expression
+   79 additive_expression: additive_expression '+' multiplicative_expression .
 
     '*'  shift, and go to state 163
     '/'  shift, and go to state 164
@@ -4502,10 +4441,10 @@ State 241
 
 State 242
 
-   75 multiplicative_expression: multiplicative_expression • '*' cast_expression
-   76                          | multiplicative_expression • '/' cast_expression
-   77                          | multiplicative_expression • '%' cast_expression
-   80 additive_expression: additive_expression '-' multiplicative_expression •
+   75 multiplicative_expression: multiplicative_expression . '*' cast_expression
+   76                          | multiplicative_expression . '/' cast_expression
+   77                          | multiplicative_expression . '%' cast_expression
+   80 additive_expression: additive_expression '-' multiplicative_expression .
 
     '*'  shift, and go to state 163
     '/'  shift, and go to state 164
@@ -4516,9 +4455,9 @@ State 242
 
 State 243
 
-   79 additive_expression: additive_expression • '+' multiplicative_expression
-   80                    | additive_expression • '-' multiplicative_expression
-   82 shift_expression: shift_expression "<<" additive_expression •
+   79 additive_expression: additive_expression . '+' multiplicative_expression
+   80                    | additive_expression . '-' multiplicative_expression
+   82 shift_expression: shift_expression "<<" additive_expression .
 
     '+'  shift, and go to state 166
     '-'  shift, and go to state 167
@@ -4528,9 +4467,9 @@ State 243
 
 State 244
 
-   79 additive_expression: additive_expression • '+' multiplicative_expression
-   80                    | additive_expression • '-' multiplicative_expression
-   83 shift_expression: shift_expression ">>" additive_expression •
+   79 additive_expression: additive_expression . '+' multiplicative_expression
+   80                    | additive_expression . '-' multiplicative_expression
+   83 shift_expression: shift_expression ">>" additive_expression .
 
     '+'  shift, and go to state 166
     '-'  shift, and go to state 167
@@ -4540,9 +4479,9 @@ State 244
 
 State 245
 
-   82 shift_expression: shift_expression • "<<" additive_expression
-   83                 | shift_expression • ">>" additive_expression
-   86 relational_expression: relational_expression "<=" shift_expression •
+   82 shift_expression: shift_expression . "<<" additive_expression
+   83                 | shift_expression . ">>" additive_expression
+   86 relational_expression: relational_expression "<=" shift_expression .
 
     "<<"  shift, and go to state 168
     ">>"  shift, and go to state 169
@@ -4552,9 +4491,9 @@ State 245
 
 State 246
 
-   82 shift_expression: shift_expression • "<<" additive_expression
-   83                 | shift_expression • ">>" additive_expression
-   88 relational_expression: relational_expression ">=" shift_expression •
+   82 shift_expression: shift_expression . "<<" additive_expression
+   83                 | shift_expression . ">>" additive_expression
+   88 relational_expression: relational_expression ">=" shift_expression .
 
     "<<"  shift, and go to state 168
     ">>"  shift, and go to state 169
@@ -4564,9 +4503,9 @@ State 246
 
 State 247
 
-   82 shift_expression: shift_expression • "<<" additive_expression
-   83                 | shift_expression • ">>" additive_expression
-   85 relational_expression: relational_expression '<' shift_expression •
+   82 shift_expression: shift_expression . "<<" additive_expression
+   83                 | shift_expression . ">>" additive_expression
+   85 relational_expression: relational_expression '<' shift_expression .
 
     "<<"  shift, and go to state 168
     ">>"  shift, and go to state 169
@@ -4576,9 +4515,9 @@ State 247
 
 State 248
 
-   82 shift_expression: shift_expression • "<<" additive_expression
-   83                 | shift_expression • ">>" additive_expression
-   87 relational_expression: relational_expression '>' shift_expression •
+   82 shift_expression: shift_expression . "<<" additive_expression
+   83                 | shift_expression . ">>" additive_expression
+   87 relational_expression: relational_expression '>' shift_expression .
 
     "<<"  shift, and go to state 168
     ">>"  shift, and go to state 169
@@ -4588,11 +4527,11 @@ State 248
 
 State 249
 
-   85 relational_expression: relational_expression • '<' shift_expression
-   86                      | relational_expression • "<=" shift_expression
-   87                      | relational_expression • '>' shift_expression
-   88                      | relational_expression • ">=" shift_expression
-   90 equality_expression: equality_expression "==" relational_expression •
+   85 relational_expression: relational_expression . '<' shift_expression
+   86                      | relational_expression . "<=" shift_expression
+   87                      | relational_expression . '>' shift_expression
+   88                      | relational_expression . ">=" shift_expression
+   90 equality_expression: equality_expression "==" relational_expression .
 
     "<="  shift, and go to state 170
     ">="  shift, and go to state 171
@@ -4604,11 +4543,11 @@ State 249
 
 State 250
 
-   85 relational_expression: relational_expression • '<' shift_expression
-   86                      | relational_expression • "<=" shift_expression
-   87                      | relational_expression • '>' shift_expression
-   88                      | relational_expression • ">=" shift_expression
-   91 equality_expression: equality_expression "!=" relational_expression •
+   85 relational_expression: relational_expression . '<' shift_expression
+   86                      | relational_expression . "<=" shift_expression
+   87                      | relational_expression . '>' shift_expression
+   88                      | relational_expression . ">=" shift_expression
+   91 equality_expression: equality_expression "!=" relational_expression .
 
     "<="  shift, and go to state 170
     ">="  shift, and go to state 171
@@ -4620,9 +4559,9 @@ State 250
 
 State 251
 
-   90 equality_expression: equality_expression • "==" relational_expression
-   91                    | equality_expression • "!=" relational_expression
-   93 and_expression: and_expression '&' equality_expression •
+   90 equality_expression: equality_expression . "==" relational_expression
+   91                    | equality_expression . "!=" relational_expression
+   93 and_expression: and_expression '&' equality_expression .
 
     "=="  shift, and go to state 174
     "!="  shift, and go to state 175
@@ -4632,8 +4571,8 @@ State 251
 
 State 252
 
-   93 and_expression: and_expression • '&' equality_expression
-   95 xor_expression: xor_expression '^' and_expression •
+   93 and_expression: and_expression . '&' equality_expression
+   95 xor_expression: xor_expression '^' and_expression .
 
     '&'  shift, and go to state 176
 
@@ -4642,8 +4581,8 @@ State 252
 
 State 253
 
-   95 xor_expression: xor_expression • '^' and_expression
-   97 or_expression: or_expression '|' xor_expression •
+   95 xor_expression: xor_expression . '^' and_expression
+   97 or_expression: or_expression '|' xor_expression .
 
     '^'  shift, and go to state 177
 
@@ -4652,8 +4591,8 @@ State 253
 
 State 254
 
-   97 or_expression: or_expression • '|' xor_expression
-   99 logical_and_expression: logical_and_expression "&&" or_expression •
+   97 or_expression: or_expression . '|' xor_expression
+   99 logical_and_expression: logical_and_expression "&&" or_expression .
 
     '|'  shift, and go to state 178
 
@@ -4662,8 +4601,8 @@ State 254
 
 State 255
 
-   99 logical_and_expression: logical_and_expression • "&&" or_expression
-  101 logical_or_expression: logical_or_expression "||" logical_and_expression •
+   99 logical_and_expression: logical_and_expression . "&&" or_expression
+  101 logical_or_expression: logical_or_expression "||" logical_and_expression .
 
     "&&"  shift, and go to state 179
 
@@ -4672,8 +4611,8 @@ State 255
 
 State 256
 
-  103 conditional_expression: logical_or_expression '?' expression • ':' conditional_expression
-  118 expression: expression • ',' assignment_expression
+  103 conditional_expression: logical_or_expression '?' expression . ':' conditional_expression
+  118 expression: expression . ',' assignment_expression
 
     ':'  shift, and go to state 293
     ','  shift, and go to state 226
@@ -4681,7 +4620,7 @@ State 256
 
 State 257
 
-   39 labeled_statement: IDENT ':' • statement
+   39 labeled_statement: IDENT ':' . statement
 
     IDENT      shift, and go to state 182
     CHARLIT    shift, and go to state 73
@@ -4713,13 +4652,6 @@ State 257
 
     $default  reduce using rule 11 ($@2)
 
-    statement                  go to state 294
-    $@2                        go to state 198
-    expression_statement       go to state 200
-    selection_statement        go to state 201
-    iteration_statement        go to state 202
-    jump_statement             go to state 203
-    labeled_statement          go to state 204
     identifier                 go to state 87
     string_literal             go to state 88
     constant                   go to state 89
@@ -4739,33 +4671,40 @@ State 257
     logical_or_expression      go to state 103
     conditional_expression     go to state 104
     assignment_expression      go to state 135
-    expression                 go to state 205
+    expression                 go to state 195
+    statement                  go to state 294
+    expression_statement       go to state 199
+    selection_statement        go to state 200
+    iteration_statement        go to state 201
+    jump_statement             go to state 202
+    labeled_statement          go to state 203
+    $@2                        go to state 206
 
 
 State 258
 
-   37 jump_statement: BREAK ';' •
+   37 jump_statement: BREAK ';' .
 
     $default  reduce using rule 37 (jump_statement)
 
 
 State 259
 
-   40 labeled_statement: CASE constant_expression • ':' statement
+   40 labeled_statement: CASE constant_expression . ':' statement
 
     ':'  shift, and go to state 295
 
 
 State 260
 
-   36 jump_statement: CONTINUE ';' •
+   36 jump_statement: CONTINUE ';' .
 
     $default  reduce using rule 36 (jump_statement)
 
 
 State 261
 
-   41 labeled_statement: DEFAULT ':' • statement
+   41 labeled_statement: DEFAULT ':' . statement
 
     IDENT      shift, and go to state 182
     CHARLIT    shift, and go to state 73
@@ -4797,13 +4736,6 @@ State 261
 
     $default  reduce using rule 11 ($@2)
 
-    statement                  go to state 296
-    $@2                        go to state 198
-    expression_statement       go to state 200
-    selection_statement        go to state 201
-    iteration_statement        go to state 202
-    jump_statement             go to state 203
-    labeled_statement          go to state 204
     identifier                 go to state 87
     string_literal             go to state 88
     constant                   go to state 89
@@ -4823,12 +4755,19 @@ State 261
     logical_or_expression      go to state 103
     conditional_expression     go to state 104
     assignment_expression      go to state 135
-    expression                 go to state 205
+    expression                 go to state 195
+    statement                  go to state 296
+    expression_statement       go to state 199
+    selection_statement        go to state 200
+    iteration_statement        go to state 201
+    jump_statement             go to state 202
+    labeled_statement          go to state 203
+    $@2                        go to state 206
 
 
 State 262
 
-   30 iteration_statement: DO @5 • statement WHILE '(' expression ')' ';'
+   30 iteration_statement: DO @5 . statement WHILE '(' expression ')' ';'
 
     IDENT      shift, and go to state 182
     CHARLIT    shift, and go to state 73
@@ -4860,13 +4799,6 @@ State 262
 
     $default  reduce using rule 11 ($@2)
 
-    statement                  go to state 297
-    $@2                        go to state 198
-    expression_statement       go to state 200
-    selection_statement        go to state 201
-    iteration_statement        go to state 202
-    jump_statement             go to state 203
-    labeled_statement          go to state 204
     identifier                 go to state 87
     string_literal             go to state 88
     constant                   go to state 89
@@ -4886,14 +4818,21 @@ State 262
     logical_or_expression      go to state 103
     conditional_expression     go to state 104
     assignment_expression      go to state 135
-    expression                 go to state 205
+    expression                 go to state 195
+    statement                  go to state 297
+    expression_statement       go to state 199
+    selection_statement        go to state 200
+    iteration_statement        go to state 201
+    jump_statement             go to state 202
+    labeled_statement          go to state 203
+    $@2                        go to state 206
 
 
 State 263
 
-   32 iteration_statement: FOR '(' • optional_expression ';' optional_expression ';' optional_expression ')' @6 statement
+   32 iteration_statement: FOR '(' . optional_expression ';' optional_expression ';' optional_expression ')' @6 statement
 
-    IDENT      shift, and go to state 35
+    IDENT      shift, and go to state 33
     CHARLIT    shift, and go to state 73
     STRINGLIT  shift, and go to state 74
     NUMBERLIT  shift, and go to state 75
@@ -4911,7 +4850,6 @@ State 263
 
     $default  reduce using rule 34 (optional_expression)
 
-    optional_expression        go to state 298
     identifier                 go to state 87
     string_literal             go to state 88
     constant                   go to state 89
@@ -4931,22 +4869,23 @@ State 263
     logical_or_expression      go to state 103
     conditional_expression     go to state 104
     assignment_expression      go to state 135
-    expression                 go to state 267
+    expression                 go to state 266
+    optional_expression        go to state 298
 
 
 State 264
 
-   35 jump_statement: GOTO IDENT • ';'
+   35 jump_statement: GOTO IDENT . ';'
 
     ';'  shift, and go to state 299
 
 
 State 265
 
-   23 selection_statement: IF '(' • expression ')' statement
-   24                    | IF '(' • expression ')' statement ELSE statement
+   23 selection_statement: IF '(' . expression ')' statement
+   24                    | IF '(' . expression ')' statement ELSE statement
 
-    IDENT      shift, and go to state 35
+    IDENT      shift, and go to state 33
     CHARLIT    shift, and go to state 73
     STRINGLIT  shift, and go to state 74
     NUMBERLIT  shift, and go to state 75
@@ -4986,26 +4925,26 @@ State 265
 
 State 266
 
-   38 jump_statement: RETURN optional_expression • ';'
-
-    ';'  shift, and go to state 301
-
-
-State 267
-
-   33 optional_expression: expression •
-  118 expression: expression • ',' assignment_expression
+   33 optional_expression: expression .
+  118 expression: expression . ',' assignment_expression
 
     ','  shift, and go to state 226
 
     $default  reduce using rule 33 (optional_expression)
 
 
+State 267
+
+   38 jump_statement: RETURN optional_expression . ';'
+
+    ';'  shift, and go to state 301
+
+
 State 268
 
-   26 selection_statement: SWITCH '(' • expression ')' @3 statement
+   26 selection_statement: SWITCH '(' . expression ')' @3 statement
 
-    IDENT      shift, and go to state 35
+    IDENT      shift, and go to state 33
     CHARLIT    shift, and go to state 73
     STRINGLIT  shift, and go to state 74
     NUMBERLIT  shift, and go to state 75
@@ -5045,9 +4984,9 @@ State 268
 
 State 269
 
-   28 iteration_statement: WHILE '(' • expression ')' @4 statement
+   28 iteration_statement: WHILE '(' . expression ')' @4 statement
 
-    IDENT      shift, and go to state 35
+    IDENT      shift, and go to state 33
     CHARLIT    shift, and go to state 73
     STRINGLIT  shift, and go to state 74
     NUMBERLIT  shift, and go to state 75
@@ -5087,74 +5026,74 @@ State 269
 
 State 270
 
-    8 block_item_list: block_item_list block_item •
-
-    $default  reduce using rule 8 (block_item_list)
-
-
-State 271
-
-   12 statement: $@2 compound_statement •
-
-    $default  reduce using rule 12 (statement)
-
-
-State 272
-
-   18 compound_statement: '{' optional_block_item_list '}' •
-
-    $default  reduce using rule 18 (compound_statement)
-
-
-State 273
-
-   21 expression_statement: expression ';' •
+   21 expression_statement: expression ';' .
 
     $default  reduce using rule 21 (expression_statement)
 
 
+State 271
+
+    8 block_item_list: block_item_list block_item .
+
+    $default  reduce using rule 8 (block_item_list)
+
+
+State 272
+
+   12 statement: $@2 compound_statement .
+
+    $default  reduce using rule 12 (statement)
+
+
+State 273
+
+   18 compound_statement: '{' optional_block_item_list '}' .
+
+    $default  reduce using rule 18 (compound_statement)
+
+
 State 274
 
-  187 direct_abstract_declarator: '(' ')' •
+  187 direct_abstract_declarator: '(' ')' .
 
     $default  reduce using rule 187 (direct_abstract_declarator)
 
 
 State 275
 
-  189 direct_abstract_declarator: '(' parameter_type_list • ')'
+  182 direct_abstract_declarator: '(' abstract_declarator . ')'
 
     ')'  shift, and go to state 304
 
 
 State 276
 
-  182 direct_abstract_declarator: '(' abstract_declarator • ')'
+  189 direct_abstract_declarator: '(' parameter_type_list . ')'
 
     ')'  shift, and go to state 305
 
 
 State 277
 
-  183 direct_abstract_declarator: '[' ']' •
+  183 direct_abstract_declarator: '[' ']' .
 
     $default  reduce using rule 183 (direct_abstract_declarator)
 
 
 State 278
 
-  184 direct_abstract_declarator: '[' constant_expression • ']'
+  184 direct_abstract_declarator: '[' constant_expression . ']'
 
     ']'  shift, and go to state 306
 
 
 State 279
 
-  181 abstract_declarator: pointer direct_abstract_declarator •
-  185 direct_abstract_declarator: direct_abstract_declarator • '[' ']'
-  186                           | direct_abstract_declarator • '[' constant_expression ']'
-  188                           | direct_abstract_declarator • '(' ')'
-  190                           | direct_abstract_declarator • '(' parameter_type_list ')'
+  181 abstract_declarator: pointer direct_abstract_declarator .
+  185 direct_abstract_declarator: direct_abstract_declarator . '[' ']'
+  186                           | direct_abstract_declarator . '[' constant_expression ']'
+  188                           | direct_abstract_declarator . '(' ')'
+  190                           | direct_abstract_declarator . '(' parameter_type_list ')'
 
     '('  shift, and go to state 280
     '['  shift, and go to state 281
@@ -5164,8 +5103,8 @@ State 279
 
 State 280
 
-  188 direct_abstract_declarator: direct_abstract_declarator '(' • ')'
-  190                           | direct_abstract_declarator '(' • parameter_type_list ')'
+  188 direct_abstract_declarator: direct_abstract_declarator '(' . ')'
+  190                           | direct_abstract_declarator '(' . parameter_type_list ')'
 
     AUTO      shift, and go to state 1
     CHAR      shift, and go to state 2
@@ -5191,23 +5130,23 @@ State 280
     ')'       shift, and go to state 307
 
     declaration_specifiers     go to state 111
-    storage_class_specifier    go to state 27
-    type_specifier             go to state 28
-    type_qualifier             go to state 29
-    function_specifier         go to state 30
+    storage_class_specifier    go to state 23
+    function_specifier         go to state 24
+    type_qualifier             go to state 25
+    type_specifier             go to state 26
     parameter_type_list        go to state 308
-    parameter_list             go to state 113
-    parameter_declaration      go to state 114
-    struct_or_union_specifier  go to state 31
-    struct_or_union            go to state 32
+    parameter_list             go to state 114
+    parameter_declaration      go to state 115
+    struct_or_union            go to state 28
+    struct_or_union_specifier  go to state 29
 
 
 State 281
 
-  185 direct_abstract_declarator: direct_abstract_declarator '[' • ']'
-  186                           | direct_abstract_declarator '[' • constant_expression ']'
+  185 direct_abstract_declarator: direct_abstract_declarator '[' . ']'
+  186                           | direct_abstract_declarator '[' . constant_expression ']'
 
-    IDENT      shift, and go to state 35
+    IDENT      shift, and go to state 33
     CHARLIT    shift, and go to state 73
     STRINGLIT  shift, and go to state 74
     NUMBERLIT  shift, and go to state 75
@@ -5247,72 +5186,72 @@ State 281
 
 State 282
 
-  171 parameter_list: parameter_list ',' parameter_declaration •
-
-    $default  reduce using rule 171 (parameter_list)
-
-
-State 283
-
-  176 identifier_list: identifier_list ',' identifier •
+  176 identifier_list: identifier_list ',' identifier .
 
     $default  reduce using rule 176 (identifier_list)
 
 
+State 283
+
+  171 parameter_list: parameter_list ',' parameter_declaration .
+
+    $default  reduce using rule 171 (parameter_list)
+
+
 State 284
 
-  194 struct_or_union_specifier: struct_or_union IDENT '{' @7 struct_declaration_list '}' •
+  194 struct_or_union_specifier: struct_or_union IDENT '{' @7 struct_declaration_list '}' .
 
     $default  reduce using rule 194 (struct_or_union_specifier)
 
 
 State 285
 
-  209 struct_declarator: declarator ':' constant_expression •
+  209 struct_declarator: declarator ':' constant_expression .
 
     $default  reduce using rule 209 (struct_declarator)
 
 
 State 286
 
-  206 struct_declarator_list: struct_declarator_list ',' struct_declarator •
+  206 struct_declarator_list: struct_declarator_list ',' struct_declarator .
 
     $default  reduce using rule 206 (struct_declarator_list)
 
 
 State 287
 
-   70 unary_expression: SIZEOF '(' type_name ')' •
+   70 unary_expression: SIZEOF '(' type_name ')' .
 
     $default  reduce using rule 70 (unary_expression)
 
 
 State 288
 
-  118 expression: expression ',' assignment_expression •
+  118 expression: expression ',' assignment_expression .
 
     $default  reduce using rule 118 (expression)
 
 
 State 289
 
-   73 cast_expression: '(' type_name ')' cast_expression •
+   73 cast_expression: '(' type_name ')' cast_expression .
 
     $default  reduce using rule 73 (cast_expression)
 
 
 State 290
 
-   53 postfix_expression: postfix_expression '(' argument_expression_list ')' •
+   53 postfix_expression: postfix_expression '(' argument_expression_list ')' .
 
     $default  reduce using rule 53 (postfix_expression)
 
 
 State 291
 
-   59 argument_expression_list: argument_expression_list ',' • assignment_expression
+   59 argument_expression_list: argument_expression_list ',' . assignment_expression
 
-    IDENT      shift, and go to state 35
+    IDENT      shift, and go to state 33
     CHARLIT    shift, and go to state 73
     STRINGLIT  shift, and go to state 74
     NUMBERLIT  shift, and go to state 75
@@ -5351,16 +5290,16 @@ State 291
 
 State 292
 
-   51 postfix_expression: postfix_expression '[' expression ']' •
+   51 postfix_expression: postfix_expression '[' expression ']' .
 
     $default  reduce using rule 51 (postfix_expression)
 
 
 State 293
 
-  103 conditional_expression: logical_or_expression '?' expression ':' • conditional_expression
+  103 conditional_expression: logical_or_expression '?' expression ':' . conditional_expression
 
-    IDENT      shift, and go to state 35
+    IDENT      shift, and go to state 33
     CHARLIT    shift, and go to state 73
     STRINGLIT  shift, and go to state 74
     NUMBERLIT  shift, and go to state 75
@@ -5398,14 +5337,14 @@ State 293
 
 State 294
 
-   39 labeled_statement: IDENT ':' statement •
+   39 labeled_statement: IDENT ':' statement .
 
     $default  reduce using rule 39 (labeled_statement)
 
 
 State 295
 
-   40 labeled_statement: CASE constant_expression ':' • statement
+   40 labeled_statement: CASE constant_expression ':' . statement
 
     IDENT      shift, and go to state 182
     CHARLIT    shift, and go to state 73
@@ -5437,13 +5376,6 @@ State 295
 
     $default  reduce using rule 11 ($@2)
 
-    statement                  go to state 313
-    $@2                        go to state 198
-    expression_statement       go to state 200
-    selection_statement        go to state 201
-    iteration_statement        go to state 202
-    jump_statement             go to state 203
-    labeled_statement          go to state 204
     identifier                 go to state 87
     string_literal             go to state 88
     constant                   go to state 89
@@ -5463,42 +5395,49 @@ State 295
     logical_or_expression      go to state 103
     conditional_expression     go to state 104
     assignment_expression      go to state 135
-    expression                 go to state 205
+    expression                 go to state 195
+    statement                  go to state 313
+    expression_statement       go to state 199
+    selection_statement        go to state 200
+    iteration_statement        go to state 201
+    jump_statement             go to state 202
+    labeled_statement          go to state 203
+    $@2                        go to state 206
 
 
 State 296
 
-   41 labeled_statement: DEFAULT ':' statement •
+   41 labeled_statement: DEFAULT ':' statement .
 
     $default  reduce using rule 41 (labeled_statement)
 
 
 State 297
 
-   30 iteration_statement: DO @5 statement • WHILE '(' expression ')' ';'
+   30 iteration_statement: DO @5 statement . WHILE '(' expression ')' ';'
 
     WHILE  shift, and go to state 314
 
 
 State 298
 
-   32 iteration_statement: FOR '(' optional_expression • ';' optional_expression ';' optional_expression ')' @6 statement
+   32 iteration_statement: FOR '(' optional_expression . ';' optional_expression ';' optional_expression ')' @6 statement
 
     ';'  shift, and go to state 315
 
 
 State 299
 
-   35 jump_statement: GOTO IDENT ';' •
+   35 jump_statement: GOTO IDENT ';' .
 
     $default  reduce using rule 35 (jump_statement)
 
 
 State 300
 
-   23 selection_statement: IF '(' expression • ')' statement
-   24                    | IF '(' expression • ')' statement ELSE statement
-  118 expression: expression • ',' assignment_expression
+   23 selection_statement: IF '(' expression . ')' statement
+   24                    | IF '(' expression . ')' statement ELSE statement
+  118 expression: expression . ',' assignment_expression
 
     ')'  shift, and go to state 316
     ','  shift, and go to state 226
@@ -5506,15 +5445,15 @@ State 300
 
 State 301
 
-   38 jump_statement: RETURN optional_expression ';' •
+   38 jump_statement: RETURN optional_expression ';' .
 
     $default  reduce using rule 38 (jump_statement)
 
 
 State 302
 
-   26 selection_statement: SWITCH '(' expression • ')' @3 statement
-  118 expression: expression • ',' assignment_expression
+   26 selection_statement: SWITCH '(' expression . ')' @3 statement
+  118 expression: expression . ',' assignment_expression
 
     ')'  shift, and go to state 317
     ','  shift, and go to state 226
@@ -5522,8 +5461,8 @@ State 302
 
 State 303
 
-   28 iteration_statement: WHILE '(' expression • ')' @4 statement
-  118 expression: expression • ',' assignment_expression
+   28 iteration_statement: WHILE '(' expression . ')' @4 statement
+  118 expression: expression . ',' assignment_expression
 
     ')'  shift, and go to state 318
     ','  shift, and go to state 226
@@ -5531,86 +5470,86 @@ State 303
 
 State 304
 
-  189 direct_abstract_declarator: '(' parameter_type_list ')' •
-
-    $default  reduce using rule 189 (direct_abstract_declarator)
-
-
-State 305
-
-  182 direct_abstract_declarator: '(' abstract_declarator ')' •
+  182 direct_abstract_declarator: '(' abstract_declarator ')' .
 
     $default  reduce using rule 182 (direct_abstract_declarator)
 
 
+State 305
+
+  189 direct_abstract_declarator: '(' parameter_type_list ')' .
+
+    $default  reduce using rule 189 (direct_abstract_declarator)
+
+
 State 306
 
-  184 direct_abstract_declarator: '[' constant_expression ']' •
+  184 direct_abstract_declarator: '[' constant_expression ']' .
 
     $default  reduce using rule 184 (direct_abstract_declarator)
 
 
 State 307
 
-  188 direct_abstract_declarator: direct_abstract_declarator '(' ')' •
+  188 direct_abstract_declarator: direct_abstract_declarator '(' ')' .
 
     $default  reduce using rule 188 (direct_abstract_declarator)
 
 
 State 308
 
-  190 direct_abstract_declarator: direct_abstract_declarator '(' parameter_type_list • ')'
+  190 direct_abstract_declarator: direct_abstract_declarator '(' parameter_type_list . ')'
 
     ')'  shift, and go to state 319
 
 
 State 309
 
-  185 direct_abstract_declarator: direct_abstract_declarator '[' ']' •
+  185 direct_abstract_declarator: direct_abstract_declarator '[' ']' .
 
     $default  reduce using rule 185 (direct_abstract_declarator)
 
 
 State 310
 
-  186 direct_abstract_declarator: direct_abstract_declarator '[' constant_expression • ']'
+  186 direct_abstract_declarator: direct_abstract_declarator '[' constant_expression . ']'
 
     ']'  shift, and go to state 320
 
 
 State 311
 
-   59 argument_expression_list: argument_expression_list ',' assignment_expression •
+   59 argument_expression_list: argument_expression_list ',' assignment_expression .
 
     $default  reduce using rule 59 (argument_expression_list)
 
 
 State 312
 
-  103 conditional_expression: logical_or_expression '?' expression ':' conditional_expression •
+  103 conditional_expression: logical_or_expression '?' expression ':' conditional_expression .
 
     $default  reduce using rule 103 (conditional_expression)
 
 
 State 313
 
-   40 labeled_statement: CASE constant_expression ':' statement •
+   40 labeled_statement: CASE constant_expression ':' statement .
 
     $default  reduce using rule 40 (labeled_statement)
 
 
 State 314
 
-   30 iteration_statement: DO @5 statement WHILE • '(' expression ')' ';'
+   30 iteration_statement: DO @5 statement WHILE . '(' expression ')' ';'
 
     '('  shift, and go to state 321
 
 
 State 315
 
-   32 iteration_statement: FOR '(' optional_expression ';' • optional_expression ';' optional_expression ')' @6 statement
+   32 iteration_statement: FOR '(' optional_expression ';' . optional_expression ';' optional_expression ')' @6 statement
 
-    IDENT      shift, and go to state 35
+    IDENT      shift, and go to state 33
     CHARLIT    shift, and go to state 73
     STRINGLIT  shift, and go to state 74
     NUMBERLIT  shift, and go to state 75
@@ -5628,7 +5567,6 @@ State 315
 
     $default  reduce using rule 34 (optional_expression)
 
-    optional_expression        go to state 322
     identifier                 go to state 87
     string_literal             go to state 88
     constant                   go to state 89
@@ -5648,13 +5586,14 @@ State 315
     logical_or_expression      go to state 103
     conditional_expression     go to state 104
     assignment_expression      go to state 135
-    expression                 go to state 267
+    expression                 go to state 266
+    optional_expression        go to state 322
 
 
 State 316
 
-   23 selection_statement: IF '(' expression ')' • statement
-   24                    | IF '(' expression ')' • statement ELSE statement
+   23 selection_statement: IF '(' expression ')' . statement
+   24                    | IF '(' expression ')' . statement ELSE statement
 
     IDENT      shift, and go to state 182
     CHARLIT    shift, and go to state 73
@@ -5686,13 +5625,6 @@ State 316
 
     $default  reduce using rule 11 ($@2)
 
-    statement                  go to state 323
-    $@2                        go to state 198
-    expression_statement       go to state 200
-    selection_statement        go to state 201
-    iteration_statement        go to state 202
-    jump_statement             go to state 203
-    labeled_statement          go to state 204
     identifier                 go to state 87
     string_literal             go to state 88
     constant                   go to state 89
@@ -5712,12 +5644,19 @@ State 316
     logical_or_expression      go to state 103
     conditional_expression     go to state 104
     assignment_expression      go to state 135
-    expression                 go to state 205
+    expression                 go to state 195
+    statement                  go to state 323
+    expression_statement       go to state 199
+    selection_statement        go to state 200
+    iteration_statement        go to state 201
+    jump_statement             go to state 202
+    labeled_statement          go to state 203
+    $@2                        go to state 206
 
 
 State 317
 
-   26 selection_statement: SWITCH '(' expression ')' • @3 statement
+   26 selection_statement: SWITCH '(' expression ')' . @3 statement
 
     $default  reduce using rule 25 (@3)
 
@@ -5726,7 +5665,7 @@ State 317
 
 State 318
 
-   28 iteration_statement: WHILE '(' expression ')' • @4 statement
+   28 iteration_statement: WHILE '(' expression ')' . @4 statement
 
     $default  reduce using rule 27 (@4)
 
@@ -5735,23 +5674,23 @@ State 318
 
 State 319
 
-  190 direct_abstract_declarator: direct_abstract_declarator '(' parameter_type_list ')' •
+  190 direct_abstract_declarator: direct_abstract_declarator '(' parameter_type_list ')' .
 
     $default  reduce using rule 190 (direct_abstract_declarator)
 
 
 State 320
 
-  186 direct_abstract_declarator: direct_abstract_declarator '[' constant_expression ']' •
+  186 direct_abstract_declarator: direct_abstract_declarator '[' constant_expression ']' .
 
     $default  reduce using rule 186 (direct_abstract_declarator)
 
 
 State 321
 
-   30 iteration_statement: DO @5 statement WHILE '(' • expression ')' ';'
+   30 iteration_statement: DO @5 statement WHILE '(' . expression ')' ';'
 
-    IDENT      shift, and go to state 35
+    IDENT      shift, and go to state 33
     CHARLIT    shift, and go to state 73
     STRINGLIT  shift, and go to state 74
     NUMBERLIT  shift, and go to state 75
@@ -5791,15 +5730,15 @@ State 321
 
 State 322
 
-   32 iteration_statement: FOR '(' optional_expression ';' optional_expression • ';' optional_expression ')' @6 statement
+   32 iteration_statement: FOR '(' optional_expression ';' optional_expression . ';' optional_expression ')' @6 statement
 
     ';'  shift, and go to state 327
 
 
 State 323
 
-   23 selection_statement: IF '(' expression ')' statement •
-   24                    | IF '(' expression ')' statement • ELSE statement
+   23 selection_statement: IF '(' expression ')' statement .
+   24                    | IF '(' expression ')' statement . ELSE statement
 
     ELSE  shift, and go to state 328
 
@@ -5808,7 +5747,7 @@ State 323
 
 State 324
 
-   26 selection_statement: SWITCH '(' expression ')' @3 • statement
+   26 selection_statement: SWITCH '(' expression ')' @3 . statement
 
     IDENT      shift, and go to state 182
     CHARLIT    shift, and go to state 73
@@ -5840,13 +5779,6 @@ State 324
 
     $default  reduce using rule 11 ($@2)
 
-    statement                  go to state 329
-    $@2                        go to state 198
-    expression_statement       go to state 200
-    selection_statement        go to state 201
-    iteration_statement        go to state 202
-    jump_statement             go to state 203
-    labeled_statement          go to state 204
     identifier                 go to state 87
     string_literal             go to state 88
     constant                   go to state 89
@@ -5866,12 +5798,19 @@ State 324
     logical_or_expression      go to state 103
     conditional_expression     go to state 104
     assignment_expression      go to state 135
-    expression                 go to state 205
+    expression                 go to state 195
+    statement                  go to state 329
+    expression_statement       go to state 199
+    selection_statement        go to state 200
+    iteration_statement        go to state 201
+    jump_statement             go to state 202
+    labeled_statement          go to state 203
+    $@2                        go to state 206
 
 
 State 325
 
-   28 iteration_statement: WHILE '(' expression ')' @4 • statement
+   28 iteration_statement: WHILE '(' expression ')' @4 . statement
 
     IDENT      shift, and go to state 182
     CHARLIT    shift, and go to state 73
@@ -5903,13 +5842,6 @@ State 325
 
     $default  reduce using rule 11 ($@2)
 
-    statement                  go to state 330
-    $@2                        go to state 198
-    expression_statement       go to state 200
-    selection_statement        go to state 201
-    iteration_statement        go to state 202
-    jump_statement             go to state 203
-    labeled_statement          go to state 204
     identifier                 go to state 87
     string_literal             go to state 88
     constant                   go to state 89
@@ -5929,13 +5861,20 @@ State 325
     logical_or_expression      go to state 103
     conditional_expression     go to state 104
     assignment_expression      go to state 135
-    expression                 go to state 205
+    expression                 go to state 195
+    statement                  go to state 330
+    expression_statement       go to state 199
+    selection_statement        go to state 200
+    iteration_statement        go to state 201
+    jump_statement             go to state 202
+    labeled_statement          go to state 203
+    $@2                        go to state 206
 
 
 State 326
 
-   30 iteration_statement: DO @5 statement WHILE '(' expression • ')' ';'
-  118 expression: expression • ',' assignment_expression
+   30 iteration_statement: DO @5 statement WHILE '(' expression . ')' ';'
+  118 expression: expression . ',' assignment_expression
 
     ')'  shift, and go to state 331
     ','  shift, and go to state 226
@@ -5943,9 +5882,9 @@ State 326
 
 State 327
 
-   32 iteration_statement: FOR '(' optional_expression ';' optional_expression ';' • optional_expression ')' @6 statement
+   32 iteration_statement: FOR '(' optional_expression ';' optional_expression ';' . optional_expression ')' @6 statement
 
-    IDENT      shift, and go to state 35
+    IDENT      shift, and go to state 33
     CHARLIT    shift, and go to state 73
     STRINGLIT  shift, and go to state 74
     NUMBERLIT  shift, and go to state 75
@@ -5963,7 +5902,6 @@ State 327
 
     $default  reduce using rule 34 (optional_expression)
 
-    optional_expression        go to state 332
     identifier                 go to state 87
     string_literal             go to state 88
     constant                   go to state 89
@@ -5983,12 +5921,13 @@ State 327
     logical_or_expression      go to state 103
     conditional_expression     go to state 104
     assignment_expression      go to state 135
-    expression                 go to state 267
+    expression                 go to state 266
+    optional_expression        go to state 332
 
 
 State 328
 
-   24 selection_statement: IF '(' expression ')' statement ELSE • statement
+   24 selection_statement: IF '(' expression ')' statement ELSE . statement
 
     IDENT      shift, and go to state 182
     CHARLIT    shift, and go to state 73
@@ -6020,13 +5959,6 @@ State 328
 
     $default  reduce using rule 11 ($@2)
 
-    statement                  go to state 333
-    $@2                        go to state 198
-    expression_statement       go to state 200
-    selection_statement        go to state 201
-    iteration_statement        go to state 202
-    jump_statement             go to state 203
-    labeled_statement          go to state 204
     identifier                 go to state 87
     string_literal             go to state 88
     constant                   go to state 89
@@ -6046,54 +5978,61 @@ State 328
     logical_or_expression      go to state 103
     conditional_expression     go to state 104
     assignment_expression      go to state 135
-    expression                 go to state 205
+    expression                 go to state 195
+    statement                  go to state 333
+    expression_statement       go to state 199
+    selection_statement        go to state 200
+    iteration_statement        go to state 201
+    jump_statement             go to state 202
+    labeled_statement          go to state 203
+    $@2                        go to state 206
 
 
 State 329
 
-   26 selection_statement: SWITCH '(' expression ')' @3 statement •
+   26 selection_statement: SWITCH '(' expression ')' @3 statement .
 
     $default  reduce using rule 26 (selection_statement)
 
 
 State 330
 
-   28 iteration_statement: WHILE '(' expression ')' @4 statement •
+   28 iteration_statement: WHILE '(' expression ')' @4 statement .
 
     $default  reduce using rule 28 (iteration_statement)
 
 
 State 331
 
-   30 iteration_statement: DO @5 statement WHILE '(' expression ')' • ';'
+   30 iteration_statement: DO @5 statement WHILE '(' expression ')' . ';'
 
     ';'  shift, and go to state 334
 
 
 State 332
 
-   32 iteration_statement: FOR '(' optional_expression ';' optional_expression ';' optional_expression • ')' @6 statement
+   32 iteration_statement: FOR '(' optional_expression ';' optional_expression ';' optional_expression . ')' @6 statement
 
     ')'  shift, and go to state 335
 
 
 State 333
 
-   24 selection_statement: IF '(' expression ')' statement ELSE statement •
+   24 selection_statement: IF '(' expression ')' statement ELSE statement .
 
     $default  reduce using rule 24 (selection_statement)
 
 
 State 334
 
-   30 iteration_statement: DO @5 statement WHILE '(' expression ')' ';' •
+   30 iteration_statement: DO @5 statement WHILE '(' expression ')' ';' .
 
     $default  reduce using rule 30 (iteration_statement)
 
 
 State 335
 
-   32 iteration_statement: FOR '(' optional_expression ';' optional_expression ';' optional_expression ')' • @6 statement
+   32 iteration_statement: FOR '(' optional_expression ';' optional_expression ';' optional_expression ')' . @6 statement
 
     $default  reduce using rule 31 (@6)
 
@@ -6102,7 +6041,7 @@ State 335
 
 State 336
 
-   32 iteration_statement: FOR '(' optional_expression ';' optional_expression ';' optional_expression ')' @6 • statement
+   32 iteration_statement: FOR '(' optional_expression ';' optional_expression ';' optional_expression ')' @6 . statement
 
     IDENT      shift, and go to state 182
     CHARLIT    shift, and go to state 73
@@ -6134,13 +6073,6 @@ State 336
 
     $default  reduce using rule 11 ($@2)
 
-    statement                  go to state 337
-    $@2                        go to state 198
-    expression_statement       go to state 200
-    selection_statement        go to state 201
-    iteration_statement        go to state 202
-    jump_statement             go to state 203
-    labeled_statement          go to state 204
     identifier                 go to state 87
     string_literal             go to state 88
     constant                   go to state 89
@@ -6160,11 +6092,18 @@ State 336
     logical_or_expression      go to state 103
     conditional_expression     go to state 104
     assignment_expression      go to state 135
-    expression                 go to state 205
+    expression                 go to state 195
+    statement                  go to state 337
+    expression_statement       go to state 199
+    selection_statement        go to state 200
+    iteration_statement        go to state 201
+    jump_statement             go to state 202
+    labeled_statement          go to state 203
+    $@2                        go to state 206
 
 
 State 337
 
-   32 iteration_statement: FOR '(' optional_expression ';' optional_expression ';' optional_expression ')' @6 statement •
+   32 iteration_statement: FOR '(' optional_expression ';' optional_expression ';' optional_expression ')' @6 statement .
 
     $default  reduce using rule 32 (iteration_statement)

@@ -1,7 +1,7 @@
 main:
 	bison -d -v -Wconflicts-rr --report-file=output/parser.output parser.y 2> output/bison_out.txt
 	flex lexer.l
-	gcc *.c -o parser_test
+	gcc -g *.c -o parser_test
 
 run:
 #	gcc -E sample_inputs/exprtests.c | ./parser_test > output/testing_out.txt

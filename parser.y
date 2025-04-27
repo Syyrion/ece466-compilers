@@ -287,7 +287,7 @@ function_definition:
         st_push();
         
         // add parameters as variables in the new scope
-        for (int i = 0; i < fn->next->function.parameters->node_count; i++)
+        for (int i = 0; fn->next->function.parameters && i < fn->next->function.parameters->node_count; i++)
         {
             // * mark the parameters as used or else they'll get thrown away after the compound statement
             fn->next->function.parameters->nodes[i]->variable.used = 1;
