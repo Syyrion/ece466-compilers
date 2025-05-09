@@ -41,6 +41,8 @@ typedef enum
 
     AST_LABEL,
 
+    AST_TEMPORARY,
+
     // AST_TYPEDEF_NAME, // not implemented
 } ast_node_kind_t;
 
@@ -171,6 +173,7 @@ struct ast_while
 {
     unsigned long : sizeof(char *) * 8;
     unsigned long : sizeof(char *) * 8;
+    void *extra;
 
     ast_node_t *condition;
     ast_node_t *statement;
@@ -180,6 +183,7 @@ struct ast_for
 {
     unsigned long : sizeof(char *) * 8;
     unsigned long : sizeof(char *) * 8;
+    void *extra;
 
     ast_node_t *init;
     ast_node_t *condition;
@@ -214,6 +218,13 @@ struct ast_label
     ast_node_t *statement;
 };
 
+struct ast_temporary
+{
+    unsigned long : sizeof(char *) * 8;
+    ast_node_t *isa;
+    unsigned long num;
+};
+
 struct ast_node
 {
     ast_node_kind_t kind;
@@ -223,6 +234,7 @@ struct ast_node
         {
             char *name;
             ast_node_t *next;
+            void *extra;
         };
         string_t stringlit;
         number_t numberlit;
@@ -255,6 +267,7 @@ struct ast_node
         struct ast_break break_statement;
         struct ast_return return_statement;
         struct ast_label label;
+        struct ast_temporary temporary;
     };
 };
 
@@ -284,7 +297,9 @@ ast_node_t *ast_new_function_call(ast_node_t *name, ast_node_list_t *args);
 ast_node_t *ast_new_type_cast(ast_node_t *operand, ast_node_t *type);
 ast_node_t *ast_new_member_access(ast_node_t *operand, char *ident);
 void ast_free_expression(ast_node_t *node);
-void ast_resolve_expression_variables(ast_node_t **node);
+void ast_resolve_expression_variables(ast_node_t **node, char ignore_on_failure);
+long ast_evaluate_constant_expression(ast_node_t *expr);
+unsigned long ast_get_sizeof_value(ast_node_t *node);
 
 ast_node_t *ast_new_struct_or_union(int kind, char *name, ast_node_list_t *members);
 ast_node_t *ast_add_struct_or_union_members(ast_node_t *node, ast_node_list_t *members);
@@ -301,6 +316,8 @@ void ast_free_variable(ast_node_t *var);
 
 int ast_are_variables_compatible(ast_node_t *a, ast_node_t *b);
 void ast_merge_into_variable(ast_node_t *a, ast_node_t *b);
+int ast_is_array(ast_node_t *var);
+int ast_is_pointer(ast_node_t *var);
 
 ast_node_t *ast_new_compound_statement(ast_node_list_t *statements);
 ast_node_t *ast_new_expression_statement(ast_node_t *expr);

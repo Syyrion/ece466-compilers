@@ -1,58 +1,87 @@
-// for assignment 4
-int (*y(int n))(int n)
-{
-    n;
+int g;
 
-    if (4)
+// for assignment 4
+int (*y(int a, int b, int c, int n, int *p))(int n)
+{
+    1 + 2;
+    2 + (n = 1 + 3);
+    1 + (*p = 1 + (n = 1));
+    1 + 2 * 3 / 4 % 5;
+    *p = 1 + 2 * 3 / 4 % 5;
+    n = ~1 + !3;
+    g = +(+1) + -(-3);
+
+    if (a == 8)
     {
-        int i;
-        for (i = 0; i < 10; i++)
-        h: // wacky
+        n = 2;
+        if (c < 9)
         {
-            break;
-            for (;;)
-            {
-                break;
-                continue;
-            }
-            continue;
+            b = 0;
+        }
+        else
+        {
+            b = 3;
         }
     }
-    else
-        goto h;
 
-    while (0)
+    while (b >= ++n)
     {
-        break;
-        continue;
+        n = n + 1;
     }
 
     do
     {
-        break;
-        continue;
-    } while (0);
+        a = a + 2;
 
-    while (0)
-    {
-        switch (n + 8)
+        if (a > 200)
         {
-        case 1:
-
-            break;
-        case 5 - 8:
-            break;
-
-        case 100:
-        case 101: // shouldn't resolve
-        case 102: // shouldn't resolve
-        default:
             break;
         }
+        else
+        {
+            continue;
+        }
+
+    } while (--a != b);
+
+    for (n = 0; n < 30; n += 3)
+    {
+        if (a > 200)
+        {
+            return a;
+        }
+        else
+        {
+            continue;
+        }
+        c ^= *p |= b += a *= 7;
     }
 
-    return 90 + 2;
+    a = f(a, b + 9);
 
-    // this seems to cause a syntax error according to the spec but gcc says it's fine?
-    // end_label:
+    a = *p + 4;
+
+    int l[10];
+    sizeof(a);
+    sizeof(p);
+    sizeof(int[10]);
+    sizeof(int[10][10]);
+    sizeof(1);
+    sizeof(l);
+    sizeof(l + 1);
+    sizeof(unsigned int *);
+
+    p = l;
+    l[3] = 9;
+    *l;
+    *(l + 8 - 3);
+
+    int *u;
+    int *v;
+
+    u + 4;
+
+    u - v;
+
+    return n + a;
 }

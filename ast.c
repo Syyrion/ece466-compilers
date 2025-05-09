@@ -129,7 +129,7 @@ ast_node_t *ast_new_type_cast(ast_node_t *operand, ast_node_t *type)
     ast_node_t *new_inst = malloc(sizeof(ast_node_t));
     new_inst->kind = AST_TYPE_CAST;
     new_inst->type_cast.operand = operand;
-    new_inst->type_cast.type=type;
+    new_inst->type_cast.type = type;
     return new_inst;
 }
 
@@ -212,6 +212,106 @@ int ast_is_expression_constant(ast_node_t *node)
     }
 }
 
+// I should probably have written this a long while ago
+
+long ast_evaluate_constant_expression(ast_node_t *expr)
+{
+    switch (expr->kind)
+    {
+    case AST_NUMBERLIT:
+        return expr->numberlit.signed_integer;
+    case AST_BINARY_OP:
+
+        switch (expr->binary_op.kind)
+        {
+        case '*':
+            return ast_evaluate_constant_expression(expr->binary_op.left) * ast_evaluate_constant_expression(expr->binary_op.right);
+        case '/':
+            return ast_evaluate_constant_expression(expr->binary_op.left) / ast_evaluate_constant_expression(expr->binary_op.right);
+        case '%':
+            return ast_evaluate_constant_expression(expr->binary_op.left) % ast_evaluate_constant_expression(expr->binary_op.right);
+        case '+':
+            return ast_evaluate_constant_expression(expr->binary_op.left) + ast_evaluate_constant_expression(expr->binary_op.right);
+        case '-':
+            return ast_evaluate_constant_expression(expr->binary_op.left) - ast_evaluate_constant_expression(expr->binary_op.right);
+        case SHL:
+            return ast_evaluate_constant_expression(expr->binary_op.left) << ast_evaluate_constant_expression(expr->binary_op.right);
+        case SHR:
+            return ast_evaluate_constant_expression(expr->binary_op.left) >> ast_evaluate_constant_expression(expr->binary_op.right);
+        case '<':
+            return ast_evaluate_constant_expression(expr->binary_op.left) < ast_evaluate_constant_expression(expr->binary_op.right);
+        case LTEQ:
+            return ast_evaluate_constant_expression(expr->binary_op.left) <= ast_evaluate_constant_expression(expr->binary_op.right);
+        case '>':
+            return ast_evaluate_constant_expression(expr->binary_op.left) > ast_evaluate_constant_expression(expr->binary_op.right);
+        case GTEQ:
+            return ast_evaluate_constant_expression(expr->binary_op.left) >= ast_evaluate_constant_expression(expr->binary_op.right);
+        case EQEQ:
+            return ast_evaluate_constant_expression(expr->binary_op.left) == ast_evaluate_constant_expression(expr->binary_op.right);
+        case NOTEQ:
+            return ast_evaluate_constant_expression(expr->binary_op.left) != ast_evaluate_constant_expression(expr->binary_op.right);
+        case '&':
+            return ast_evaluate_constant_expression(expr->binary_op.left) & ast_evaluate_constant_expression(expr->binary_op.right);
+        case '^':
+            return ast_evaluate_constant_expression(expr->binary_op.left) ^ ast_evaluate_constant_expression(expr->binary_op.right);
+        case '|':
+            return ast_evaluate_constant_expression(expr->binary_op.left) | ast_evaluate_constant_expression(expr->binary_op.right);
+        case LOGAND:
+            return ast_evaluate_constant_expression(expr->binary_op.left) && ast_evaluate_constant_expression(expr->binary_op.right);
+        case LOGOR:
+            return ast_evaluate_constant_expression(expr->binary_op.left) || ast_evaluate_constant_expression(expr->binary_op.right);
+        default:
+            fprintf(stderr, "ast_evaluate_constant_expression encountered unknown binary op %d", expr->binary_op.kind);
+            exit(EXIT_FAILURE);
+        }
+        break;
+    case AST_UNARY_OP:
+        switch (expr->unary_op.kind)
+        {
+        case '+':
+            return +ast_evaluate_constant_expression(expr->unary_op.operand);
+        case '-':
+            return -ast_evaluate_constant_expression(expr->unary_op.operand);
+        case '~':
+            return ~ast_evaluate_constant_expression(expr->unary_op.operand);
+        case '!':
+            return !ast_evaluate_constant_expression(expr->unary_op.operand);
+        default:
+            fprintf(stderr, "ast_evaluate_constant_expression encountered unknown unary op %d", expr->unary_op.kind);
+            exit(EXIT_FAILURE);
+        }
+        break;
+
+    default:
+        fprintf(stderr, "ast_evaluate_constant_expression cannot evaluate %d", expr->kind);
+        exit(EXIT_FAILURE);
+    }
+}
+
+unsigned long ast_get_sizeof_value(ast_node_t *node)
+{
+    switch (node->kind)
+    {
+    case AST_TYPE:
+        // assumes everything is an int
+        return 4;
+    case AST_POINTER:
+    case AST_FUNCTION: // sizeof function is just the size of the function pointer
+        return 8;
+    case AST_ARRAY:
+        long size = ast_evaluate_constant_expression(node->array.size);
+        if (size <= 0)
+        {
+            fprintf(stderr, "invalid array size\n");
+            exit(EXIT_FAILURE);
+        }
+        return size * ast_get_sizeof_value(node->array.of);
+    default:
+        fprintf(stderr, "unknown variable type %d\n", node->variable.isa->kind);
+        exit(EXIT_FAILURE);
+    }
+}
+
 static void ast_mark_variable_as_used(ast_node_t *var)
 {
     var->variable.used = 1;
@@ -223,7 +323,7 @@ static void ast_mark_variable_as_used(ast_node_t *var)
 }
 
 // replaces AST_IDENT nodes in an expression with literal variables in-place
-void ast_resolve_expression_variables(ast_node_t **node)
+void ast_resolve_expression_variables(ast_node_t **node, char ignore_on_failure)
 {
     ast_node_t *var;
     switch ((*node)->kind)
@@ -237,38 +337,39 @@ void ast_resolve_expression_variables(ast_node_t **node)
             ast_mark_variable_as_used(var);
             *node = var;
             var->variable.used = 1;
+            break;
         }
-        else
-        {
-            fprintf(stderr, "%s:%d: the variable %s doesn't exist\n", filename, line_num, (*node)->name);
-            exit(EXIT_FAILURE);
-        }
-        break;
+        if (ignore_on_failure)
+            break;
+        fprintf(stderr, "%s:%d: the variable %s doesn't exist\n", filename, line_num, (*node)->name);
+        exit(EXIT_FAILURE);
     case AST_UNARY_OP:
-        ast_resolve_expression_variables(&(*node)->unary_op.operand);
+        ast_resolve_expression_variables(&(*node)->unary_op.operand, 0);
         break;
     case AST_BINARY_OP:
-        ast_resolve_expression_variables(&(*node)->binary_op.left);
-        ast_resolve_expression_variables(&(*node)->binary_op.right);
+        ast_resolve_expression_variables(&(*node)->binary_op.left, 0);
+        ast_resolve_expression_variables(&(*node)->binary_op.right, 0);
         break;
     case AST_TERNARY_OP:
-        ast_resolve_expression_variables(&(*node)->ternary_op.condition);
-        ast_resolve_expression_variables(&(*node)->ternary_op.true_branch);
-        ast_resolve_expression_variables(&(*node)->ternary_op.false_branch);
+        ast_resolve_expression_variables(&(*node)->ternary_op.condition, 0);
+        ast_resolve_expression_variables(&(*node)->ternary_op.true_branch, 0);
+        ast_resolve_expression_variables(&(*node)->ternary_op.false_branch, 0);
         break;
     case AST_TYPE_CAST:
-        ast_resolve_expression_variables(&(*node)->type_cast.operand);
+        ast_resolve_expression_variables(&(*node)->type_cast.operand, 0);
         break;
     case AST_MEMBER_ACCESS:
-        ast_resolve_expression_variables(&(*node)->member_access.operand);
+        ast_resolve_expression_variables(&(*node)->member_access.operand, 0);
         break;
     case AST_FUNCTION_CALL:
-        ast_resolve_expression_variables(&(*node)->function_call.name);
+        ast_resolve_expression_variables(&(*node)->function_call.name, 1);
         for (int i = 0; i < (*node)->function_call.args->node_count; i++)
-            ast_resolve_expression_variables(&(*node)->function_call.args->nodes[i]);
+            ast_resolve_expression_variables(&(*node)->function_call.args->nodes[i], 0);
 
     case AST_STRINGLIT:
     case AST_NUMBERLIT:
+    case AST_TYPE:
+    case AST_VARIABLE:
         break;
     default:
         fprintf(stderr, "failed to resolve expression %d\n", (*node)->kind);
@@ -276,6 +377,8 @@ void ast_resolve_expression_variables(ast_node_t **node)
         break;
     }
 }
+
+
 
 // ## STRUCTS
 
@@ -471,6 +574,15 @@ int ast_are_variables_compatible(ast_node_t *a, ast_node_t *b)
     return 1;
 }
 
+int ast_is_array(ast_node_t *var)
+{
+    return var->next->kind == AST_ARRAY;
+}
+int ast_is_pointer(ast_node_t *var)
+{
+    return var->next->kind == AST_POINTER;
+}
+
 // Merges variable b into variable a in place. Variable name is ignored. Variable b is destroyed.
 // Assumes variables have already been checked for compatibility.
 void ast_merge_into_variable(ast_node_t *a, ast_node_t *b)
@@ -653,11 +765,12 @@ void ast_print_expression(ast_node_t *node, const unsigned int depth)
 {
 
 #define SUBSECTION(name, where)                 \
+    do                                          \
     {                                           \
         TAB_PAD(depth);                         \
         printf(".%s\n", name);                  \
         ast_print_expression(where, depth + 1); \
-    }
+    } while (0)
 
     TAB_PAD(depth);
     switch (node->kind)
@@ -679,7 +792,14 @@ void ast_print_expression(ast_node_t *node, const unsigned int depth)
         printf("UNARY_OP \"");
         print_operator(node->unary_op.kind);
         printf("\"\n");
-        SUBSECTION("operand", node->unary_op.operand);
+        if (node->unary_op.kind == SIZEOF && node->unary_op.operand->kind == AST_VARIABLE && node->unary_op.operand->name == 0)
+        {
+            TAB_PAD(depth);
+            printf(".%s\n", "operand");
+            ast_print_variable(node->unary_op.operand, depth + 1);
+        }
+        else
+            SUBSECTION("operand", node->unary_op.operand);
         break;
     case AST_MEMBER_ACCESS:
         printf("MEMBER_ACCESS %s\n", node->member_access.ident);
@@ -712,7 +832,7 @@ void ast_print_expression(ast_node_t *node, const unsigned int depth)
         printf("TYPE_CAST");
         TAB_PAD(depth);
         printf(".type\n");
-        ast_print_declarator(node->type_cast.type, depth + 1);
+        ast_print_variable(node->type_cast.type, depth + 1);
         SUBSECTION("operand", node->type_cast.operand);
         break;
     case AST_VARIABLE:
@@ -891,34 +1011,36 @@ void ast_print_statement(ast_node_t *statement, int depth)
             ast_print_statement(statement->if_statement.false_branch, depth + 1);
         }
         break;
-    case AST_SWITCH:
-        printf("switch\n");
-        TAB_PAD(depth);
-        printf("(\n");
-        ast_print_expression(statement->switch_statement.expression, depth + 1);
-        TAB_PAD(depth);
-        printf(") == [\n");
+        /*
+            case AST_SWITCH:
+                printf("switch\n");
+                TAB_PAD(depth);
+                printf("(\n");
+                ast_print_expression(statement->switch_statement.expression, depth + 1);
+                TAB_PAD(depth);
+                printf(") == [\n");
 
-        for (int i = 0; i < statement->switch_statement.cases->node_count; i++)
-        {
-            TAB_PAD(depth + 1);
-            printf("case\n");
-            ast_print_expression(statement->switch_statement.cases->nodes[i]->switch_case.constant_expression, depth + 2);
-            TAB_PAD(depth + 1);
-            printf(": %p\n", statement->switch_statement.cases->nodes[i]->switch_case.statement);
-        }
+                for (int i = 0; i < statement->switch_statement.cases->node_count; i++)
+                {
+                    TAB_PAD(depth + 1);
+                    printf("case\n");
+                    ast_print_expression(statement->switch_statement.cases->nodes[i]->switch_case.constant_expression, depth + 2);
+                    TAB_PAD(depth + 1);
+                    printf(": %p\n", statement->switch_statement.cases->nodes[i]->switch_case.statement);
+                }
 
-        if (statement->switch_statement.default_case)
-        {
-            TAB_PAD(depth + 1);
-            printf("default : %p\n", statement->switch_statement.default_case);
-        }
-        TAB_PAD(depth);
-        printf("]\n");
-        TAB_PAD(depth);
-        printf("then\n");
-        ast_print_statement(statement->switch_statement.statement, depth + 1);
-        break;
+                if (statement->switch_statement.default_case)
+                {
+                    TAB_PAD(depth + 1);
+                    printf("default : %p\n", statement->switch_statement.default_case);
+                }
+                TAB_PAD(depth);
+                printf("]\n");
+                TAB_PAD(depth);
+                printf("then\n");
+                ast_print_statement(statement->switch_statement.statement, depth + 1);
+                break;
+        */
     case AST_WHILE:
         printf("while\n");
         TAB_PAD(depth);
@@ -930,6 +1052,7 @@ void ast_print_statement(ast_node_t *statement, int depth)
         printf("do\n");
         ast_print_statement(statement->while_statement.statement, depth + 1);
         break;
+
     case AST_DO_WHILE:
         printf("do\n");
         ast_print_statement(statement->while_statement.statement, depth + 1);
@@ -961,6 +1084,7 @@ void ast_print_statement(ast_node_t *statement, int depth)
         printf("do\n");
         ast_print_statement(statement->for_statement.statement, depth + 1);
         break;
+
     case AST_EXPRESSION:
         if (statement->expression_statement.expression)
         {

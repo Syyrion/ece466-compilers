@@ -10,6 +10,7 @@
     #include "ast.h"
     #include "symbol_table.h"
     #include "jump_association.h"
+    #include "quad.h"
 
     void yyerror (const char *s)
     {
@@ -153,7 +154,7 @@
     <node> expression
     <node> constant_expression
 
-    <node> initializer
+//  <node> initializer
 
     <declaration_specifiers> declaration_specifiers
     <storage_class_specifier> storage_class_specifier
@@ -186,7 +187,7 @@
     <type_qualifier> type_qualifier_list
     <integer> struct_or_union
     <node> struct_or_union_specifier
-    <node> enum_specifier
+    // <node> enum_specifier
 
     <node> optional_expression
 
@@ -196,7 +197,7 @@
     <node> selection_statement
     <node> iteration_statement
     <node> jump_statement
-    <node> labeled_statement
+    // <node> labeled_statement
 
 %%
 translation_unit:
@@ -205,7 +206,7 @@ translation_unit:
     ;
 
 external_declaration:
-    function_definition // this would be a list of ast nodes 
+    function_definition
     | declaration
     {
         // alias for declaration specs
@@ -304,6 +305,8 @@ function_definition:
         ast_print_variable($<node>3, 0);
         ast_print_statement($4, 0);
         printf("\n");
+        print_basic_block_list(generate_function_quads($4));
+
     }
     // TODO this is just a copy of above for now. It also needs to be fixed.
 /*
@@ -354,13 +357,13 @@ function_definition:
         printf("FUNCTION DEFINITION (2): ");
         ast_print_variable($<node>4, 0);
     }
-*/
     ;
 
 declaration_list:
     declaration
     | declaration_list declaration
     ;
+*/
 
 block_item_list:
     block_item
@@ -417,7 +420,7 @@ block_item:
         | selection_statement
         | iteration_statement
         | jump_statement
-        | labeled_statement
+//      | labeled_statement
         ;
 
     compound_statement:
@@ -430,38 +433,28 @@ block_item:
         ;
 
     expression_statement:
-        expression ';' {ast_resolve_expression_variables(&$1); $$ = ast_new_expression_statement($1);}
+        expression ';' {ast_resolve_expression_variables(&$1, 0); $$ = ast_new_expression_statement($1);}
         | ';' {$$ = ast_new_expression_statement(0);}
         ;
 
     selection_statement:
         IF '(' expression ')' statement
         {
-            ast_resolve_expression_variables(&$3);
+            ast_resolve_expression_variables(&$3, 0);
             $$ = ast_new_if_statement($3, $5, 0);
         } %prec IF
         | IF '(' expression ')' statement ELSE statement
         {
-            ast_resolve_expression_variables(&$3);
+            ast_resolve_expression_variables(&$3, 0);
             $$ = ast_new_if_statement($3, $5, $7);
         } %prec ELSE
-        | SWITCH '(' expression ')'
-        {
-            ast_resolve_expression_variables(&$3);
-            ja_push($<node>$ = ast_new_switch_statement($3, 0));
-        }
-        statement
-        {
-            ja_pop();
-            $<node>5->switch_statement.statement = $6;
-            $$ = $<node>5;
-        }
+//      | SWITCH '(' expression ')' statement
         ;
 
     iteration_statement:
         WHILE '(' expression ')'
         {
-            ast_resolve_expression_variables(&$3);
+            ast_resolve_expression_variables(&$3, 0);
             ja_push($<node>$ = ast_new_while_statement(AST_WHILE, $3, 0));
         }
         statement
@@ -476,7 +469,7 @@ block_item:
         }
         statement WHILE '(' expression ')' ';'
         {
-            ast_resolve_expression_variables(&$6);
+            ast_resolve_expression_variables(&$6, 0);
             ja_pop();
             $<node>2->while_statement.condition = $6;
             $<node>2->while_statement.statement = $3;
@@ -485,11 +478,11 @@ block_item:
         | FOR '(' optional_expression ';' optional_expression ';' optional_expression ')'
         {
             if ($3)
-                ast_resolve_expression_variables(&$3);
+                ast_resolve_expression_variables(&$3, 0);
             if ($5)
-                ast_resolve_expression_variables(&$5);
+                ast_resolve_expression_variables(&$5, 0);
             if ($7)
-                ast_resolve_expression_variables(&$7);
+                ast_resolve_expression_variables(&$7, 0);
             ja_push($<node>$ = ast_new_for_statement($3, $5, $7, 0));
         }
         statement
@@ -507,16 +500,20 @@ block_item:
         ;
 
     jump_statement:
-        GOTO IDENT ';' {$$ = ast_new_goto_statement($2.buffer);}
-        | CONTINUE ';' {$$ = ast_new_continue_statement(ja_get_continue_association());}
+        CONTINUE ';' {$$ = ast_new_continue_statement(ja_get_continue_association());}
         | BREAK ';' {$$ = ast_new_break_statement(ja_get_break_association());}
-        | RETURN optional_expression ';' {$$ = ast_new_return_statement($2);}
+        | RETURN optional_expression ';' {    
+            if ($2)
+                ast_resolve_expression_variables(&$2, 0);
+            $$ = ast_new_return_statement($2);
+        }
+//      | GOTO IDENT ';' {$$ = ast_new_goto_statement($2.buffer);}
         ;
 
-    labeled_statement:
-        IDENT ':' statement {st_add_label($1.buffer, $3); $$ = $3;}
-        | CASE constant_expression ':' statement {ja_add_switch_case($2, $4); $$ = $4;}
-        | DEFAULT ':' statement {ja_add_switch_default($3); $$ = $3;}
+//  labeled_statement:
+//      IDENT ':' statement {st_add_label($1.buffer, $3); $$ = $3;}
+//      | CASE constant_expression ':' statement
+//      | DEFAULT ':' statement
         ;
 
 //
@@ -569,7 +566,7 @@ block_item:
         | '~' cast_expression {$$ = ast_new_unary_op('~', $2);}
         | '!' cast_expression {$$ = ast_new_unary_op('!', $2);}
         | SIZEOF unary_expression {$$ = ast_new_unary_op(SIZEOF, $2);}
-        | SIZEOF '(' type_name ')'
+        | SIZEOF '(' type_name ')' {$$ = ast_new_unary_op(SIZEOF, $3);}
         | ALIGNOF unary_expression {$$ = ast_new_unary_op(ALIGNOF, $2);}
         ;
 
@@ -646,11 +643,11 @@ block_item:
 
     assignment_operator:
         '=' {$$ = '=';}
-        | "*=" {$$ = PLUSEQ;}
-        | "/=" {$$ = MINUSEQ;}
-        | "%=" {$$ = TIMESEQ;}
-        | "+=" {$$ = DIVEQ;}
-        | "-=" {$$ = MODEQ;}
+        | "+=" {$$ = PLUSEQ;}
+        | "-=" {$$ = MINUSEQ;}
+        | "*=" {$$ = TIMESEQ;}
+        | "/=" {$$ = DIVEQ;}
+        | "%=" {$$ = MODEQ;}
         | "<<=" {$$ = SHLEQ;}
         | ">>=" {$$ = SHREQ;}
         | "&=" {$$ = ANDEQ;}
@@ -741,7 +738,7 @@ init_declarator_list:
 
 init_declarator:
     declarator {$1.initializer = 0; $$ = $1;}
-    | declarator '=' initializer {$1.initializer = $3; $$ = $1;} // TODO apparently I forgot to use the initializer;
+//  | declarator '=' initializer {$1.initializer = $3; $$ = $1;}
     ;
 
 declarator:
@@ -832,11 +829,17 @@ identifier_list:
     ;
 
 type_name:
-    specifier_qualifier_list {$$ = ast_new_type($1.type_specifier, $1.type_qualifier);}
+    specifier_qualifier_list {
+        ast_node_t *tn = ast_ident_to_variable(ast_new_ident(0), 0);
+        tn->next = ast_new_type($1.type_specifier, $1.type_qualifier);
+        $$ = tn;
+    }
     | specifier_qualifier_list abstract_declarator
     {
         $2.newest->next = ast_new_type($1.type_specifier, $1.type_qualifier);
-        $$ = $2.oldest;
+        ast_node_t *tn = ast_ident_to_variable(ast_new_ident(0), 0);
+        tn->next = $2.oldest;
+        $$ = tn;
     }
     ;
 
@@ -862,9 +865,9 @@ direct_abstract_declarator:
 //     IDENT
 //     ;
 
-initializer:
-    assignment_expression
-    ;
+// initializer:
+//     assignment_expression
+//     ;
 
 // ## STRUCTS AND UNIONS
     struct_or_union_specifier:
@@ -958,6 +961,7 @@ initializer:
 
 // ## ENUMS
     // TODO save for later
+    /*
     enum_specifier:
         ENUM identifier
         | ENUM '{' enumerator_list '}'
@@ -975,6 +979,7 @@ initializer:
         identifier
         | identifier '=' constant_expression
         ;
+    */
 //
 
 %%

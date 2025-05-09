@@ -52,32 +52,6 @@ void st_push(void)
     depth++;
 }
 
-/*
-
-{
-    {
-        if (expr = 1)
-            goto a;
-        if (expr = 2)
-            goto b;
-
-        goto _default;
-    }
-    {
-        a:
-
-
-        b:
-
-
-
-        _default:
-
-    }
-}
-
-*/
-
 static void resolve_goto_statements(ast_node_t *statement)
 {
     ast_node_t *label;
