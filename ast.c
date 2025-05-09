@@ -290,6 +290,7 @@ long ast_evaluate_constant_expression(ast_node_t *expr)
 
 unsigned long ast_get_sizeof_value(ast_node_t *node)
 {
+    long size;
     switch (node->kind)
     {
     case AST_TYPE:
@@ -299,7 +300,7 @@ unsigned long ast_get_sizeof_value(ast_node_t *node)
     case AST_FUNCTION: // sizeof function is just the size of the function pointer
         return 8;
     case AST_ARRAY:
-        long size = ast_evaluate_constant_expression(node->array.size);
+        size = ast_evaluate_constant_expression(node->array.size);
         if (size <= 0)
         {
             fprintf(stderr, "invalid array size\n");
