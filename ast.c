@@ -9,6 +9,7 @@
 #include "location.h"
 #include "parser.tab.h"
 #include "expression_operators.h"
+#include "errorf.h"
 
 // keeps track of all created type nodes
 static ast_node_list_t *type_list;
@@ -234,8 +235,7 @@ long ast_evaluate_constant_expression(ast_node_t *expr)
         case LOGOR:
             return ast_evaluate_constant_expression(expr->binary_op.left) || ast_evaluate_constant_expression(expr->binary_op.right);
         default:
-            fprintf(stderr, "ast_evaluate_constant_expression encountered unknown binary op %d", expr->binary_op.kind);
-            exit(EXIT_FAILURE);
+            errorf("ast_evaluate_constant_expression encountered unknown binary op %d", expr->binary_op.kind);
         }
         break;
     case AST_UNARY_OP:
@@ -250,14 +250,12 @@ long ast_evaluate_constant_expression(ast_node_t *expr)
         case '!':
             return !ast_evaluate_constant_expression(expr->unary_op.operand);
         default:
-            fprintf(stderr, "ast_evaluate_constant_expression encountered unknown unary op %d", expr->unary_op.kind);
-            exit(EXIT_FAILURE);
+            errorf("ast_evaluate_constant_expression encountered unknown unary op %d", expr->unary_op.kind);
         }
         break;
 
     default:
-        fprintf(stderr, "ast_evaluate_constant_expression cannot evaluate %d", expr->kind);
-        exit(EXIT_FAILURE);
+        errorf("ast_evaluate_constant_expression cannot evaluate %d", expr->kind);
     }
 }
 
@@ -275,14 +273,10 @@ unsigned long ast_get_sizeof_value(ast_node_t *node)
     case AST_ARRAY:
         size = ast_evaluate_constant_expression(node->array.size);
         if (size <= 0)
-        {
-            fprintf(stderr, "invalid array size\n");
-            exit(EXIT_FAILURE);
-        }
+            errorf("invalid array size");
         return size * ast_get_sizeof_value(node->array.of);
     default:
-        fprintf(stderr, "unknown variable type %d\n", node->variable.isa->kind);
-        exit(EXIT_FAILURE);
+        errorf("unknown variable type %d", node->variable.isa->kind);
     }
 }
 
@@ -315,8 +309,7 @@ void ast_resolve_expression_variables(ast_node_t **node, char ignore_on_failure)
         }
         if (ignore_on_failure)
             break;
-        fprintf(stderr, "%s:%d: the variable %s doesn't exist\n", filename, line_num, (*node)->name);
-        exit(EXIT_FAILURE);
+        errorf("%s:%d: the variable %s doesn't exist", filename, line_num, (*node)->name);
     case AST_UNARY_OP:
         ast_resolve_expression_variables(&(*node)->unary_op.operand, 0);
         break;
@@ -347,17 +340,18 @@ void ast_resolve_expression_variables(ast_node_t **node, char ignore_on_failure)
     case AST_VARIABLE:
         break;
     default:
-        fprintf(stderr, "failed to resolve expression %d\n", (*node)->kind);
-        exit(EXIT_FAILURE);
-        break;
+        errorf("failed to resolve expression %d", (*node)->kind);
     }
 }
 
 // ## STRUCTS
 
 // Makes a new struct. Set members to 0 for an incomplete struct
-ast_node_t *ast_new_struct_or_union(int kind, char *name, ast_node_list_t *members)
+ast_node_t *ast_new_struct_or_union(ast_node_kind_t kind, char *name, ast_node_list_t *members)
 {
+    if (!(kind == AST_STRUCT || kind == AST_UNION))
+        errorf("argument 1 of ast_new_struct_or_union was not AST_STRUCT or AST_UNION");
+
     ast_node_t *new_inst = malloc(sizeof(ast_node_t));
     new_inst->kind = kind;
     new_inst->structure.name = name;
@@ -484,9 +478,7 @@ void ast_free_variable(ast_node_t *var)
                 });
             break;
         default:
-            fprintf(stderr, "can't free node kind %d for variable\n", current->kind);
-            exit(EXIT_FAILURE);
-            break;
+            errorf("can't free node kind %d for variable", current->kind);
         }
 
         temp = current;
@@ -531,9 +523,7 @@ int ast_are_variables_compatible(ast_node_t *a, ast_node_t *b)
             }
             break;
         default:
-            fprintf(stderr, "cannot check compatibility");
-            exit(EXIT_FAILURE);
-            break;
+            errorf("cannot check compatibility");
         }
         current_a = current_a->next, current_b = current_b->next;
     }
@@ -606,9 +596,7 @@ void ast_merge_into_variable(ast_node_t *a, ast_node_t *b)
             }
             break;
         default:
-            fprintf(stderr, "cannot merge");
-            exit(EXIT_FAILURE);
-            break;
+            errorf("cannot merge");
         }
 
         // free variable b's node
@@ -815,9 +803,7 @@ void ast_print_expression(ast_node_t *node, const unsigned int depth)
         printf("VARIABLE (resolved) \"%s\"\n", node->name);
         break;
     default:
-        fprintf(stderr, "can't print node kind %d for expression\n", node->kind);
-        exit(EXIT_FAILURE);
-        break;
+        errorf("can't print node kind %d for expression", node->kind);
     }
 
 #undef SUBSECTION
@@ -1081,8 +1067,6 @@ void ast_print_statement(ast_node_t *statement, int depth)
             ast_print_expression(statement->return_statement.expression, depth + 1);
         break;
     default:
-        fprintf(stderr, "unknown statement %d\n", statement->kind);
-        exit(EXIT_FAILURE);
-        break;
+        errorf("unknown statement %d", statement->kind);
     }
 }

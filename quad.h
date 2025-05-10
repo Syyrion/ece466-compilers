@@ -1,17 +1,8 @@
-#ifndef QUAD_API_INCLUDED
-#define QUAD_API_INCLUDED
+#ifndef QUAD_H
+#define QUAD_H
 
-#include "ast.h"
-
-// apparently quad_t is already reserved by something else.
-struct quad;
-typedef struct quad bquad_t;
-
-struct basic_block;
-typedef struct basic_block basic_block_t;
-
-struct basic_block_list;
-typedef struct basic_block_list basic_block_list_t;
+struct ast_node;
+typedef struct ast_node ast_node_t;
 
 enum quad_op
 {
@@ -82,7 +73,8 @@ static const char op_names[][16] = {
     "JPNZ",
 };
 
-struct quad
+// apparently quad_t is already reserved by something else.
+typedef struct
 {
     ast_node_t *dest;
     union
@@ -92,22 +84,17 @@ struct quad
     };
     void *arg2;
     enum quad_op op;
-};
+} bquad_t;
 
-struct basic_block
-{
-    unsigned long capacity;
-    unsigned long quad_count;
-    bquad_t **quads;
+#define LIST_NAME basic_block
+#define LIST_CONTENT_TYPE bquad_t *
+#define LIST_ADDITIONAL_MEMBERS \
     char is_exit;
-};
+#include "list.inl"
 
-struct basic_block_list
-{
-    unsigned long capacity;
-    unsigned long block_count;
-    basic_block_t **blocks;
-};
+#define LIST_NAME basic_block_list
+#define LIST_CONTENT_TYPE basic_block_t *
+#include "list.inl"
 
 basic_block_list_t *generate_function_quads(ast_node_t *compound);
 void print_basic_block_list(basic_block_list_t *bbl);

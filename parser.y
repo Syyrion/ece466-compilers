@@ -11,6 +11,7 @@
     #include "symbol_table.h"
     #include "jump_association.h"
     #include "quad.h"
+    #include "errorf.h"
 
     void yyerror (const char *s)
     {
@@ -235,8 +236,7 @@ external_declaration:
                 }
                 else
                 {
-                    fprintf(stderr, "%s:%d: Error: conflicting type on already existing variable `%s`\n", filename, line_num, other->name);
-                    exit(EXIT_FAILURE);
+                    errorf("%s:%d: Error: conflicting type on already existing variable `%s`", filename, line_num, other->name);
                 }
             }
             else
@@ -262,8 +262,7 @@ function_definition:
 
         if (fn->next->kind != AST_FUNCTION)
         {
-            fprintf(stderr, "%s:%d: Error: expected a ';'\n");
-            exit(EXIT_FAILURE);
+            errorf("%s:%d: Error: expected a ';'");
         }
 
         ast_node_t *other = st_find_local(NS_VARIABLE, fn->variable.name);
@@ -277,8 +276,7 @@ function_definition:
             }
             else
             {
-                fprintf(stderr, "%s:%d: Error: conflicting type on already existing variable `%s`\n", filename, line_num, other->name);
-                exit(EXIT_FAILURE);
+                errorf("%s:%d: Error: conflicting type on already existing variable `%s`", filename, line_num, other->name);
             }
         }
         else
@@ -323,8 +321,7 @@ function_definition:
 
         if (fn->next->kind != AST_FUNCTION)
         {
-            fprintf(stderr, "%s:%d: Error: expected a ';'\n");
-            exit(EXIT_FAILURE);
+            errorf("%s:%d: Error: expected a ';'");
         }
 
         ast_node_t *other = st_find_local(NS_VARIABLE, fn->variable.name);
@@ -338,8 +335,7 @@ function_definition:
             }
             else
             {
-                fprintf(stderr, "%s:%d: Error: conflicting type on already existing variable `%s`\n", filename, line_num, other->name);
-                exit(EXIT_FAILURE);
+                errorf("%s:%d: Error: conflicting type on already existing variable `%s`", filename, line_num, other->name);
             }
         }
         else
@@ -400,8 +396,7 @@ block_item:
                 }
                 else
                 {
-                    fprintf(stderr, "%s:%d: Error: conflicting type on already existing variable `%s`\n", filename, line_num, other->name);
-                    exit(EXIT_FAILURE);
+                    errorf("%s:%d: Error: conflicting type on already existing variable `%s`", filename, line_num, other->name);
                 }
             }
             else
@@ -783,8 +778,7 @@ parameter_list:
     {
         if ($3->name && st_find_local($1, $3->name))
         {
-            fprintf(stderr, "%s:%d: Error: parameter %s was already declared\n", filename, line_num, $3->name);
-            exit(EXIT_FAILURE);
+            errorf("%s:%d: Error: parameter %s was already declared", filename, line_num, $3->name);
         }
         $$ = st_add($1, $3);
     }
@@ -823,8 +817,7 @@ identifier_list:
     {
         if (st_find_local($1, $3->name))
         {
-            fprintf(stderr, "%s:%d: Error: parameter %s was already declared\n", filename, line_num, $3->name);
-            exit(EXIT_FAILURE);
+            errorf("%s:%d: Error: parameter %s was already declared", filename, line_num, $3->name);
         }
         $$ = st_add($1, $3);
     }
@@ -888,14 +881,12 @@ direct_abstract_declarator:
                         }
                         else
                         {
-                            fprintf(stderr, "%s:%d: Error: `%s` is already complete\n", filename, line_num, $2.buffer);
-                            exit(EXIT_FAILURE);
+                            errorf("%s:%d: Error: `%s` is already complete", filename, line_num, $2.buffer);
                         }
                     }
                     else
                     {
-                        fprintf(stderr, "%s:%d: Error: a struct or union `%s` has already been declared\n", filename, line_num, $2.buffer);
-                        exit(EXIT_FAILURE);
+                        errorf("%s:%d: Error: a struct or union `%s` has already been declared", filename, line_num, $2.buffer);
                     }
                 }
                 else
@@ -1013,22 +1004,19 @@ symbol_table_t *add_members_to_symbol_table(symbol_table_t *member_table, declar
                 && type->type.specifier.custom->structure.members == 0  // no members
             )
             {
-                fprintf(stderr, "%s:%d: Error: member `%s` is incomplete\n", filename, line_num, member->name);
-                exit(EXIT_FAILURE);
+                errorf("%s:%d: Error: member `%s` is incomplete", filename, line_num, member->name);
             }
 
             if (declarator->oldest->next && declarator->oldest->next->kind == AST_ARRAY && declarator->oldest->next->array.size == 0)
             {
-                fprintf(stderr, "%s:%d: Error: member `%s` cannot be an array of unknown size\n", filename, line_num, member->name);
-                exit(EXIT_FAILURE);
+                errorf("%s:%d: Error: member `%s` cannot be an array of unknown size", filename, line_num, member->name);
             }
 
             declarator->newest->next = type;
 
             if (st_find_local(member_table, member->name))
             {
-                fprintf(stderr, "%s:%d: Error: member `%s` has already been declared\n", filename, line_num, member->name);
-                exit(EXIT_FAILURE);
+                errorf("%s:%d: Error: member `%s` has already been declared", filename, line_num, member->name);
             }
 
             st_add(member_table, member);

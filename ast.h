@@ -1,12 +1,12 @@
-#ifndef AST_API_INCLUDED
-#define AST_API_INCLUDED
-
+#ifndef AST_H
+#define AST_H
 
 struct ast_node;
 typedef struct ast_node ast_node_t;
 
-struct __ast_node_list;
-typedef struct __ast_node_list ast_node_list_t;
+#define LIST_NAME ast_node_list
+#define LIST_FORWARD_DECLARE
+#include "list.inl"
 
 #include "literal.h"
 
@@ -278,7 +278,7 @@ struct ast_node
     };
 };
 
-#define LIST_CONTENT_NAME ast_node
+#define LIST_NAME ast_node_list
 #define LIST_CONTENT_TYPE ast_node_t *
 #include "list.inl"
 
@@ -300,7 +300,7 @@ void ast_resolve_expression_variables(ast_node_t **node, char ignore_on_failure)
 long ast_evaluate_constant_expression(ast_node_t *expr);
 unsigned long ast_get_sizeof_value(ast_node_t *node);
 
-ast_node_t *ast_new_struct_or_union(int kind, char *name, ast_node_list_t *members);
+ast_node_t *ast_new_struct_or_union(ast_node_kind_t kind, char *name, ast_node_list_t *members);
 ast_node_t *ast_add_struct_or_union_members(ast_node_t *node, ast_node_list_t *members);
 ast_node_t *ast_ident_to_member(ast_node_t *node, ast_node_t *bit_width);
 ast_node_t *ast_new_padding_member(ast_node_t *bit_width);

@@ -1,5 +1,5 @@
-#ifndef SYMBOL_TABLE_API_INCLUDED
-#define SYMBOL_TABLE_API_INCLUDED
+#ifndef SYMBOL_TABLE_H
+#define SYMBOL_TABLE_H
 
 #include "ast.h"
 

@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include "location.h"
 #include "declarations.h"
+#include "errorf.h"
 
 void declspec_init(declaration_specifiers_t *declspec)
 {
@@ -21,8 +22,7 @@ void declspec_add_type_specifier(declaration_specifiers_t *declspec, type_specif
     // duplicate type specifiers aren't allowed (except for long)
     if (current_scalar & new_scalar)
     {
-        fprintf(stderr, "%s:%d: Error: invalid combination of type specifiers\n", filename, line_num);
-        exit(EXIT_FAILURE);
+        errorf("%s:%d: Error: invalid combination of type specifiers", filename, line_num);
     }
 
     if (new_scalar & TS_CUSTOM)
@@ -40,8 +40,7 @@ void declspec_add_storage_class(declaration_specifiers_t *declspec, int storage_
 {
     if (declspec->storage_class)
     {
-        fprintf(stderr, "%s:%d: Error: storage class has already been specified\n", filename, line_num);
-        exit(EXIT_FAILURE);
+        errorf("%s:%d: Error: storage class has already been specified", filename, line_num);
     }
     declspec->storage_class = storage_class;
 };
@@ -132,8 +131,7 @@ static scalar_t simplify_scalar(scalar_t scalar)
         return (scalar_t){.full = TS_ENUM};
 
     default:
-        fprintf(stderr, "cannot simplify invalid scalar");
-        exit(EXIT_FAILURE);
+        errorf("cannot simplify invalid scalar");
         break;
     }
 }
@@ -151,16 +149,14 @@ scalar_t declspec_normalize_scalar(scalar_t scalar)
         if (scalar.full == TS_VALID[i])
             return simplify_scalar(scalar);
 
-    fprintf(stderr, "%s:%d: Error: invalid combination of type specifiers\n", filename, line_num);
-    exit(EXIT_FAILURE);
+    errorf("%s:%d: Error: invalid combination of type specifiers", filename, line_num);
 }
 
 storage_class_specifier_t declspec_normalize_parameter_storage_class(storage_class_specifier_t storage_class)
 {
     if (storage_class && storage_class != SC_REGISTER)
     {
-        fprintf(stderr, "%s:%d: Error: invalid parameter storage class \n", filename, line_num);
-        exit(EXIT_FAILURE);
+        errorf("%s:%d: Error: invalid parameter storage class ", filename, line_num);
     }
     return SC_AUTO;
 }

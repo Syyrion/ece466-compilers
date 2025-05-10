@@ -1,9 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "parser.tab.h"
+#include "errorf.h"
 
 int main()
 {
-    fprintf(stderr, "%% yyparse returned: %d %%\n", yyparse());
+    log("%% yyparse returned: %d %%", yyparse());
     return 0;
 }

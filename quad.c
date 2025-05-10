@@ -1,9 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
+#define LIST_IMPLEMENT
 #include "quad.h"
+#undef LIST_IMPLEMENT
 // location doesn't work at this point since we've already parsed the file and forgotten about it
 // #include "location.h"
 #include "parser.tab.h"
+#include "errorf.h"
 
 void generate_quads(ast_node_t *statement);
 ast_node_t *generate_rvalue(ast_node_t *node, ast_node_t *target);
@@ -32,74 +35,11 @@ ast_node_t *new_immediate(int n)
     return ast_new_numberlit((number_t){.integer = n});
 }
 
-// Makes a new basic block
-basic_block_t *new_basic_block(void)
-{
-    basic_block_t *new_inst = calloc(1, sizeof(bquad_t));
-    return new_inst;
-}
-
 bquad_t *new_quad(bquad_t quad)
 {
     bquad_t *new_inst = malloc(sizeof(bquad_t));
     *new_inst = quad;
     return new_inst;
-}
-
-// Appends a quad to a basic block
-void add_quad(basic_block_t *bb, bquad_t *quad)
-{
-    if (bb->quads)
-    {
-        if (bb->quad_count == bb->capacity)
-            bb->quads = realloc(bb->quads, (bb->capacity *= 2) * sizeof(bquad_t *));
-    }
-    else
-    {
-        bb->capacity = 1;
-        bb->quads = malloc(sizeof(bquad_t *));
-    }
-    bb->quads[bb->quad_count++] = quad;
-}
-
-// Frees a basic block but not it's quads
-void basic_block_free(basic_block_t *bb)
-{
-    if (bb->quads)
-        free(bb->quads);
-    free(bb);
-}
-
-// Makes a new basic block
-basic_block_list_t *new_basic_block_list(void)
-{
-    basic_block_list_t *new_inst = calloc(1, sizeof(basic_block_list_t));
-    return new_inst;
-}
-
-// Appends a quad to a basic block
-basic_block_list_t *add_block(basic_block_list_t *bbl, basic_block_t *bb)
-{
-    if (bbl->blocks)
-    {
-        if (bbl->block_count == bbl->capacity)
-            bbl->blocks = realloc(bbl->blocks, (bbl->capacity *= 2) * sizeof(basic_block_t *));
-    }
-    else
-    {
-        bbl->capacity = 1;
-        bbl->blocks = malloc(sizeof(basic_block_t *));
-    }
-    bbl->blocks[bbl->block_count++] = bb;
-    return bbl;
-}
-
-// Frees a basic block list. Does not free any contained blocks.
-void basic_block_list_free(basic_block_list_t *bbl)
-{
-    if (bbl->blocks)
-        free(bbl->blocks);
-    free(bbl);
 }
 
 struct jump_metadata
@@ -111,19 +51,19 @@ struct jump_metadata
 struct jump_metadata *new_jump_metadata(void)
 {
     struct jump_metadata *new_inst = malloc(sizeof(struct jump_metadata));
-    new_inst->break_quads = new_basic_block();
-    new_inst->continue_quads = new_basic_block();
+    new_inst->break_quads = basic_block_new();
+    new_inst->continue_quads = basic_block_new();
     return new_inst;
 }
 
 void add_continue_metadata(struct jump_metadata *data, bquad_t *ref)
 {
-    add_quad(data->continue_quads, ref);
+    basic_block_add(data->continue_quads, ref);
 }
 
 void add_break_metadata(struct jump_metadata *data, bquad_t *ref)
 {
-    add_quad(data->break_quads, ref);
+    basic_block_add(data->break_quads, ref);
 }
 
 void free_jump_metadata(struct jump_metadata *data)
@@ -135,18 +75,16 @@ void free_jump_metadata(struct jump_metadata *data)
 
 void resolve_break_metadata(struct jump_metadata *data, int jump_target)
 {
-    for (int i = 0; i < data->break_quads->quad_count; i++)
-    {
-        data->break_quads->quads[i]->jump_target = jump_target;
-    }
+    ENUMERATE(data->break_quads, i, {
+        data->break_quads->items[i]->jump_target = jump_target;
+    });
 }
 
 void resolve_continue_metadata(struct jump_metadata *data, int jump_target)
 {
-    for (int i = 0; i < data->continue_quads->quad_count; i++)
-    {
-        data->continue_quads->quads[i]->jump_target = jump_target;
-    }
+    ENUMERATE(data->continue_quads, i, {
+        data->continue_quads->items[i]->jump_target = jump_target;
+    });    
 }
 
 static int current_block_index = 0;
@@ -157,12 +95,11 @@ void begin_new_function(void)
 {
     if (current_function)
     {
-        fprintf(stderr, "there is already an available function\n");
-        exit(EXIT_FAILURE);
+        errorf("there is already an available function");
     }
 
-    current_function = new_basic_block_list();
-    add_block(current_function, new_basic_block());
+    current_function = basic_block_list_new();
+    basic_block_list_add(current_function, basic_block_new());
     current_block_index = 0;
 }
 
@@ -171,11 +108,10 @@ void add_new_basic_block_to_function(void)
 {
     if (!current_function)
     {
-        fprintf(stderr, "there is no available function\n");
-        exit(EXIT_FAILURE);
+        errorf("there is no available function");
     }
 
-    add_block(current_function, new_basic_block());
+    basic_block_list_add(current_function, basic_block_new());
     current_block_index++;
 }
 
@@ -187,14 +123,12 @@ bquad_t *emit(int prev, ast_node_t *dest, enum quad_op op, void *arg1, void *arg
 {
     if (!current_function)
     {
-        fprintf(stderr, "there is no available basic block\n");
-        exit(EXIT_FAILURE);
+        errorf("there is no available basic block");
     }
 
     if (prev > 0 || current_block_index + prev < 0)
     {
-        fprintf(stderr, "cannot emit quad to block at index %d\n", prev);
-        exit(EXIT_FAILURE);
+        errorf("cannot emit quad to block at index %d", prev);
     }
     bquad_t *q;
     if (op >= JP)
@@ -215,13 +149,10 @@ bquad_t *emit(int prev, ast_node_t *dest, enum quad_op op, void *arg1, void *arg
             .arg2 = arg2,
         });
     }
-    add_quad(current_function->blocks[current_block_index + prev], q);
+    basic_block_add(current_function->items[current_block_index + prev], q);
     if (op == RET)
-        current_function->blocks[current_block_index + prev]->is_exit = 1;
+        current_function->items[current_block_index + prev]->is_exit = 1;
 
-    if (dest->kind == AST_TEMPORARY)
-    {
-    }
     return q;
 }
 
@@ -230,10 +161,9 @@ basic_block_list_t *end_function(void)
 {
     if (!current_function)
     {
-        fprintf(stderr, "there is no available function\n");
-        exit(EXIT_FAILURE);
+        errorf("there is no available function");
     }
-    if (!current_function->blocks[current_block_index]->is_exit)
+    if (!current_function->items[current_block_index]->is_exit)
     {
         emit(0, 0, RET, 0, 0, 0);
     }
@@ -247,8 +177,7 @@ basic_block_list_t *generate_function_quads(ast_node_t *compound)
 {
     if (compound->kind != AST_COMPOUND)
     {
-        fprintf(stderr, "generate_function_quads requires a compound statement\n");
-        exit(EXIT_FAILURE);
+        errorf("generate_function_quads requires a compound statement");
     }
 
     begin_new_function();
@@ -295,8 +224,7 @@ void generate_quads(ast_node_t *statement)
         emit(0, 0, RET, generate_rvalue(statement->return_statement.expression, 0), 0, 0);
         break;
     default:
-        fprintf(stderr, "can't generate quads for statement of kind %d\n", statement->kind);
-        exit(EXIT_FAILURE);
+        errorf("can't generate quads for statement of kind %d", statement->kind);
         break;
     }
 }
@@ -346,8 +274,7 @@ ast_node_t *generate_rvalue(ast_node_t *node, ast_node_t *target)
     switch (node->kind)
     {
     case AST_IDENT:
-        fprintf(stderr, "unresolved identifier");
-        exit(EXIT_FAILURE);
+        errorf("unresolved identifier");
 
     case AST_VARIABLE:
         if (node->variable.isa->kind == AST_ARRAY)
@@ -368,8 +295,7 @@ ast_node_t *generate_rvalue(ast_node_t *node, ast_node_t *target)
     case AST_NUMBERLIT:
         if (node->numberlit.type.full & TS_REAL)
         {
-            fprintf(stderr, "real number literals are not supported");
-            exit(EXIT_FAILURE);
+            errorf("real number literals are not supported");
         }
         return node;
 
@@ -417,8 +343,7 @@ ast_node_t *generate_rvalue(ast_node_t *node, ast_node_t *target)
             {
                 if ((t2->kind == AST_TEMPORARY || t2->kind == AST_VARIABLE) && t2->next && t2->next->kind == AST_POINTER)
                 {
-                    fprintf(stderr, "pointer + pointer not allowed\n");
-                    exit(EXIT_FAILURE);
+                    errorf("pointer + pointer not allowed");
                 }
 
                 t3 = new_temp_var();
@@ -456,8 +381,7 @@ ast_node_t *generate_rvalue(ast_node_t *node, ast_node_t *target)
                     int size2 = (int)ast_get_sizeof_value(t2->next->next);
                     if (size1 != size2)
                     {
-                        fprintf(stderr, "pointer - pointer incompatible sizes\n");
-                        exit(EXIT_FAILURE);
+                        errorf("pointer - pointer incompatible sizes");
                     }
                     t3 = new_temp_var();
                     emit(0, t3, SUB, t1, t2, 0);
@@ -511,8 +435,7 @@ ast_node_t *generate_rvalue(ast_node_t *node, ast_node_t *target)
         case LOGAND:
         case LOGOR:
         default:
-            fprintf(stderr, "encountered invalid or unsupported binary op kind %d while generating rvalue\n", node->binary_op.kind);
-            exit(EXIT_FAILURE);
+            errorf("encountered invalid or unsupported binary op kind %d while generating rvalue", node->binary_op.kind);
             break;
         }
         break;
@@ -552,8 +475,7 @@ ast_node_t *generate_rvalue(ast_node_t *node, ast_node_t *target)
     case AST_MEMBER_ACCESS:
     case AST_STRINGLIT:
     default:
-        fprintf(stderr, "can't generate quad for node type %d in expression\n", node->kind);
-        exit(EXIT_FAILURE);
+        errorf("can't generate quad for node type %d in expression", node->kind);
         break;
     }
 }
@@ -565,8 +487,7 @@ ast_node_t *generate_assignment(ast_node_t *node)
     ast_node_t *value;
     if (!dest)
     {
-        fprintf(stderr, "LHS of assignment is not an lvalue\n");
-        exit(EXIT_FAILURE);
+        errorf("LHS of assignment is not an lvalue");
     }
     value = generate_rvalue(node->binary_op.right, dest);
     if (is_direct)
@@ -591,8 +512,7 @@ ast_node_t *generate_compound_assignment(ast_node_t *node, int kind)
     ast_node_t *value;
     if (!dest)
     {
-        fprintf(stderr, "LHS of assignment is not an lvalue\n");
-        exit(EXIT_FAILURE);
+        errorf("LHS of assignment is not an lvalue");
     }
     value = generate_rvalue(node->binary_op.right, dest);
     if (is_direct)
@@ -638,8 +558,7 @@ ast_node_t *generate_function_call(ast_node_t *node, ast_node_t *target)
     ast_node_t *t1;
     if (node->kind != AST_FUNCTION_CALL)
     {
-        fprintf(stderr, "wrong node type for generate_function_call %d\n", node->kind);
-        exit(EXIT_FAILURE);
+        errorf("wrong node type for generate_function_call %d", node->kind);
     }
     emit(0, 0, ARGBEGIN, 0, 0, 0);
     ENUMERATE(node->function_call.args, i, {
@@ -666,8 +585,7 @@ ast_node_t *generate_sizeof(ast_node_t *node, ast_node_t *target)
         generate_rvalue(node, 0);
         return target;
     default:
-        fprintf(stderr, "wrong node type for generate_sizeof %d\n", node->kind);
-        exit(EXIT_FAILURE);
+        errorf("wrong node type for generate_sizeof %d", node->kind);
         break;
     }
 }
@@ -677,8 +595,7 @@ ast_node_t *generate_if_statement(ast_node_t *statement)
     ast_node_t *t1;
     if (statement->kind != AST_IF)
     {
-        fprintf(stderr, "wrong node type for generate_if_statement %d\n", statement->kind);
-        exit(EXIT_FAILURE);
+        errorf("wrong node type for generate_if_statement %d", statement->kind);
     }
 
     if (statement->if_statement.false_branch)
@@ -724,8 +641,7 @@ ast_node_t *generate_while_statement(ast_node_t *statement)
     ast_node_t *t1;
     if (!(statement->kind == AST_WHILE || statement->kind == AST_DO_WHILE))
     {
-        fprintf(stderr, "wrong node type for generate_while_statement %d\n", statement->kind);
-        exit(EXIT_FAILURE);
+        errorf("wrong node type for generate_while_statement %d", statement->kind);
     }
 
     // leading block
@@ -764,8 +680,7 @@ ast_node_t *generate_for_statement(ast_node_t *statement)
     ast_node_t *t1;
     if (statement->kind != AST_FOR)
     {
-        fprintf(stderr, "wrong node type for generate_for_statement %d\n", statement->kind);
-        exit(EXIT_FAILURE);
+        errorf("wrong node type for generate_for_statement %d", statement->kind);
     }
 
     // leading block
@@ -824,8 +739,7 @@ void print_quad(bquad_t q)
             }
             else
             {
-                fprintf(stderr, "invalid quad destination %d\n", q.dest->kind);
-                exit(EXIT_FAILURE);
+                errorf("invalid quad destination %d", q.dest->kind);
             }
         }
     }
@@ -866,8 +780,7 @@ void print_quad(bquad_t q)
             }
             else
             {
-                fprintf(stderr, "invalid quad arg1 %d\n", arg1->kind);
-                exit(EXIT_FAILURE);
+                errorf("invalid quad arg1 %d", arg1->kind);
             }
         }
     }
@@ -896,26 +809,22 @@ void print_quad(bquad_t q)
         }
         else
         {
-            fprintf(stderr, "invalid quad arg2\n");
-            exit(EXIT_FAILURE);
+            errorf("invalid quad arg2");
         }
     }
-    fflush(stdout);
 }
 
 void print_basic_block_list(basic_block_list_t *bbl)
 {
-    for (int i = 0; i < bbl->block_count; i++)
-    {
-        basic_block_t *bb = bbl->blocks[i];
+    ENUMERATE(bbl, i, {
+        basic_block_t *bb = bbl->items[i];
         if (bb->is_exit)
             printf("(exit)");
         printf("BB%d:\n", i);
-        for (int j = 0; j < bb->quad_count; j++)
-        {
+        ENUMERATE(bb, j, {
             printf("    ");
-            print_quad(*bb->quads[j]);
+            print_quad(*bb->items[j]);
             printf("\n");
-        }
-    }
+        });
+    });    
 }

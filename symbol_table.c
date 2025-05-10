@@ -3,6 +3,7 @@
 #include <string.h>
 #include "symbol_table.h"
 #include "location.h"
+#include "errorf.h"
 
 // oh no, more globals
 
@@ -11,7 +12,7 @@
 // 1 means at root of function
 static int depth = -1;
 
-// not really a symbol table but somewhere to put all of the statements nodes
+// not really a symbol table but somewhere to put all of the statement nodes
 static symbol_table_t *FN_STATEMENTS = 0;
 
 symbol_table_t *NS_VARIABLE = 0;
@@ -24,8 +25,7 @@ void st_init(void)
 {
     if (depth >= 0)
     {
-        fprintf(stderr, "symbol tables have already been initialized");
-        exit(EXIT_FAILURE);
+        errorf("symbol tables have already been initialized");
     }
 
     NS_VARIABLE = st_new(0);
@@ -60,8 +60,7 @@ static void resolve_goto_statements(ast_node_t *statement)
         label = st_find_local(NS_LABEL, statement->goto_statement.label_name);
         if (!label)
         {
-            fprintf(stderr, "undefined label\n");
-            exit(EXIT_FAILURE);
+            errorf("undefined label");
         }
         free(statement->goto_statement.label_name);
         statement->goto_statement.label_name = 0;
@@ -95,8 +94,7 @@ static void resolve_goto_statements(ast_node_t *statement)
         // do nothing
         break;
     default:
-        fprintf(stderr, "unknown statement %d\n", statement->kind);
-        exit(EXIT_FAILURE);
+        errorf("unknown statement %d", statement->kind);
         break;
     }
 }
@@ -106,8 +104,7 @@ ast_node_t *st_pop(void)
 {
     if (depth == 0)
     {
-        fprintf(stderr, "cannot pop the root symbol table");
-        exit(EXIT_FAILURE);
+        errorf("cannot pop the root symbol table");
     }
 
     symbol_table_t *st_statements = FN_STATEMENTS;

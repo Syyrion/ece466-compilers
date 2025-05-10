@@ -1,11 +1,19 @@
 #include "macro_kit.h"
 
-// macro parameters
-
 // list prefix
-#ifndef LIST_CONTENT_NAME
-#error list.inl needs LIST_CONTENT_NAME to be defined
+#ifndef LIST_NAME
+#error list.inl needs LIST_NAME to be defined
 #endif
+
+#define LIST_STRUCT_NAME JOIN2(__LX, LIST_NAME)
+#define LIST_TYPEDEF_NAME JOIN2(LIST_NAME, t)
+
+#ifdef LIST_FORWARD_DECLARE // define to set forward declare mode
+
+struct LIST_STRUCT_NAME;
+typedef struct LIST_STRUCT_NAME LIST_TYPEDEF_NAME;
+
+#else
 
 // data type that the list contains (no arrays)
 #ifndef LIST_CONTENT_TYPE
@@ -17,11 +25,10 @@
 #define LIST_ADDITIONAL_MEMBERS
 #endif
 
-#define LIST_TYPEDEF_NAME JOIN2(LIST_CONTENT_NAME, list_t)
-#define LIST_CONTENT_TYPEDEF_NAME CAT2(__, JOIN2(LIST_TYPEDEF_NAME, content))
+#define LIST_CONTENT_TYPEDEF_NAME JOIN3(__LX, LIST_NAME, content)
 
 typedef LIST_CONTENT_TYPE LIST_CONTENT_TYPEDEF_NAME;
-typedef struct CAT2(__, JOIN2(LIST_CONTENT_NAME, list))
+typedef struct LIST_STRUCT_NAME
 {
     unsigned long capacity;
     unsigned long count;
@@ -29,9 +36,9 @@ typedef struct CAT2(__, JOIN2(LIST_CONTENT_NAME, list))
     LIST_ADDITIONAL_MEMBERS
 } LIST_TYPEDEF_NAME;
 
-#define LIST_NEW JOIN2(LIST_CONTENT_NAME, list_new)
-#define LIST_ADD JOIN2(LIST_CONTENT_NAME, list_add)
-#define LIST_FREE JOIN2(LIST_CONTENT_NAME, list_free)
+#define LIST_NEW JOIN2(LIST_NAME, new)
+#define LIST_ADD JOIN2(LIST_NAME, add)
+#define LIST_FREE JOIN2(LIST_NAME, free)
 
 extern LIST_TYPEDEF_NAME *LIST_NEW(void);
 extern LIST_TYPEDEF_NAME *LIST_ADD(LIST_TYPEDEF_NAME *list, LIST_CONTENT_TYPEDEF_NAME item);
@@ -73,6 +80,7 @@ extern void LIST_FREE(LIST_TYPEDEF_NAME *list)
 
 #endif
 
+// works for any list
 #ifndef LIST_INL_ENUMERATOR
 #define LIST_INL_ENUMERATOR
 
@@ -85,11 +93,15 @@ extern void LIST_FREE(LIST_TYPEDEF_NAME *list)
 
 #endif
 
-#undef LIST_CONTENT_NAME
+#endif // LIST_FORWARD_DECLARE
+
+#undef LIST_NAME
 #undef LIST_CONTENT_TYPE
+#undef LIST_FORWARD_DECLARE
 #undef LIST_ADDITIONAL_MEMBERS
 
 #undef LIST_TYPEDEF_NAME
+#undef LIST_STRUCT_NAME
 #undef LIST_CONTENT_TYPEDEF_NAME
 #undef LIST_NEW
 #undef LIST_ADD

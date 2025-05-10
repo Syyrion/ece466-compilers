@@ -1,5 +1,5 @@
-#ifndef JUMP_ASSOCIATION_INCLUDED
-#define JUMP_ASSOCIATION_INCLUDED
+#ifndef JUMP_ASSOCIATION_H
+#define JUMP_ASSOCIATION_H
 
 #include "ast.h"
 
