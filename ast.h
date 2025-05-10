@@ -1,7 +1,14 @@
 #ifndef AST_API_INCLUDED
 #define AST_API_INCLUDED
 
-#include "types.h"
+
+struct ast_node;
+typedef struct ast_node ast_node_t;
+
+struct __ast_node_list;
+typedef struct __ast_node_list ast_node_list_t;
+
+#include "literal.h"
 
 typedef enum
 {
@@ -271,20 +278,12 @@ struct ast_node
     };
 };
 
-// generic list of ast_node_t
-struct ast_node_list
-{
-    unsigned long capacity;
-    unsigned long node_count;
-    ast_node_t **nodes;
-};
+#define LIST_CONTENT_NAME ast_node
+#define LIST_CONTENT_TYPE ast_node_t *
+#include "list.inl"
 
 void ast_init(void);
 void ast_deinit(void);
-
-ast_node_list_t *ast_list_new(void);
-ast_node_list_t *ast_list_add(ast_node_list_t *list, ast_node_t *node);
-void ast_list_free(ast_node_list_t *list);
 
 ast_node_t *ast_new_ident(char *name);
 ast_node_t *ast_new_charlit(char c);

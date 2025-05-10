@@ -2,7 +2,6 @@
 #include <stdio.h>
 #include <string.h>
 #include "symbol_table.h"
-#include "types.h"
 #include "location.h"
 
 // oh no, more globals
@@ -70,8 +69,9 @@ static void resolve_goto_statements(ast_node_t *statement)
         statement->goto_statement.statement = label->label.statement;
         break;
     case AST_COMPOUND:
-        for (int i = 0; i < statement->compound_statement.sub_statements->node_count; i++)
-            resolve_goto_statements(statement->compound_statement.sub_statements->nodes[i]);
+        ENUMERATE(statement->compound_statement.sub_statements, i, {
+            resolve_goto_statements(statement->compound_statement.sub_statements->items[i]);
+        });
         break;
     case AST_IF:
         resolve_goto_statements(statement->if_statement.true_branch);
@@ -123,27 +123,28 @@ ast_node_t *st_pop(void)
     ast_node_list_t *variables = st_unpack(st_variables);
     ast_node_list_t *structs = st_unpack(st_structs);
 
-    for (int i = 0; i < variables->node_count; i++)
-        if (!variables->nodes[i]->variable.used)
-            ast_free_variable(variables->nodes[i]);
-    ast_list_free(variables);
+    ENUMERATE(variables, i, {
+        if (!variables->items[i]->variable.used)
+            ast_free_variable(variables->items[i]);
+    });
+    ast_node_list_free(variables);
 
-    for (int i = 0; i < structs->node_count; i++)
-        if (!structs->nodes[i]->structure.used)
-            ast_free_struct(structs->nodes[i]);
-    ast_list_free(structs);
+    ENUMERATE(structs, i, {
+        if (!structs->items[i]->structure.used)
+            ast_free_struct(structs->items[i]);
+    });
+    ast_node_list_free(structs);
 
     if (depth == 1)
     {
         resolve_goto_statements(statements);
 
         ast_node_list_t *labels = st_unpack(NS_LABEL);
-        for (int i = 0; i < labels->node_count; i++)
-        {
-            free(labels->nodes[i]->label.name);
-            free(labels->nodes[i]);
-        }
-        ast_list_free(labels);
+        ENUMERATE(labels, i, {
+            free(labels->items[i]->label.name);
+            free(labels->items[i]);
+        });
+        ast_node_list_free(labels);
 
         NS_LABEL = 0;
     }
@@ -157,7 +158,7 @@ ast_node_t *st_pop(void)
 symbol_table_t *st_new(symbol_table_t *parent)
 {
     symbol_table_t *new_inst = malloc(sizeof(symbol_table_t));
-    new_inst->entries = ast_list_new();
+    new_inst->entries = ast_node_list_new();
     new_inst->parent = parent;
     return new_inst;
 }
@@ -173,7 +174,7 @@ ast_node_list_t *st_unpack(symbol_table_t *st)
 // adds an ast_node to the symbol table
 symbol_table_t *st_add(symbol_table_t *st, ast_node_t *entry)
 {
-    ast_list_add(st->entries, entry);
+    ast_node_list_add(st->entries, entry);
     return st;
 }
 
@@ -207,9 +208,9 @@ ast_node_t *st_find_local(symbol_table_t *st, char *name)
         return 0;
     }
 
-    for (int i = st->entries->node_count - 1; i >= 0; i--)
+    for (int i = st->entries->count - 1; i >= 0; i--)
     {
-        ast_node_t *node = st->entries->nodes[i];
+        ast_node_t *node = st->entries->items[i];
         if (node->name // the identifier may not exist for struct padding
             && strcmp(name, node->name) == 0)
             return node;

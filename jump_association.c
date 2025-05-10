@@ -1,9 +1,9 @@
 
-#include "jump_association.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include "jump_association.h"
 #include "location.h"
-#include "parser.tab.h"
+// #include "parser.tab.h"
 
 static ast_node_t *top = 0;
 
@@ -61,7 +61,7 @@ void ja_add_switch_case(ast_node_t *constant_expression, ast_node_t *statement)
         exit(EXIT_FAILURE);
     }
 
-    ast_list_add(top->switch_statement.cases, ast_new_switch_case(constant_expression, statement));
+    ast_node_list_add(top->switch_statement.cases, ast_new_switch_case(constant_expression, statement));
 }
 
 void ja_add_switch_default(ast_node_t *statement)

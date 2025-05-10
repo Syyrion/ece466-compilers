@@ -47,9 +47,9 @@ extern int yydebug;
 /* "%code requires" blocks.  */
 #line 29 "parser.y"
 
-    #include "declarations.h"
-    #include "types.h"
+    #include "literal.h"
     #include "ast.h"
+    #include "declarations.h"
     #include "symbol_table.h"
 
 #line 56 "parser.tab.h"

@@ -1,54 +1,26 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include "types.h"
+
+#define LIST_IMPLEMENT
 #include "ast.h"
-#include "parser.tab.h"
+#undef LIST_IMPLEMENT
+
 #include "location.h"
+#include "parser.tab.h"
+#include "expression_operators.h"
 
 // keeps track of all created type nodes
 static ast_node_list_t *type_list;
 
 void ast_init(void)
 {
-    type_list = ast_list_new();
+    type_list = ast_node_list_new();
 }
 
 void ast_deinit(void)
 {
     // TODO free stuff left behind
-}
-
-// Makes a new generic ast list
-ast_node_list_t *ast_list_new(void)
-{
-    ast_node_list_t *new_inst = calloc(1, sizeof(ast_node_list_t));
-    return new_inst;
-}
-
-// Appends an ast node to an ast list
-ast_node_list_t *ast_list_add(ast_node_list_t *list, ast_node_t *node)
-{
-    if (list->nodes)
-    {
-        if (list->node_count == list->capacity)
-            list->nodes = realloc(list->nodes, (list->capacity *= 2) * sizeof(ast_node_t *));
-    }
-    else
-    {
-        list->capacity = 1;
-        list->nodes = malloc(sizeof(ast_node_t *));
-    }
-    list->nodes[list->node_count++] = node;
-    return list;
-}
-
-// Frees a node list. Does not free any contained nodes.
-void ast_list_free(ast_node_list_t *list)
-{
-    if (list->nodes)
-        free(list->nodes);
-    free(list);
 }
 
 // ## EXPRESSIONS
@@ -170,9 +142,10 @@ void ast_free_expression(ast_node_t *node)
         break;
     case AST_FUNCTION_CALL:
         ast_free_expression(node->function_call.name);
-        for (int i = 0; i < node->function_call.args->node_count; i++)
-            ast_free_expression(node->function_call.args->nodes[i]);
-        ast_list_free(node->function_call.args);
+        ENUMERATE(node->function_call.args, i, {
+            ast_free_expression(node->function_call.args->items[i]);
+        });
+        ast_node_list_free(node->function_call.args);
         break;
     case AST_TYPE_CAST:
         ast_free_expression(node->type_cast.operand);
@@ -364,8 +337,9 @@ void ast_resolve_expression_variables(ast_node_t **node, char ignore_on_failure)
         break;
     case AST_FUNCTION_CALL:
         ast_resolve_expression_variables(&(*node)->function_call.name, 1);
-        for (int i = 0; i < (*node)->function_call.args->node_count; i++)
-            ast_resolve_expression_variables(&(*node)->function_call.args->nodes[i], 0);
+        ENUMERATE((*node)->function_call.args, i, {
+            ast_resolve_expression_variables(&(*node)->function_call.args->items[i], 0);
+        });
 
     case AST_STRINGLIT:
     case AST_NUMBERLIT:
@@ -378,8 +352,6 @@ void ast_resolve_expression_variables(ast_node_t **node, char ignore_on_failure)
         break;
     }
 }
-
-
 
 // ## STRUCTS
 
@@ -422,17 +394,17 @@ ast_node_t *ast_new_padding_member(ast_node_t *bit_width)
 
 void ast_free_struct(ast_node_t *node)
 {
-    for (int i = 0; i < node->structure.members->node_count; i++)
-    {
-        ast_node_t *m = node->structure.members->nodes[i];
+    ENUMERATE(node->structure.members, i, {
+        ast_node_t *m = node->structure.members->items[i];
         if (m->member.bit_width)
             ast_free_expression(m->member.bit_width);
         if (m->member.isa)
             ast_free_variable(m->member.isa);
         if (m->member.name)
             free(m->member.name);
-    }
-    ast_list_free(node->structure.members);
+    });
+
+    ast_node_list_free(node->structure.members);
     free(node->structure.members);
     free(node);
 }
@@ -481,7 +453,7 @@ ast_node_t *ast_new_type(type_specifier_t type_specifier, type_qualifier_t type_
     new_inst->kind = AST_TYPE;
     new_inst->type.specifier = type_specifier;
     new_inst->type.qualifier = type_qualifier;
-    ast_list_add(type_list, new_inst);
+    ast_node_list_add(type_list, new_inst);
     return new_inst;
 }
 
@@ -507,8 +479,9 @@ void ast_free_variable(ast_node_t *var)
             break;
         case AST_FUNCTION:
             if (current->function.parameters)
-                for (int i = 0; i < current->function.parameters->node_count; i++)
-                    ast_free_variable(current->function.parameters->nodes[i]);
+                ENUMERATE(current->function.parameters, i, {
+                    ast_free_variable(current->function.parameters->items[i]);
+                });
             break;
         default:
             fprintf(stderr, "can't free node kind %d for variable\n", current->kind);
@@ -548,11 +521,13 @@ int ast_are_variables_compatible(ast_node_t *a, ast_node_t *b)
         case AST_FUNCTION:
             if (current_a->function.parameters && current_b->function.parameters)
             {
-                if (current_a->function.parameters->node_count != current_b->function.parameters->node_count)
+                if (current_a->function.parameters->count != current_b->function.parameters->count)
                     return 0;
-                for (int i = 0; i < current_a->function.parameters->node_count; i++)
-                    if (!ast_are_variables_compatible(current_a->function.parameters->nodes[i], current_b->function.parameters->nodes[i]))
+
+                ENUMERATE(current_a->function.parameters, i, {
+                    if (!ast_are_variables_compatible(current_a->function.parameters->items[i], current_b->function.parameters->items[i]))
                         return 0;
+                });
             }
             break;
         default:
@@ -617,8 +592,9 @@ void ast_merge_into_variable(ast_node_t *a, ast_node_t *b)
             // both variables have known parameters
             {
                 // merge function parameters
-                for (int i = 0; i < current_a->function.parameters->node_count; i++)
-                    ast_merge_into_variable(current_a->function.parameters->nodes[i], current_b->function.parameters->nodes[i]);
+                ENUMERATE(current_a->function.parameters, i, {
+                    ast_merge_into_variable(current_a->function.parameters->items[i], current_b->function.parameters->items[i]);
+                });
             }
             else
             // one variable has unknown parameters
@@ -676,7 +652,7 @@ ast_node_t *ast_new_switch_statement(ast_node_t *expression, ast_node_t *stateme
     new_inst->kind = AST_SWITCH;
     new_inst->switch_statement.expression = expression;
     new_inst->switch_statement.statement = statement;
-    new_inst->switch_statement.cases = ast_list_new();
+    new_inst->switch_statement.cases = ast_node_list_new();
     new_inst->switch_statement.default_case = 0;
     new_inst->next = 0;
     return new_inst;
@@ -791,7 +767,7 @@ void ast_print_expression(ast_node_t *node, const unsigned int depth)
         break;
     case AST_UNARY_OP:
         printf("UNARY_OP \"");
-        print_operator(node->unary_op.kind);
+        print_expression_operator(node->unary_op.kind);
         printf("\"\n");
         if (node->unary_op.kind == SIZEOF && node->unary_op.operand->kind == AST_VARIABLE && node->unary_op.operand->name == 0)
         {
@@ -808,7 +784,7 @@ void ast_print_expression(ast_node_t *node, const unsigned int depth)
         break;
     case AST_BINARY_OP:
         printf("BINARY_OP \"");
-        print_operator(node->binary_op.kind);
+        print_expression_operator(node->binary_op.kind);
         printf("\"\n");
         SUBSECTION("left", node->binary_op.left);
         SUBSECTION("right", node->binary_op.right);
@@ -822,12 +798,11 @@ void ast_print_expression(ast_node_t *node, const unsigned int depth)
     case AST_FUNCTION_CALL:
         printf("FUNCTION_CALL");
         SUBSECTION("name", node->function_call.name);
-        for (int i = 0; i < node->function_call.args->node_count; i++)
-        {
+        ENUMERATE(node->function_call.args, i, {
             char b[16];
             snprintf(b, sizeof(b), "arg[%d]", i);
-            SUBSECTION(b, node->function_call.args->nodes[i]);
-        }
+            SUBSECTION(b, node->function_call.args->items[i]);
+        });
         break;
     case AST_TYPE_CAST:
         printf("TYPE_CAST");
@@ -889,10 +864,9 @@ void ast_print_declarator(ast_node_t *node, unsigned int depth)
                 printf("function taking parameters\n");
                 TAB_PAD(depth);
                 printf("(\n");
-                for (unsigned int i = 0, j = current_node->function.parameters->node_count; i < j; i++)
-                {
-                    ast_print_variable(current_node->function.parameters->nodes[i], depth + 1);
-                }
+                ENUMERATE(current_node->function.parameters, i, {
+                    ast_print_variable(current_node->function.parameters->items[i], depth + 1);
+                });
                 TAB_PAD(depth);
                 printf(")\n");
                 TAB_PAD(depth);
@@ -964,10 +938,9 @@ void ast_print_struct_or_union(ast_node_t *node)
     {
         printf("with members\n");
         printf("{\n");
-        for (int i = 0; i < node->structure.members->node_count; i++)
-        {
-            print_member(node->structure.members->nodes[i], 1);
-        }
+        ENUMERATE(node->structure.members, i, {
+            print_member(node->structure.members->items[i], 1);
+        });
         printf("}");
     }
     else
@@ -990,8 +963,9 @@ void ast_print_statement(ast_node_t *statement, int depth)
         printf("compound\n");
         TAB_PAD(depth);
         printf("{\n");
-        for (int i = 0; i < statement->compound_statement.sub_statements->node_count; i++)
-            ast_print_statement(statement->compound_statement.sub_statements->nodes[i], depth + 1);
+        ENUMERATE(statement->compound_statement.sub_statements, i, {
+            ast_print_statement(statement->compound_statement.sub_statements->items[i], depth + 1);
+        });
         TAB_PAD(depth);
         printf("}\n");
         break;

@@ -15,20 +15,20 @@ typedef struct basic_block_list basic_block_list_t;
 
 enum quad_op
 {
-    NOP,
-    MOV,    // move
-    CMOVP,  // move if plus
-    CMOVM,  // move if minus
-    CMOVZ,  // move if zero
-    CMOVNZ, // move if not zero
-    LEA,    // load effective address
-    LOAD,   // load from address
-    STORE,  // store to address
-    ADD,
-    SUB,
-    MUL,
-    DIV,
-    MOD,
+    NOP,      // no operation
+    MOV,      // move
+    CMOVP,    // move if plus
+    CMOVM,    // move if minus
+    CMOVZ,    // move if zero
+    CMOVNZ,   // move if not zero
+    LEA,      // load effective address
+    LOAD,     // load from address
+    STORE,    // store to address
+    ADD,      // add
+    SUB,      // subtract
+    MUL,      // multiply
+    DIV,      // divide
+    MOD,      // modulo
     NEG,      // two's complement
     SL,       // shift left
     SR,       // shift right

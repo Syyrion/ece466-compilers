@@ -1,5 +1,5 @@
-#ifndef LOCATION_INCLUDED
-#define LOCATION_INCLUDED
+#ifndef LOCATION_H
+#define LOCATION_H
 
 extern char *filename;
 extern int line_num;

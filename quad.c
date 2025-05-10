@@ -267,8 +267,9 @@ void generate_quads(ast_node_t *statement)
             target = generate_rvalue(statement->expression_statement.expression, 0);
         break;
     case AST_COMPOUND:
-        for (int i = 0; i < statement->compound_statement.sub_statements->node_count; i++)
-            generate_quads(statement->compound_statement.sub_statements->nodes[i]);
+        ENUMERATE(statement->compound_statement.sub_statements, i, {
+            generate_quads(statement->compound_statement.sub_statements->items[i]);
+        });
         break;
     case AST_IF:
         generate_if_statement(statement);
@@ -641,11 +642,10 @@ ast_node_t *generate_function_call(ast_node_t *node, ast_node_t *target)
         exit(EXIT_FAILURE);
     }
     emit(0, 0, ARGBEGIN, 0, 0, 0);
-    for (int i = 0; i < node->function_call.args->node_count; i++)
-    {
-        t1 = generate_rvalue(node->function_call.args->nodes[i], 0);
+    ENUMERATE(node->function_call.args, i, {
+        t1 = generate_rvalue(node->function_call.args->items[i], 0);
         emit(0, 0, ARG, t1, 0, 0);
-    }
+    });
     emit(0, target, CALL, node->function_call.name, 0, 0);
     return target;
 }

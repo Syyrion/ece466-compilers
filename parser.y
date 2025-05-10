@@ -27,9 +27,9 @@
 }
 
 %code requires{
-    #include "declarations.h"
-    #include "types.h"
+    #include "literal.h"
     #include "ast.h"
+    #include "declarations.h"
     #include "symbol_table.h"
 }
 
@@ -288,11 +288,13 @@ function_definition:
         st_push();
         
         // add parameters as variables in the new scope
-        for (int i = 0; fn->next->function.parameters && i < fn->next->function.parameters->node_count; i++)
+        if (fn->next->function.parameters)
         {
-            // * mark the parameters as used or else they'll get thrown away after the compound statement
-            fn->next->function.parameters->nodes[i]->variable.used = 1;
-            st_add(NS_VARIABLE, fn->next->function.parameters->nodes[i]);
+            ENUMERATE(fn->next->function.parameters, i, {
+                // * mark the parameters as used or else they'll get thrown away after the compound statement
+                fn->next->function.parameters->items[i]->variable.used = 1;
+                st_add(NS_VARIABLE, fn->next->function.parameters->items[i]);
+            });
         }
 
         $<node>$ = fn;
@@ -542,7 +544,7 @@ block_item:
     postfix_expression:
         primary_expression
         | postfix_expression '[' expression ']' {$$ = ast_new_unary_op('*', ast_new_binary_op('+', $1, $3));}
-        | postfix_expression '(' ')' {$$ = ast_new_function_call($1, ast_list_new());}
+        | postfix_expression '(' ')' {$$ = ast_new_function_call($1, ast_node_list_new());}
         | postfix_expression '(' argument_expression_list ')' {$$ = ast_new_function_call($1, $3);}
         | postfix_expression '.' IDENT {$$ = ast_new_member_access($1, $3.buffer);}
         | postfix_expression "->" IDENT {$$ = ast_new_member_access(ast_new_unary_op('*', $1), $3.buffer);}
@@ -551,8 +553,8 @@ block_item:
         ;
 
     argument_expression_list:
-        assignment_expression {$$ = ast_list_add(ast_list_new(), $1);}
-        | argument_expression_list ',' assignment_expression {$$ = ast_list_add($1, $3);}
+        assignment_expression {$$ = ast_node_list_add(ast_node_list_new(), $1);}
+        | argument_expression_list ',' assignment_expression {$$ = ast_node_list_add($1, $3);}
         ;
 
     unary_expression:

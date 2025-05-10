@@ -1,5 +1,5 @@
-#ifndef LEXER_GLOBALS_INCLUDED
-#define LEXER_GLOBALS_INCLUDED
+#ifndef LEXER_H
+#define LEXER_H
 
 // provided by flex
 extern char *yytext;

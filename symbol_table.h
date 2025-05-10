@@ -1,7 +1,6 @@
 #ifndef SYMBOL_TABLE_API_INCLUDED
 #define SYMBOL_TABLE_API_INCLUDED
 
-#include "types.h"
 #include "ast.h"
 
 typedef struct symbol_table symbol_table_t;
