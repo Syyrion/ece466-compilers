@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <ctype.h>
 
 #define LIST_IMPLEMENT
 #include "ast.h"
@@ -34,28 +35,31 @@ ast_node_t *ast_new_ident(char *name)
     return new_inst;
 }
 
-ast_node_t *ast_new_charlit(char c)
+ast_node_t *ast_new_char_literal(char c)
 {
     ast_node_t *new_inst = malloc(sizeof(ast_node_t));
-    new_inst->kind = AST_NUMBERLIT;
-    new_inst->numberlit.integer = c;
-    new_inst->numberlit.type.full = TS_CHAR;
+    new_inst->kind = AST_NUMBER_LITERAL;
+    new_inst->number_literal.integer = c;
+    new_inst->number_literal.isa = ast_new_type((type_specifier_t){.scalar = (scalar_t){.full = TS_INT}, .custom = 0}, (type_qualifier_t){0});
     return new_inst;
 }
 
-ast_node_t *ast_new_stringlit(string_t string)
+ast_node_t *ast_new_string_literal(string_t string)
 {
     ast_node_t *new_inst = malloc(sizeof(ast_node_t));
-    new_inst->kind = AST_STRINGLIT;
-    new_inst->stringlit = string;
+    new_inst->kind = AST_STRING_LITERAL;
+    new_inst->string_literal.buffer = string.buffer;
+    new_inst->string_literal.isa = ast_new_array(ast_new_number_literal((number_t){.integer = string.length + 1, .type.full = TS_INT}));
+    new_inst->string_literal.isa->array.of = ast_new_type((type_specifier_t){.scalar = (scalar_t){.full = TS_CHAR}, .custom = 0}, (type_qualifier_t){0});
     return new_inst;
 }
 
-ast_node_t *ast_new_numberlit(number_t number)
+ast_node_t *ast_new_number_literal(number_t number)
 {
     ast_node_t *new_inst = malloc(sizeof(ast_node_t));
-    new_inst->kind = AST_NUMBERLIT;
-    new_inst->numberlit = number;
+    new_inst->kind = AST_NUMBER_LITERAL;
+    new_inst->number_literal.integer = number.integer;
+    new_inst->number_literal.isa = new_inst->number_literal.isa = ast_new_type((type_specifier_t){.scalar = (scalar_t){.full = TS_INT}, .custom = 0}, (type_qualifier_t){0});
     return new_inst;
 }
 
@@ -120,14 +124,15 @@ void ast_free_expression(ast_node_t *node)
 {
     switch (node->kind)
     {
-    case AST_NUMBERLIT:
-        // these are stored inside the node itself so there's nothing to do
+    case AST_NUMBER_LITERAL:
+        ast_free_variable_like_node(node->number_literal.isa);
         break;
     case AST_IDENT:
         free(node->name);
         break;
-    case AST_STRINGLIT:
-        free(node->stringlit.buffer);
+    case AST_STRING_LITERAL:
+        ast_free_variable_like_node(node->string_literal.isa);
+        free(node->string_literal.buffer);
         break;
     case AST_UNARY_OP:
         ast_free_expression(node->unary_op.operand);
@@ -150,7 +155,7 @@ void ast_free_expression(ast_node_t *node)
         break;
     case AST_TYPE_CAST:
         ast_free_expression(node->type_cast.operand);
-        ast_free_variable(node->type_cast.type);
+        ast_free_variable_like_node(node->type_cast.type);
         break;
     default:
         // don't proceed if a part of the tree isn't part of the expression
@@ -192,10 +197,9 @@ long ast_evaluate_constant_expression(ast_node_t *expr)
 {
     switch (expr->kind)
     {
-    case AST_NUMBERLIT:
-        return expr->numberlit.signed_integer;
+    case AST_NUMBER_LITERAL:
+        return expr->number_literal.integer;
     case AST_BINARY_OP:
-
         switch (expr->binary_op.kind)
         {
         case '*':
@@ -265,11 +269,10 @@ unsigned long ast_get_sizeof_value(ast_node_t *node)
     switch (node->kind)
     {
     case AST_TYPE:
+    case AST_POINTER:
+    case AST_FUNCTION:
         // assumes everything is an int
         return 4;
-    case AST_POINTER:
-    case AST_FUNCTION: // sizeof function is just the size of the function pointer
-        return 8;
     case AST_ARRAY:
         size = ast_evaluate_constant_expression(node->array.size);
         if (size <= 0)
@@ -334,8 +337,8 @@ void ast_resolve_expression_variables(ast_node_t **node, char ignore_on_failure)
             ast_resolve_expression_variables(&(*node)->function_call.args->items[i], 0);
         });
 
-    case AST_STRINGLIT:
-    case AST_NUMBERLIT:
+    case AST_STRING_LITERAL:
+    case AST_NUMBER_LITERAL:
     case AST_TYPE:
     case AST_VARIABLE:
         break;
@@ -393,7 +396,7 @@ void ast_free_struct(ast_node_t *node)
         if (m->member.bit_width)
             ast_free_expression(m->member.bit_width);
         if (m->member.isa)
-            ast_free_variable(m->member.isa);
+            ast_free_variable_like_node(m->member.isa);
         if (m->member.name)
             free(m->member.name);
     });
@@ -411,6 +414,8 @@ ast_node_t *ast_ident_to_variable(ast_node_t *node, storage_class_specifier_t st
     node->kind = AST_VARIABLE;
     node->variable.storage_class = storage_class_specifier;
     node->variable.used = 0;
+    node->variable.num = 0;
+    node->variable.is_argument = 0;
     return node;
 }
 
@@ -451,8 +456,8 @@ ast_node_t *ast_new_type(type_specifier_t type_specifier, type_qualifier_t type_
     return new_inst;
 }
 
-// Frees a variable. Doesn't free the AST_TYPE at the end since other variables might be using it.
-void ast_free_variable(ast_node_t *var)
+// Frees a variable like node.
+void ast_free_variable_like_node(ast_node_t *var)
 {
     ast_node_t *current = var, *temp;
 
@@ -460,6 +465,15 @@ void ast_free_variable(ast_node_t *var)
     {
         switch (current->kind)
         {
+        case AST_STRING_LITERAL:
+            free(current->string_literal.buffer);
+            break;
+        case AST_NUMBER_LITERAL:
+            // nothing to do
+            break;
+        case AST_TEMPORARY:
+            // nothing to do
+            break;
         case AST_VARIABLE:
             if (current->variable.name)
                 free(current->variable.name);
@@ -474,7 +488,7 @@ void ast_free_variable(ast_node_t *var)
         case AST_FUNCTION:
             if (current->function.parameters)
                 ENUMERATE(current->function.parameters, i, {
-                    ast_free_variable(current->function.parameters->items[i]);
+                    ast_free_variable_like_node(current->function.parameters->items[i]);
                 });
             break;
         default:
@@ -538,15 +552,6 @@ int ast_are_variables_compatible(ast_node_t *a, ast_node_t *b)
         return 0;
 
     return 1;
-}
-
-int ast_is_array(ast_node_t *var)
-{
-    return var->next->kind == AST_ARRAY;
-}
-int ast_is_pointer(ast_node_t *var)
-{
-    return var->next->kind == AST_POINTER;
 }
 
 // Merges variable b into variable a in place. Variable name is ignored. Variable b is destroyed.
@@ -720,6 +725,64 @@ ast_node_t *ast_new_label(char *label, ast_node_t *statement)
 
 // ## Functions for printing below
 
+void ast_print_string_literal(ast_node_t *string)
+{
+    const char *s = string->string_literal.buffer;
+    for (int i = 0; s[i] != 0; i++)
+    {
+        if (s[i] == '\x07')
+            printf("\\a");
+        else if (s[i] == '\x08')
+            printf("\\b");
+        else if (s[i] == '\x0c')
+            printf("\\f");
+        else if (s[i] == '\x0a')
+            printf("\\n");
+        else if (s[i] == '\x0d')
+            printf("\\r");
+        else if (s[i] == '\x09')
+            printf("\\t");
+        else if (s[i] == '\x0b')
+            printf("\\v");
+        else if (s[i] == '\\')
+            printf("\\\\");
+        else if (s[i] == '\'')
+            printf("\\\'");
+        else if (s[i] == '"')
+            printf("\\\"");
+        else if (s[i] == 0)
+            printf("\\0");
+        else if (isprint(s[i]))
+            fputc(s[i], stdout);
+        else
+            printf("\\%03o", (unsigned char)s[i]);
+    }
+}
+
+void ast_print_number_literal(ast_node_t *number)
+{
+    scalar_t type = number->number_literal.isa->type.specifier.scalar;
+    if (type.full & TS_REAL)
+    {
+        printf(
+            "REAL    %Lg    %s",
+            number->number_literal.real,
+            type.long_bit     ? "LONG DOUBLE"
+            : type.double_bit ? "DOUBLE"
+                              : "FLOAT");
+    }
+    else
+    {
+        printf(
+            "INTEGER    %lld    %s%s",
+            number->number_literal.integer,
+            type.unsigned_bit ? "UNSIGNED " : "",
+            type.long2_bit       ? "LONG LONG"
+            : type.long_bit == 1 ? "LONG"
+                                 : "INT");
+    }
+}
+
 #define TAB_PAD(depth)                  \
     {                                   \
         for (int i = 0; i < depth; i++) \
@@ -743,14 +806,14 @@ void ast_print_expression(ast_node_t *node, const unsigned int depth)
     case AST_IDENT:
         printf("IDENT \"%s\"\n", node->name);
         break;
-    case AST_STRINGLIT:
+    case AST_STRING_LITERAL:
         printf("STRINGLIT \"");
-        print_stringlit(node->stringlit);
+        ast_print_string_literal(node);
         printf("\"\n");
         break;
-    case AST_NUMBERLIT:
+    case AST_NUMBER_LITERAL:
         printf("NUMBERLIT    ");
-        print_numberlit(node->numberlit);
+        ast_print_number_literal(node);
         printf("\n");
         break;
     case AST_UNARY_OP:

@@ -13,9 +13,8 @@ typedef struct ast_node ast_node_t;
 typedef enum
 {
     AST_IDENT,
-    AST_STRINGLIT,
-    AST_NUMBERLIT,
 
+    // expression related nodes
     AST_UNARY_OP,
     AST_BINARY_OP,
     AST_TERNARY_OP,
@@ -23,16 +22,22 @@ typedef enum
     AST_TYPE_CAST,
     AST_FUNCTION_CALL,
 
+    // structure related nodes
     AST_STRUCT,
     AST_UNION,
     AST_MEMBER,
 
+    // variable-like nodes
+    AST_STRING_LITERAL,
+    AST_NUMBER_LITERAL,
+    AST_TEMPORARY,
     AST_VARIABLE,
     AST_POINTER,
     AST_ARRAY,
     AST_FUNCTION,
     AST_TYPE,
 
+    // statement nodes
     AST_COMPOUND,
     AST_EXPRESSION,
     AST_IF,
@@ -47,8 +52,6 @@ typedef enum
     AST_RETURN,
 
     AST_LABEL,
-
-    AST_TEMPORARY,
 
     // AST_TYPEDEF_NAME, // not implemented
 } ast_node_kind_t;
@@ -105,11 +108,43 @@ struct ast_member
     ast_node_t *bit_width;
 };
 
+struct ast_string_literal
+{
+    unsigned long : sizeof(char *) * 8;
+    ast_node_t *isa;
+
+    char *buffer;
+    unsigned long num;
+};
+
+struct ast_number_literal
+{
+    unsigned long : sizeof(char *) * 8;
+    ast_node_t *isa;
+
+    union
+    {
+        unsigned long long integer;
+        long double real;
+    };
+};
+
+struct ast_temporary
+{
+    unsigned long : sizeof(char *) * 8;
+    ast_node_t *isa;
+
+    unsigned long num;
+};
+
 struct ast_variable
 {
     char *name;
     ast_node_t *isa;
+
     storage_class_specifier_t storage_class;
+    unsigned long num;
+    char is_argument;
     char used;
 };
 
@@ -117,6 +152,7 @@ struct ast_pointer
 {
     unsigned long : sizeof(char *) * 8;
     ast_node_t *to;
+
     type_qualifier_t type_qualifier;
 };
 
@@ -124,6 +160,7 @@ struct ast_array
 {
     unsigned long : sizeof(char *) * 8;
     ast_node_t *of;
+
     ast_node_t *size;
 };
 
@@ -131,9 +168,10 @@ struct ast_function
 {
     unsigned long : sizeof(char *) * 8;
     ast_node_t *returns;
+
     ast_node_list_t *parameters;
     function_specifier_t specifier; // not fully implemented
-    ast_node_t *definition;         // a compound statement
+    ast_node_t *definition;
 };
 
 struct ast_type
@@ -142,6 +180,7 @@ struct ast_type
     type_qualifier_t qualifier;
 };
 
+// ## STATEMENTS
 struct ast_compound
 {
     ast_node_list_t *sub_statements;
@@ -225,13 +264,6 @@ struct ast_label
     ast_node_t *statement;
 };
 
-struct ast_temporary
-{
-    unsigned long : sizeof(char *) * 8;
-    ast_node_t *isa;
-    unsigned long num;
-};
-
 struct ast_node
 {
     ast_node_kind_t kind;
@@ -243,8 +275,6 @@ struct ast_node
             ast_node_t *next;
             void *extra;
         };
-        string_t stringlit;
-        number_t numberlit;
 
         struct ast_unary_op unary_op;
         struct ast_binary_op binary_op;
@@ -256,6 +286,9 @@ struct ast_node
         struct ast_struct_or_union structure;
         struct ast_member member;
 
+        struct ast_string_literal string_literal;
+        struct ast_number_literal number_literal;
+        struct ast_temporary temporary;
         struct ast_variable variable;
         struct ast_pointer pointer;
         struct ast_array array;
@@ -274,7 +307,6 @@ struct ast_node
         struct ast_break break_statement;
         struct ast_return return_statement;
         struct ast_label label;
-        struct ast_temporary temporary;
     };
 };
 
@@ -286,9 +318,9 @@ void ast_init(void);
 void ast_deinit(void);
 
 ast_node_t *ast_new_ident(char *name);
-ast_node_t *ast_new_charlit(char c);
-ast_node_t *ast_new_stringlit(string_t string);
-ast_node_t *ast_new_numberlit(number_t number);
+ast_node_t *ast_new_char_literal(char c);
+ast_node_t *ast_new_string_literal(string_t string);
+ast_node_t *ast_new_number_literal(number_t number);
 ast_node_t *ast_new_unary_op(int kind, ast_node_t *operand);
 ast_node_t *ast_new_binary_op(int kind, ast_node_t *left, ast_node_t *right);
 ast_node_t *ast_new_ternary_op(ast_node_t *condition, ast_node_t *true_branch, ast_node_t *false_branch);
@@ -311,12 +343,10 @@ ast_node_t *ast_new_pointer(int type_qualifier);
 ast_node_t *ast_new_array(ast_node_t *size);
 ast_node_t *ast_new_function(ast_node_list_t *paramter_list);
 ast_node_t *ast_new_type(type_specifier_t type_specifier, type_qualifier_t type_qualifier);
-void ast_free_variable(ast_node_t *var);
+void ast_free_variable_like_node(ast_node_t *var);
 
 int ast_are_variables_compatible(ast_node_t *a, ast_node_t *b);
 void ast_merge_into_variable(ast_node_t *a, ast_node_t *b);
-int ast_is_array(ast_node_t *var);
-int ast_is_pointer(ast_node_t *var);
 
 ast_node_t *ast_new_compound_statement(ast_node_list_t *statements);
 ast_node_t *ast_new_expression_statement(ast_node_t *expr);
@@ -331,6 +361,8 @@ ast_node_t *ast_new_break_statement(ast_node_t *assocoation);
 ast_node_t *ast_new_return_statement(ast_node_t *expr);
 ast_node_t *ast_new_label(char *label, ast_node_t *statement);
 
+void ast_print_string_literal(ast_node_t *string);
+void ast_print_number_literal(ast_node_t *number);
 void ast_print_expression(ast_node_t *node, const unsigned int depth);
 void ast_print_variable(ast_node_t *node, unsigned int depth);
 void ast_print_struct_or_union(ast_node_t *node);

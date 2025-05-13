@@ -1,17 +1,30 @@
 #ifndef QUAD_H
 #define QUAD_H
 
+#include "literal.h"
+
 struct ast_node;
 typedef struct ast_node ast_node_t;
+
+// preprocessor jank
+#ifdef LIST_IMPLEMENT
+#undef LIST_IMPLEMENT
+#include "ast.h"
+#define LIST_IMPLEMENT
+#else
+#include "ast.h"
+#endif
 
 enum quad_op
 {
     NOP,      // no operation
     MOV,      // move
-    CMOVP,    // move if plus
-    CMOVM,    // move if minus
-    CMOVZ,    // move if zero
-    CMOVNZ,   // move if not zero
+    SETP,     // set if plus (>)
+    SETNP,    // set if not plus (<=)
+    SETM,     // set if minus (<)
+    SETNM,    // set if not minus (>=)
+    SETZ,     // set if zero (==)
+    SETNZ,    // set if not zero (!=)
     LEA,      // load effective address
     LOAD,     // load from address
     STORE,    // store to address
@@ -23,7 +36,7 @@ enum quad_op
     NEG,      // two's complement
     SL,       // shift left
     SR,       // shift right
-    CPL,      // ones complement
+    CPL,      // one's complement
     AND,      // bitwise and
     OR,       // bitwise or
     XOR,      // bitwise xor
@@ -34,7 +47,9 @@ enum quad_op
     RET,      // return from a function
     JP,       // unconditional jump
     JPP,      // jump if plus (>)
+    JPNP,     // jump if plus (<=)
     JPM,      // jump if minus (<)
+    JPNM,     // jump if minus (>=)
     JPZ,      // jump if zero (==)
     JPNZ,     // jump if not zero (!=)
 };
@@ -42,10 +57,12 @@ enum quad_op
 static const char op_names[][16] = {
     "NOP",
     "MOV",
-    "CMOVP",
-    "CMOVM",
-    "CMOVZ",
-    "CMOVNZ",
+    "SETP",
+    "SETNP",
+    "SETM",
+    "SETNM",
+    "SETZ",
+    "SETNZ",
     "LEA",
     "LOAD",
     "STORE",
@@ -68,7 +85,9 @@ static const char op_names[][16] = {
     "RET",
     "JP",
     "JPP",
+    "JPNP",
     "JPM",
+    "JPNM",
     "JPZ",
     "JPNZ",
 };
@@ -79,10 +98,10 @@ typedef struct
     ast_node_t *dest;
     union
     {
-        void *arg1;
+        ast_node_t *arg1;
         int jump_target;
     };
-    void *arg2;
+    ast_node_t *arg2;
     enum quad_op op;
 } bquad_t;
 
@@ -94,6 +113,11 @@ typedef struct
 
 #define LIST_NAME basic_block_list
 #define LIST_CONTENT_TYPE basic_block_t *
+#define LIST_ADDITIONAL_MEMBERS   \
+    unsigned long temp_var_count; \
+    unsigned long variable_count; \
+    unsigned long argument_count; \
+    ast_node_list_t *string_literal_list;
 #include "list.inl"
 
 basic_block_list_t *generate_function_quads(ast_node_t *compound);

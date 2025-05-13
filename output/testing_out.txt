@@ -30,23 +30,16 @@ FUNCTION DEFINITION: The variable `y` has storage class EXTERN and is a(n)
                 INT 
     )
     returning
-        pointer to a(n)
-            function taking parameters
-            (
-                The variable `n` has storage class AUTO and is a(n)
-                    INT 
-            )
-            returning
-                INT 
-0x18d85f10 : compound
+        INT 
+0xb60da60 : compound
 {
-    0x18d810a0 : expression
+    0xb607200 : expression
         BINARY_OP "+"
         .left
             NUMBERLIT    INTEGER    1    INT
         .right
             NUMBERLIT    INTEGER    2    INT
-    0x18d811a0 : expression
+    0xb607360 : expression
         BINARY_OP "+"
         .left
             NUMBERLIT    INTEGER    2    INT
@@ -60,7 +53,7 @@ FUNCTION DEFINITION: The variable `y` has storage class EXTERN and is a(n)
                     NUMBERLIT    INTEGER    1    INT
                 .right
                     NUMBERLIT    INTEGER    3    INT
-    0x18d81580 : expression
+    0xb6078c0 : expression
         BINARY_OP "+"
         .left
             NUMBERLIT    INTEGER    1    INT
@@ -80,7 +73,7 @@ FUNCTION DEFINITION: The variable `y` has storage class EXTERN and is a(n)
                         VARIABLE (resolved) "n"
                     .right
                         NUMBERLIT    INTEGER    1    INT
-    0x18d81af0 : expression
+    0xb608180 : expression
         BINARY_OP "+"
         .left
             NUMBERLIT    INTEGER    1    INT
@@ -98,7 +91,7 @@ FUNCTION DEFINITION: The variable `y` has storage class EXTERN and is a(n)
                     NUMBERLIT    INTEGER    4    INT
             .right
                 NUMBERLIT    INTEGER    5    INT
-    0x18d81b50 : expression
+    0xb6081e0 : expression
         BINARY_OP "="
         .left
             UNARY_OP "*"
@@ -122,7 +115,7 @@ FUNCTION DEFINITION: The variable `y` has storage class EXTERN and is a(n)
                         NUMBERLIT    INTEGER    4    INT
                 .right
                     NUMBERLIT    INTEGER    5    INT
-    0x18d82020 : expression
+    0xb608890 : expression
         BINARY_OP "="
         .left
             VARIABLE (resolved) "n"
@@ -136,7 +129,7 @@ FUNCTION DEFINITION: The variable `y` has storage class EXTERN and is a(n)
                 UNARY_OP "!"
                 .operand
                     NUMBERLIT    INTEGER    3    INT
-    0x18d822c0 : expression
+    0xb608bf0 : expression
         BINARY_OP "="
         .left
             VARIABLE (resolved) "g"
@@ -154,7 +147,7 @@ FUNCTION DEFINITION: The variable `y` has storage class EXTERN and is a(n)
                     UNARY_OP "-"
                     .operand
                         NUMBERLIT    INTEGER    3    INT
-    0x18d82620 : if
+    0xb609010 : if
     (
         BINARY_OP "=="
         .left
@@ -163,15 +156,15 @@ FUNCTION DEFINITION: The variable `y` has storage class EXTERN and is a(n)
             NUMBERLIT    INTEGER    8    INT
     )
     then
-        0x18d82e60 : compound
+        0xb609c40 : compound
         {
-            0x18d827e0 : expression
+            0xb609230 : expression
                 BINARY_OP "="
                 .left
                     VARIABLE (resolved) "n"
                 .right
                     NUMBERLIT    INTEGER    2    INT
-            0x18d82920 : if
+            0xb6093d0 : if
             (
                 BINARY_OP "<"
                 .left
@@ -180,9 +173,9 @@ FUNCTION DEFINITION: The variable `y` has storage class EXTERN and is a(n)
                     NUMBERLIT    INTEGER    9    INT
             )
             then
-                0x18d82c40 : compound
+                0xb6099c0 : compound
                 {
-                    0x18d82b20 : expression
+                    0xb609630 : expression
                         BINARY_OP "="
                         .left
                             VARIABLE (resolved) "b"
@@ -190,9 +183,9 @@ FUNCTION DEFINITION: The variable `y` has storage class EXTERN and is a(n)
                             NUMBERLIT    INTEGER    0    INT
                 }
             else
-                0x18d82e00 : compound
+                0xb609be0 : compound
                 {
-                    0x18d82ce0 : expression
+                    0xb609a60 : expression
                         BINARY_OP "="
                         .left
                             VARIABLE (resolved) "b"
@@ -200,7 +193,7 @@ FUNCTION DEFINITION: The variable `y` has storage class EXTERN and is a(n)
                             NUMBERLIT    INTEGER    3    INT
                 }
         }
-    0x18d82f20 : while
+    0xb609d00 : while
     (
         BINARY_OP ">="
         .left
@@ -213,9 +206,9 @@ FUNCTION DEFINITION: The variable `y` has storage class EXTERN and is a(n)
                 NUMBERLIT    INTEGER    1    INT
     )
     do
-        0x18d82ec0 : compound
+        0xb609ca0 : compound
         {
-            0x18d830a0 : expression
+            0xb609ee0 : expression
                 BINARY_OP "="
                 .left
                     VARIABLE (resolved) "n"
@@ -226,10 +219,10 @@ FUNCTION DEFINITION: The variable `y` has storage class EXTERN and is a(n)
                     .right
                         NUMBERLIT    INTEGER    1    INT
         }
-    0x18d832b0 : do
-        0x18d83810 : compound
+    0xb60a150 : do
+        0xb60a770 : compound
         {
-            0x18d83370 : expression
+            0xb60a210 : expression
                 BINARY_OP "="
                 .left
                     VARIABLE (resolved) "a"
@@ -239,7 +232,7 @@ FUNCTION DEFINITION: The variable `y` has storage class EXTERN and is a(n)
                         VARIABLE (resolved) "a"
                     .right
                         NUMBERLIT    INTEGER    2    INT
-            0x18d83310 : if
+            0xb60a1b0 : if
             (
                 BINARY_OP ">"
                 .left
@@ -248,14 +241,14 @@ FUNCTION DEFINITION: The variable `y` has storage class EXTERN and is a(n)
                     NUMBERLIT    INTEGER    200    INT
             )
             then
-                0x18d836b0 : compound
+                0xb60a610 : compound
                 {
-                    0x18d83630 : break (0x18d832b0)
+                    0xb60a590 : break (0xb60a150)
                 }
             else
-                0x18d837b0 : compound
+                0xb60a710 : compound
                 {
-                    0x18d83730 : continue (0x18d832b0)
+                    0xb60a690 : continue (0xb60a150)
                 }
         }
     while
@@ -270,7 +263,7 @@ FUNCTION DEFINITION: The variable `y` has storage class EXTERN and is a(n)
         .right
             VARIABLE (resolved) "b"
     )
-    0x18d83bd0 : for
+    0xb60ac50 : for
     (
         BINARY_OP "="
         .left
@@ -291,9 +284,9 @@ FUNCTION DEFINITION: The variable `y` has storage class EXTERN and is a(n)
             NUMBERLIT    INTEGER    3    INT
     )
     do
-        0x18d84090 : compound
+        0xb60b1d0 : compound
         {
-            0x18d83ab0 : if
+            0xb60aad0 : if
             (
                 BINARY_OP ">"
                 .left
@@ -302,17 +295,17 @@ FUNCTION DEFINITION: The variable `y` has storage class EXTERN and is a(n)
                     NUMBERLIT    INTEGER    200    INT
             )
             then
-                0x18d83e10 : compound
+                0xb60af50 : compound
                 {
-                    0x18d83db0 : return
+                    0xb60aef0 : return
                         VARIABLE (resolved) "a"
                 }
             else
-                0x18d83f10 : compound
+                0xb60b050 : compound
                 {
-                    0x18d83e90 : continue (0x18d83bd0)
+                    0xb60afd0 : continue (0xb60ac50)
                 }
-            0x18d840f0 : expression
+            0xb60b230 : expression
                 BINARY_OP "^="
                 .left
                     VARIABLE (resolved) "c"
@@ -333,7 +326,7 @@ FUNCTION DEFINITION: The variable `y` has storage class EXTERN and is a(n)
                             .right
                                 NUMBERLIT    INTEGER    7    INT
         }
-    0x18d84390 : expression
+    0xb60b530 : expression
         BINARY_OP "="
         .left
             VARIABLE (resolved) "a"
@@ -348,7 +341,7 @@ FUNCTION DEFINITION: The variable `y` has storage class EXTERN and is a(n)
                     VARIABLE (resolved) "b"
                 .right
                     NUMBERLIT    INTEGER    9    INT
-    0x18d83fd0 : expression
+    0xb60b110 : expression
         BINARY_OP "="
         .left
             VARIABLE (resolved) "a"
@@ -360,15 +353,15 @@ FUNCTION DEFINITION: The variable `y` has storage class EXTERN and is a(n)
                     VARIABLE (resolved) "p"
             .right
                 NUMBERLIT    INTEGER    4    INT
-    0x18d848a0 : expression
+    0xb60bad0 : expression
         UNARY_OP "sizeof"
         .operand
             VARIABLE (resolved) "a"
-    0x18d84960 : expression
+    0xb60bb90 : expression
         UNARY_OP "sizeof"
         .operand
             VARIABLE (resolved) "p"
-    0x18d84c00 : expression
+    0xb60be90 : expression
         UNARY_OP "sizeof"
         .operand
             The variable `<no-name>` has storage class unknown and is a(n)
@@ -378,7 +371,7 @@ FUNCTION DEFINITION: The variable `y` has storage class EXTERN and is a(n)
                 ]
                 containing
                     INT 
-    0x18d84f00 : expression
+    0xb60c250 : expression
         UNARY_OP "sizeof"
         .operand
             The variable `<no-name>` has storage class unknown and is a(n)
@@ -393,15 +386,15 @@ FUNCTION DEFINITION: The variable `y` has storage class EXTERN and is a(n)
                     ]
                     containing
                         INT 
-    0x18d85130 : expression
+    0xb60c4e0 : expression
         UNARY_OP "sizeof"
         .operand
             NUMBERLIT    INTEGER    1    INT
-    0x18d85190 : expression
+    0xb60c540 : expression
         UNARY_OP "sizeof"
         .operand
             VARIABLE (resolved) "l"
-    0x18d85250 : expression
+    0xb60c600 : expression
         UNARY_OP "sizeof"
         .operand
             BINARY_OP "+"
@@ -409,19 +402,19 @@ FUNCTION DEFINITION: The variable `y` has storage class EXTERN and is a(n)
                 VARIABLE (resolved) "l"
             .right
                 NUMBERLIT    INTEGER    1    INT
-    0x18d85550 : expression
+    0xb60c960 : expression
         UNARY_OP "sizeof"
         .operand
             The variable `<no-name>` has storage class unknown and is a(n)
                 pointer to a(n)
                     INT UNSIGNED 
-    0x18d85610 : expression
+    0xb60ca20 : expression
         BINARY_OP "="
         .left
             VARIABLE (resolved) "p"
         .right
             VARIABLE (resolved) "l"
-    0x18d855b0 : expression
+    0xb60c9c0 : expression
         BINARY_OP "="
         .left
             UNARY_OP "*"
@@ -433,11 +426,11 @@ FUNCTION DEFINITION: The variable `y` has storage class EXTERN and is a(n)
                     NUMBERLIT    INTEGER    3    INT
         .right
             NUMBERLIT    INTEGER    9    INT
-    0x18d858b0 : expression
+    0xb60cd80 : expression
         UNARY_OP "*"
         .operand
             VARIABLE (resolved) "l"
-    0x18d85970 : expression
+    0xb60ce40 : expression
         UNARY_OP "*"
         .operand
             BINARY_OP "-"
@@ -449,88 +442,109 @@ FUNCTION DEFINITION: The variable `y` has storage class EXTERN and is a(n)
                     NUMBERLIT    INTEGER    8    INT
             .right
                 NUMBERLIT    INTEGER    3    INT
-    0x18d85df0 : expression
+    0xb60d380 : expression
         BINARY_OP "+"
         .left
             VARIABLE (resolved) "u"
         .right
             NUMBERLIT    INTEGER    4    INT
-    0x18d85f90 : expression
+    0xb60d580 : expression
         BINARY_OP "-"
         .left
             VARIABLE (resolved) "u"
         .right
             VARIABLE (resolved) "v"
-    0x18d86050 : return
-        BINARY_OP "+"
+    0xb60d640 : expression
+        BINARY_OP "="
         .left
-            VARIABLE (resolved) "n"
+            VARIABLE (resolved) "b"
         .right
+            UNARY_OP "++"
+            .operand
+                VARIABLE (resolved) "a"
+    0xb60d760 : expression
+        BINARY_OP "="
+        .left
+            VARIABLE (resolved) "b"
+        .right
+            UNARY_OP "*"
+            .operand
+                UNARY_OP "++"
+                .operand
+                    VARIABLE (resolved) "p"
+    0xb60d500 : expression
+        UNARY_OP "++"
+        .operand
+            UNARY_OP "*"
+            .operand
+                VARIABLE (resolved) "p"
+    0xb60d9a0 : expression
+        UNARY_OP "&"
+        .operand
             VARIABLE (resolved) "a"
 }
 
+total arguments = 5
+total local variables = 4
+total temp variables = 56
+total string literals = 0
 BB0:
-    %T0    ADD    1    2
-    n{ AUTO }    ADD    1    3
-    %T1    ADD    2    n{ AUTO }
-    n{ AUTO }    MOV    1    
-    p{ AUTO }    ADD    1    n{ AUTO }
+    %T0    ADD    $1    $2
+    n{ AUTO }    ADD    $1    $3
+    %T1    ADD    $2    n{ AUTO }
+    n{ AUTO }    MOV    $1    
+    p{ AUTO }    ADD    $1    n{ AUTO }
         STORE    p{ AUTO }    p{ AUTO }
-        MUL    1    4
+    %T3    MUL    $1    $4
     (%T2)    ADD    %T3    p{ AUTO }
-    %T7    MUL    2    3
-    %T6    DIV    %T7    4
-    %T5    MOD    %T6    5
-    %T4    ADD    1    %T5
-    %T10    MUL    2    3
-    %T9    DIV    %T10    4
-    %T8    MOD    %T9    5
-    p{ AUTO }    ADD    1    %T8
+    (%T7)    MUL    $2    $3
+    (%T6)    DIV    (%T7)    $4
+    (%T5)    MOD    (%T6)    $5
+    %T4    ADD    $1    (%T5)
+    (%T10)    MUL    $2    $3
+    (%T9)    DIV    (%T10)    $4
+    (%T8)    MOD    (%T9)    $5
+    p{ AUTO }    ADD    $1    (%T8)
         STORE    p{ AUTO }    p{ AUTO }
-    %T11    CPL    1    
-    %T12    MOV    0    
-        CMP    3    0
-    %T12    CMOVZ    1    
-    n{ AUTO }    ADD    %T11    %T12
-    %T14    NEG    3    
-    %T13    NEG    %T14    
-    g{ EXTERN }    ADD    1    %T13
-    %T15    MOV    0    
-        CMP    a{ AUTO }    8
-    %T15    CMOVZ    1    
-        CMP    %T15    0
+    (%T11)    CPL    $1    
+        CMP    $3    $0
+    (%T12)    SETZ    $1    
+    n{ AUTO }    ADD    (%T11)    (%T12)
+    (%T14)    NEG    $3    
+    (%T13)    NEG    (%T14)    
+    g{ EXTERN }    ADD    $1    (%T13)
+        CMP    a{ AUTO }    $8
+    (%T15)    SETZ        
+        CMP    (%T15)    $0
         JPZ    BB5    
 BB1:
-    n{ AUTO }    MOV    2    
-    %T16    MOV    0    
-        CMP    c{ AUTO }    9
-    %T16    CMOVM    1    
-        CMP    %T16    0
+    n{ AUTO }    MOV    $2    
+        CMP    c{ AUTO }    $9
+    (%T16)    SETM        
+        CMP    (%T16)    $0
         JPZ    BB3    
 BB2:
-    b{ AUTO }    MOV    0    
+    b{ AUTO }    MOV    $0    
         JP    BB4    
 BB3:
-    b{ AUTO }    MOV    3    
+    b{ AUTO }    MOV    $3    
 BB4:
 BB5:
         JP    BB7    
 BB6:
-    n{ AUTO }    ADD    n{ AUTO }    1
+    n{ AUTO }    ADD    n{ AUTO }    $1
 BB7:
-    %T17    MOV    1    
-    n{ AUTO }    ADD    n{ AUTO }    1
+    n{ AUTO }    ADD    n{ AUTO }    $1
         CMP    b{ AUTO }    n{ AUTO }
-    %T17    CMOVM    0    
-        CMP    %T17    0
+    (%T17)    SETNM        
+        CMP    (%T17)    $0
         JPNZ    BB6    
 BB8:
 BB9:
-    a{ AUTO }    ADD    a{ AUTO }    2
-    %T18    MOV    0    
-        CMP    a{ AUTO }    200
-    %T18    CMOVP    1    
-        CMP    %T18    0
+    a{ AUTO }    ADD    a{ AUTO }    $2
+        CMP    a{ AUTO }    $200
+    (%T18)    SETP        
+        CMP    (%T18)    $0
         JPZ    BB13    
 BB10:
         JP    BB16    
@@ -541,20 +555,18 @@ BB12:
 BB13:
 BB14:
 BB15:
-    %T19    MOV    0    
-    a{ AUTO }    SUB    a{ AUTO }    1
+    a{ AUTO }    SUB    a{ AUTO }    $1
         CMP    a{ AUTO }    b{ AUTO }
-    %T19    CMOVNZ    1    
-        CMP    %T19    0
+    (%T19)    SETNZ        
+        CMP    (%T19)    $0
         JPNZ    BB9    
 BB16:
-    n{ AUTO }    MOV    0    
+    n{ AUTO }    MOV    $0    
         JP    BB23    
 BB17:
-    %T20    MOV    0    
-        CMP    a{ AUTO }    200
-    %T20    CMOVP    1    
-        CMP    %T20    0
+        CMP    a{ AUTO }    $200
+    (%T20)    SETP        
+        CMP    (%T20)    $0
         JPZ    BB20    
 (exit)BB18:
         RET    a{ AUTO }    
@@ -563,53 +575,61 @@ BB19:
         JP    BB22    
 BB20:
 BB21:
-    a{ AUTO }    MUL    a{ AUTO }    7
+    a{ AUTO }    MUL    a{ AUTO }    $7
     b{ AUTO }    ADD    b{ AUTO }    a{ AUTO }
-    %T21    LOAD    p{ AUTO }    
-    %T22    OR    %T21    b{ AUTO }
-        STORE    p{ AUTO }    %T22
-    c{ AUTO }    XOR    c{ AUTO }    %T22
+    (%T21)    LOAD    p{ AUTO }    
+    (%T22)    OR    (%T21)    b{ AUTO }
+        STORE    p{ AUTO }    (%T22)
+    c{ AUTO }    XOR    c{ AUTO }    (%T22)
 BB22:
-    n{ AUTO }    ADD    n{ AUTO }    3
+    n{ AUTO }    ADD    n{ AUTO }    $3
 BB23:
-    %T23    MOV    0    
-        CMP    n{ AUTO }    30
-    %T23    CMOVM    1    
-        CMP    %T23    0
+        CMP    n{ AUTO }    $30
+    (%T23)    SETM        
+        CMP    (%T23)    $0
         JPNZ    BB17    
 (exit)BB24:
         ARGBEGIN        
         ARG    a{ AUTO }    
-    %T24    ADD    b{ AUTO }    9
+    %T24    ADD    b{ AUTO }    $9
         ARG    %T24    
     a{ AUTO }    CALL    f (ident)    
-    %T25    LOAD    p{ AUTO }    
-    a{ AUTO }    ADD    %T25    4
-    %T26    MOV    4    
-    %T27    MOV    8    
-    %T28    MOV    40    
-    %T29    MOV    400    
-    %T30    MOV    4    
-    %T31    MOV    40    
+    (%T25)    LOAD    p{ AUTO }    
+    a{ AUTO }    ADD    (%T25)    $4
+    (%T26)    MOV    $4    
+    (%T27)    MOV    $4    
+    (%T28)    MOV    $40    
+    (%T29)    MOV    $400    
+    (%T30)    MOV    $4    
+    (%T31)    MOV    $40    
     (%T34)    LEA    l{ AUTO }    
-    %T35    MUL    1    4
+    %T35    MUL    $1    $40
     (%T33)    ADD    (%T34)    %T35
-    %T36    MOV    8    
+    (%T36)    MOV    $4    
     p{ AUTO }    LEA    l{ AUTO }    
     (%T38)    LEA    l{ AUTO }    
-    %T39    MUL    3    4
+    %T39    MUL    $3    $40
     (%T37)    ADD    (%T38)    %T39
-        STORE    (%T37)    9
+        STORE    (%T37)    $9
     (%T40)    LEA    l{ AUTO }    
     (%T44)    LEA    l{ AUTO }    
-    %T45    MUL    8    4
+    %T45    MUL    $8    $40
     (%T43)    ADD    (%T44)    %T45
-    %T46    MUL    3    4
+    %T46    MUL    $3    $40
     (%T42)    SUB    (%T43)    %T46
-    %T41    LOAD    (%T42)    
-    %T48    MUL    4    4
+    (%T41)    LOAD    (%T42)    
+    %T48    MUL    $4    $4
     (%T47)    ADD    u{ AUTO }    %T48
     %T50    SUB    u{ AUTO }    v{ AUTO }
-    %T49    DIV    %T50    4
-    %T51    ADD    n{ AUTO }    a{ AUTO }
-        RET    %T51    
+    %T49    DIV    %T50    $4
+    b{ AUTO }    MOV    a{ AUTO }    
+    a{ AUTO }    ADD    a{ AUTO }    $1
+    (%T51)    MOV    p{ AUTO }    
+    %T52    MUL    $1    $4
+    p{ AUTO }    ADD    p{ AUTO }    %T52
+    b{ AUTO }    LOAD    (%T51)    
+    (%T53)    MOV    p{ AUTO }    
+    %T54    MUL    $1    $4
+    p{ AUTO }    ADD    p{ AUTO }    %T54
+    (%T55)    LEA    a{ AUTO }    
+        RET        

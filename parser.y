@@ -1,7 +1,7 @@
 %debug
 
 %{
-    // * probably full of memory leaks *
+    // * definitly full of memory leaks *
 
     #include <stdlib.h>
     #include <stdio.h>
@@ -10,8 +10,9 @@
     #include "ast.h"
     #include "symbol_table.h"
     #include "jump_association.h"
-    #include "quad.h"
     #include "errorf.h"
+    #include "quad.h"
+    #include "backend.h"
 
     void yyerror (const char *s)
     {
@@ -246,6 +247,8 @@ external_declaration:
             printf("EXTERNAL DECLARATION: ");
             ast_print_variable(var, 0);
             printf("\n");
+
+            backend_write_global(var);
         }
     }
     ;
@@ -291,6 +294,7 @@ function_definition:
             ENUMERATE(fn->next->function.parameters, i, {
                 // * mark the parameters as used or else they'll get thrown away after the compound statement
                 fn->next->function.parameters->items[i]->variable.used = 1;
+                fn->next->function.parameters->items[i]->variable.is_argument = 1;
                 st_add(NS_VARIABLE, fn->next->function.parameters->items[i]);
             });
         }
@@ -305,8 +309,11 @@ function_definition:
         ast_print_variable($<node>3, 0);
         ast_print_statement($4, 0);
         printf("\n");
-        print_basic_block_list(generate_function_quads($4));
 
+        basic_block_list_t *bbl = generate_function_quads($4);
+        print_basic_block_list(bbl);
+
+        backend_write_function(bbl, $<node>3->name);
     }
     // TODO this is just a copy of above for now. It also needs to be fixed.
 /*
@@ -521,12 +528,12 @@ block_item:
         ;
 
     string_literal:
-        STRINGLIT {$$ = ast_new_stringlit($1);}
+        STRINGLIT {$$ = ast_new_string_literal($1);}
         ;
 
     constant:
-        CHARLIT {$$ = ast_new_charlit($1.buffer[0]); free($1.buffer);}
-        | NUMBERLIT {$$ = ast_new_numberlit($1);}
+        CHARLIT {$$ = ast_new_char_literal($1.buffer[0]); free($1.buffer);}
+        | NUMBERLIT {$$ = ast_new_number_literal($1);}
         ;
 
     primary_expression:
@@ -541,8 +548,8 @@ block_item:
         | postfix_expression '[' expression ']' {$$ = ast_new_unary_op('*', ast_new_binary_op('+', $1, $3));}
         | postfix_expression '(' ')' {$$ = ast_new_function_call($1, ast_node_list_new());}
         | postfix_expression '(' argument_expression_list ')' {$$ = ast_new_function_call($1, $3);}
-        | postfix_expression '.' IDENT {$$ = ast_new_member_access($1, $3.buffer);}
-        | postfix_expression "->" IDENT {$$ = ast_new_member_access(ast_new_unary_op('*', $1), $3.buffer);}
+//      | postfix_expression '.' IDENT {$$ = ast_new_member_access($1, $3.buffer);}
+//      | postfix_expression "->" IDENT {$$ = ast_new_member_access(ast_new_unary_op('*', $1), $3.buffer);}
         | postfix_expression "++" {$$ = ast_new_unary_op(PLUSPLUS, $1);}
         | postfix_expression "--" {$$ = ast_new_unary_op(MINUSMINUS, $1);}
         ;
@@ -554,8 +561,8 @@ block_item:
 
     unary_expression:
         postfix_expression
-        | "++" unary_expression {$$ = ast_new_binary_op(PLUSEQ, $2, ast_new_numberlit((number_t){.integer = 1, .type = (scalar_t){.full = TS_INT}}));}
-        | "--" unary_expression {$$ = ast_new_binary_op(MINUSEQ, $2, ast_new_numberlit((number_t){.integer = 1, .type = (scalar_t){.full = TS_INT}}));}
+        | "++" unary_expression {$$ = ast_new_binary_op(PLUSEQ, $2, ast_new_number_literal((number_t){.integer = 1, .type = (scalar_t){.full = TS_INT}}));}
+        | "--" unary_expression {$$ = ast_new_binary_op(MINUSEQ, $2, ast_new_number_literal((number_t){.integer = 1, .type = (scalar_t){.full = TS_INT}}));}
         | '&' cast_expression {$$ = ast_new_unary_op('&', $2);}
         | '*' cast_expression {$$ = ast_new_unary_op('*', $2);}
         | '+' cast_expression {$$ = ast_new_unary_op('+', $2);}

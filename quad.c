@@ -19,20 +19,9 @@ ast_node_t *generate_if_statement(ast_node_t *statement);
 ast_node_t *generate_while_statement(ast_node_t *statement);
 ast_node_t *generate_for_statement(ast_node_t *statement);
 
-static unsigned long temp_var_counter = 0;
-
-ast_node_t *new_temp_var()
-{
-    ast_node_t *new_inst = malloc(sizeof(ast_node_t));
-    new_inst->kind = AST_TEMPORARY;
-    new_inst->temporary.num = temp_var_counter++;
-    new_inst->temporary.isa = 0;
-    return new_inst;
-}
-
 ast_node_t *new_immediate(int n)
 {
-    return ast_new_numberlit((number_t){.integer = n});
+    return ast_new_number_literal((number_t){.integer = n});
 }
 
 bquad_t *new_quad(bquad_t quad)
@@ -84,7 +73,7 @@ void resolve_continue_metadata(struct jump_metadata *data, int jump_target)
 {
     ENUMERATE(data->continue_quads, i, {
         data->continue_quads->items[i]->jump_target = jump_target;
-    });    
+    });
 }
 
 static int current_block_index = 0;
@@ -94,13 +83,24 @@ static basic_block_list_t *current_function = 0;
 void begin_new_function(void)
 {
     if (current_function)
-    {
         errorf("there is already an available function");
-    }
 
     current_function = basic_block_list_new();
     basic_block_list_add(current_function, basic_block_new());
+    current_function->temp_var_count = 0;
+    current_function->variable_count = 0;
+    current_function->argument_count = 0;
+    current_function->string_literal_list = ast_node_list_new();
     current_block_index = 0;
+}
+
+ast_node_t *new_temp_var(void)
+{
+    ast_node_t *new_inst = malloc(sizeof(ast_node_t));
+    new_inst->kind = AST_TEMPORARY;
+    new_inst->temporary.num = current_function->temp_var_count++;
+    new_inst->temporary.isa = 0;
+    return new_inst;
 }
 
 // adds a new basic block to the current function
@@ -119,18 +119,280 @@ void add_new_basic_block_to_function(void)
 // prev == 0: emit to latest created block
 // prev < 0: emit to previous created blocks
 // returns a pointer to the emitted quad
-bquad_t *emit(int prev, ast_node_t *dest, enum quad_op op, void *arg1, void *arg2, int jump_target)
+bquad_t *emit(int prev, ast_node_t *dest, enum quad_op op, ast_node_t *arg1, ast_node_t *arg2, int jump_target)
 {
     if (!current_function)
-    {
         errorf("there is no available basic block");
-    }
 
     if (prev > 0 || current_block_index + prev < 0)
-    {
         errorf("cannot emit quad to block at index %d", prev);
+
+    ast_node_t *t1;
+
+    char p_minus_p = 0;
+
+    log("%s", op_names[op]);
+
+    if (dest)
+    {
+        switch (dest->kind)
+        {
+        case AST_TEMPORARY:
+
+            if (dest->temporary.isa)
+                errorf("temporary variable was written to twice");
+            switch (op)
+            {
+            case MOV:
+                dest->next = arg1->next;
+                break;
+            case SETP:
+            case SETNP:
+            case SETM:
+            case SETNM:
+            case SETZ:
+            case SETNZ:
+                dest->next = ast_new_type((type_specifier_t){.scalar = (scalar_t){.full = TS_INT}, .custom = 0}, (type_qualifier_t){0});
+                break;
+            case LEA:
+                if (arg1->kind == AST_TEMPORARY)
+                    errorf("LEA doesn't work on temporary variables");
+                dest->next = ast_new_pointer(0);
+                dest->next->next = arg1->next;
+                break;
+            case LOAD:
+                if (arg1->next->kind != AST_POINTER)
+                    errorf("must load from pointer");
+                dest->next = arg1->next->next;
+                break;
+            case STORE:
+                break;
+            case ADD:
+                if (arg1->next->kind == AST_POINTER && arg2->next->kind == AST_POINTER)
+                    errorf("ADD can't be done on 2 pointers");
+
+                if (arg1->next->kind == AST_POINTER && arg2->next->kind == AST_TYPE)
+                {
+                    t1 = new_temp_var();
+                    basic_block_add(current_function->items[current_block_index + prev],
+                                    new_quad((bquad_t){
+                                        .dest = t1,
+                                        .op = MUL,
+                                        .arg1 = arg2,
+                                        .arg2 = new_immediate((int)ast_get_sizeof_value(arg1->next->next)),
+                                    }));
+                    dest->next = arg1->next;
+                    arg2 = t1;
+                }
+                else if (arg1->next->kind == AST_TYPE && arg2->next->kind == AST_POINTER)
+                {
+                    t1 = new_temp_var();
+                    basic_block_add(current_function->items[current_block_index + prev],
+                                    new_quad((bquad_t){
+                                        .dest = t1,
+                                        .op = MUL,
+                                        .arg1 = arg1,
+                                        .arg2 = new_immediate((int)ast_get_sizeof_value(arg2->next->next)),
+                                    }));
+                    dest->next = arg2->next;
+                    arg1 = t1;
+                }
+                break;
+            case SUB:
+                if (arg1->next->kind == AST_POINTER && arg2->next->kind == AST_POINTER)
+                {
+                    if (ast_get_sizeof_value(arg1->next->next) != ast_get_sizeof_value(arg2->next->next))
+                        errorf("can't subtract two pointers of different size objects");
+                    p_minus_p = 1;
+                    t1 = dest;
+                    dest = new_temp_var();
+                }
+                if (arg1->next->kind == AST_POINTER && arg2->next->kind == AST_TYPE)
+                {
+                    t1 = new_temp_var();
+                    basic_block_add(current_function->items[current_block_index + prev],
+                                    new_quad((bquad_t){
+                                        .dest = t1,
+                                        .op = MUL,
+                                        .arg1 = arg2,
+                                        .arg2 = new_immediate((int)ast_get_sizeof_value(arg1->next->next)),
+                                    }));
+                    dest->next = arg1->next;
+                    arg2 = t1;
+                }
+                else if (arg1->next->kind == AST_TYPE && arg2->next->kind == AST_POINTER)
+                {
+                    t1 = new_temp_var();
+                    basic_block_add(current_function->items[current_block_index + prev],
+                                    new_quad((bquad_t){
+                                        .dest = t1,
+                                        .op = MUL,
+                                        .arg1 = arg1,
+                                        .arg2 = new_immediate((int)ast_get_sizeof_value(arg2->next->next)),
+                                    }));
+                    dest->next = arg2->next;
+                    arg1 = t1;
+                }
+                break;
+            case MUL:
+            case DIV:
+            case MOD:
+            case AND:
+            case OR:
+            case XOR:
+                if (arg1->next->kind != AST_TYPE || arg2->next->kind != AST_TYPE)
+                    errorf("can only perform MUL/DIV/MOD/AND/OR/XOR on integers");
+                dest->next = ast_new_type((type_specifier_t){.scalar = (scalar_t){.full = TS_INT}, .custom = 0}, (type_qualifier_t){0});
+                break;
+
+            case NEG:
+            case SL:
+            case SR:
+            case CPL:
+                if (arg1->next->kind != AST_TYPE)
+                    errorf("can only perform NEG/SL/SR/CPL on integers");
+                dest->next = ast_new_type((type_specifier_t){.scalar = (scalar_t){.full = TS_INT}, .custom = 0}, (type_qualifier_t){0});
+                break;
+
+            case CALL:
+                dest->next = ast_new_type((type_specifier_t){.scalar = (scalar_t){.full = TS_INT}, .custom = 0}, (type_qualifier_t){0});
+                break;
+
+            default:
+                errorf("type promotion failed for temp variable");
+                break;
+            }
+            break;
+        case AST_VARIABLE:
+
+            switch (op)
+            {
+            case MOV:
+                if (dest->next->kind != arg1->next->kind)
+                    errorf("can't MOV incompatible variables");
+                break;
+
+            case SETP:
+            case SETNP:
+            case SETM:
+            case SETNM:
+            case SETZ:
+            case SETNZ:
+                if (dest->next->kind != AST_TYPE)
+                    errorf("NEG/SL/SR/CPL can only store to integers");
+                break;
+
+            case LEA:
+                if (dest->next->kind != AST_POINTER)
+                    errorf("variable destination of LEA isn't a pointer");
+                break;
+            case LOAD:
+                if (arg1->next->kind != AST_POINTER)
+                    errorf("must load from pointer");
+                if (dest->next->kind != AST_TYPE)
+                    errorf("can't load to variable of type other than integer");
+            case STORE:
+                break;
+            case ADD:
+                if (arg1->next->kind == AST_POINTER && arg2->next->kind == AST_POINTER)
+                    errorf("ADD can't be done on 2 pointers");
+                else if (arg1->next->kind == AST_POINTER && arg2->next->kind == AST_TYPE)
+                {
+                    t1 = new_temp_var();
+                    basic_block_add(current_function->items[current_block_index + prev],
+                                    new_quad((bquad_t){
+                                        .dest = t1,
+                                        .op = MUL,
+                                        .arg1 = arg2,
+                                        .arg2 = new_immediate((int)ast_get_sizeof_value(arg1->next->next)),
+                                    }));
+                    arg2 = t1;
+                }
+                else if (arg1->next->kind == AST_TYPE && arg2->next->kind == AST_POINTER)
+                {
+                    t1 = new_temp_var();
+                    basic_block_add(current_function->items[current_block_index + prev],
+                                    new_quad((bquad_t){
+                                        .dest = t1,
+                                        .op = MUL,
+                                        .arg1 = arg1,
+                                        .arg2 = new_immediate((int)ast_get_sizeof_value(arg2->next->next)),
+                                    }));
+                    arg1 = t1;
+                }
+                break;
+
+            case SUB:
+                if (arg1->next->kind == AST_POINTER && arg2->next->kind == AST_POINTER)
+                {
+                    if (ast_get_sizeof_value(arg1->next->next) != ast_get_sizeof_value(arg2->next->next))
+                        errorf("can't subtract two pointers of different size objects");
+                    p_minus_p = 1;
+                    t1 = dest;
+                    dest = new_temp_var();
+                }
+                else if (arg1->next->kind == AST_POINTER && arg2->next->kind == AST_TYPE)
+                {
+                    t1 = new_temp_var();
+                    basic_block_add(current_function->items[current_block_index + prev],
+                                    new_quad((bquad_t){
+                                        .dest = t1,
+                                        .op = MUL,
+                                        .arg1 = arg2,
+                                        .arg2 = new_immediate((int)ast_get_sizeof_value(arg1->next->next)),
+                                    }));
+                    arg2 = t1;
+                }
+                else if (arg1->next->kind == AST_TYPE && arg2->next->kind == AST_POINTER)
+                {
+                    t1 = new_temp_var();
+                    basic_block_add(current_function->items[current_block_index + prev],
+                                    new_quad((bquad_t){
+                                        .dest = t1,
+                                        .op = MUL,
+                                        .arg1 = arg1,
+                                        .arg2 = new_immediate((int)ast_get_sizeof_value(arg2->next->next)),
+                                    }));
+                    arg1 = t1;
+                }
+                break;
+            case MUL:
+            case DIV:
+            case MOD:
+            case AND:
+            case OR:
+            case XOR:
+                if (arg1->next->kind != AST_TYPE || arg2->next->kind != AST_TYPE)
+                    errorf("can only perform MUL/DIV/MOD/AND/OR/XOR on integers");
+                if (dest->next->kind != AST_TYPE)
+                    errorf("MUL/DIV/MOD/AND/OR/XOR can only store to integers");
+                break;
+
+            case NEG:
+            case SL:
+            case SR:
+            case CPL:
+                if (arg1->next->kind != AST_TYPE)
+                    errorf("can only perform NEG/SL/SR/CPL on integers");
+                if (dest->next->kind != AST_TYPE)
+                    errorf("NEG/SL/SR/CPL can only store to integers");
+                break;
+            case CALL:
+                break;
+            default:
+                errorf("destination variable is not compatible");
+                break;
+            }
+            break;
+
+        default:
+            errorf("destination can only be a temporary or variable");
+            break;
+        }
     }
+
     bquad_t *q;
+
     if (op >= JP)
     {
         q = new_quad((bquad_t){
@@ -149,20 +411,50 @@ bquad_t *emit(int prev, ast_node_t *dest, enum quad_op op, void *arg1, void *arg
             .arg2 = arg2,
         });
     }
+
     basic_block_add(current_function->items[current_block_index + prev], q);
+
+    if (p_minus_p)
+    {
+        basic_block_add(current_function->items[current_block_index + prev],
+                        q = new_quad((bquad_t){
+                            .dest = t1,
+                            .op = DIV,
+                            .arg1 = dest,
+                            .arg2 = new_immediate((int)ast_get_sizeof_value(arg1->next->next)),
+                        }));
+    }
+
     if (op == RET)
         current_function->items[current_block_index + prev]->is_exit = 1;
 
     return q;
 }
 
+void *add_local_variable(ast_node_t *var)
+{
+    if (var->variable.used != 2)
+    {
+        if (var->variable.is_argument)
+            var->variable.num = current_function->argument_count++;
+        else
+            var->variable.num = current_function->variable_count++;
+        var->variable.used = 2;
+    }
+}
+
+unsigned long add_string_literal(ast_node_t *string)
+{
+    string->string_literal.num = current_function->string_literal_list->count;
+    ast_node_list_add(current_function->string_literal_list, string);
+}
+
 // returns the finished function
 basic_block_list_t *end_function(void)
 {
     if (!current_function)
-    {
         errorf("there is no available function");
-    }
+
     if (!current_function->items[current_block_index]->is_exit)
     {
         emit(0, 0, RET, 0, 0, 0);
@@ -237,6 +529,8 @@ ast_node_t *generate_rvalue(ast_node_t *node, ast_node_t *target)
     ast_node_t *t2;
     ast_node_t *t3;
 
+    char is_direct = 0;
+
 #define T        \
     if (!target) \
     target = new_temp_var()
@@ -259,16 +553,15 @@ ast_node_t *generate_rvalue(ast_node_t *node, ast_node_t *target)
         return target;                                  \
     } while (0)
 
-#define BIN_COMPARE(op, predicate, value)                     \
-    do                                                        \
-    {                                                         \
-        T;                                                    \
-        emit(0, target, MOV, new_immediate(predicate), 0, 0); \
-        t1 = generate_rvalue(node->binary_op.left, 0);        \
-        t2 = generate_rvalue(node->binary_op.right, 0);       \
-        emit(0, 0, CMP, t1, t2, 0);                           \
-        emit(0, target, op, new_immediate(value), 0, 0);      \
-        return target;                                        \
+#define BIN_COMPARE(op)                                 \
+    do                                                  \
+    {                                                   \
+        T;                                              \
+        t1 = generate_rvalue(node->binary_op.left, 0);  \
+        t2 = generate_rvalue(node->binary_op.right, 0); \
+        emit(0, 0, CMP, t1, t2, 0);                     \
+        emit(0, target, op, 0, 0, 0);                   \
+        return target;                                  \
     } while (0)
 
     switch (node->kind)
@@ -277,27 +570,36 @@ ast_node_t *generate_rvalue(ast_node_t *node, ast_node_t *target)
         errorf("unresolved identifier");
 
     case AST_VARIABLE:
+        if (!node->variable.name)
+            errorf("variable has no name");
+
+        if (node->variable.storage_class == SC_AUTO)
+            add_local_variable(node);
+
         if (node->variable.isa->kind == AST_ARRAY)
         {
+            // the rvalue of an array is its address which is a pointer to the first element of the array
             T;
             emit(0, target, LEA, node, 0, 0);
-            if (target->kind == AST_TEMPORARY)
-                ;
-            {
-                target->temporary.isa = ast_new_pointer(0);
-                target->temporary.isa->pointer.to = node->next->next;
-            }
             return target;
         }
         else
-            return node;
-
-    case AST_NUMBERLIT:
-        if (node->numberlit.type.full & TS_REAL)
         {
-            errorf("real number literals are not supported");
+            // other variables just return themselves
+            return node;
         }
+
+    case AST_NUMBER_LITERAL:
+        if (node->number_literal.isa->type.specifier.scalar.full != TS_INT)
+            errorf("only integers are supported");
         return node;
+
+    case AST_STRING_LITERAL:
+        add_string_literal(node);
+
+        T;
+        emit(0, target, LEA, node, 0, 0);
+        return target;
 
     case AST_BINARY_OP:
         switch (node->binary_op.kind)
@@ -330,85 +632,10 @@ ast_node_t *generate_rvalue(ast_node_t *node, ast_node_t *target)
             BIN(DIV);
         case '%':
             BIN(MOD);
-
-        // There definitly a better way to do this pointer arithmetic stuff
         case '+':
-
-            T;
-            t1 = generate_rvalue(node->binary_op.left, 0);
-            t2 = generate_rvalue(node->binary_op.right, 0);
-
-            // check for temp values and variables that are pointers
-            if ((t1->kind == AST_TEMPORARY || t1->kind == AST_VARIABLE) && t1->next && t1->next->kind == AST_POINTER)
-            {
-                if ((t2->kind == AST_TEMPORARY || t2->kind == AST_VARIABLE) && t2->next && t2->next->kind == AST_POINTER)
-                {
-                    errorf("pointer + pointer not allowed");
-                }
-
-                t3 = new_temp_var();
-                emit(0, t3, MUL, t2, new_immediate((int)ast_get_sizeof_value(t1->next->next)), 0);
-                emit(0, target, ADD, t1, t3, 0);
-                if (target->kind == AST_TEMPORARY)
-                    target->next = t1->next;
-                return target;
-            }
-
-            if ((t2->kind == AST_TEMPORARY || t2->kind == AST_VARIABLE) && t2->next && t2->next->kind == AST_POINTER)
-            {
-                t3 = new_temp_var();
-                emit(0, 0, MUL, t1, new_immediate((int)ast_get_sizeof_value(t2->next->next)), 0);
-                emit(0, target, ADD, t3, t2, 0);
-                if (target->kind == AST_TEMPORARY)
-                    target->next = t1->next;
-                return target;
-            }
-
-            emit(0, target, ADD, t1, t2, 0);
-            return target;
-
+            BIN(ADD);
         case '-':
-            T;
-            t1 = generate_rvalue(node->binary_op.left, 0);
-            t2 = generate_rvalue(node->binary_op.right, 0);
-
-            // check for temp values and variables that are pointers
-            if ((t1->kind == AST_TEMPORARY || t1->kind == AST_VARIABLE) && t1->next && t1->next->kind == AST_POINTER)
-            {
-                if ((t2->kind == AST_TEMPORARY || t2->kind == AST_VARIABLE) && t2->next && t2->next->kind == AST_POINTER)
-                {
-                    int size1 = (int)ast_get_sizeof_value(t1->next->next);
-                    int size2 = (int)ast_get_sizeof_value(t2->next->next);
-                    if (size1 != size2)
-                    {
-                        errorf("pointer - pointer incompatible sizes");
-                    }
-                    t3 = new_temp_var();
-                    emit(0, t3, SUB, t1, t2, 0);
-                    emit(0, target, DIV, t3, new_immediate(size1), 0);
-                    return target;
-                }
-
-                t3 = new_temp_var();
-                emit(0, t3, MUL, t2, new_immediate((int)ast_get_sizeof_value(t1->next->next)), 0);
-                emit(0, target, SUB, t1, t3, 0);
-                if (target->kind == AST_TEMPORARY)
-                    target->next = t1->next;
-                return target;
-            }
-
-            if ((t2->kind == AST_TEMPORARY || t2->kind == AST_VARIABLE) && t2->next && t2->next->kind == AST_POINTER)
-            {
-                t3 = new_temp_var();
-                emit(0, 0, MUL, t1, new_immediate((int)ast_get_sizeof_value(t2->next->next)), 0);
-                emit(0, target, SUB, t3, t2, 0);
-                if (target->kind == AST_TEMPORARY)
-                    target->next = t1->next;
-                return target;
-            }
-
-            emit(0, target, SUB, t1, t2, 0);
-            return target;
+            BIN(SUB);
         case SHL:
             BIN(SL);
         case SHR:
@@ -420,40 +647,55 @@ ast_node_t *generate_rvalue(ast_node_t *node, ast_node_t *target)
         case '|':
             BIN(OR);
         case '<':
-            BIN_COMPARE(CMOVM, 0, 1);
+            BIN_COMPARE(SETM);
         case LTEQ:
-            BIN_COMPARE(CMOVP, 1, 0);
+            BIN_COMPARE(SETNP);
         case '>':
-            BIN_COMPARE(CMOVP, 0, 1);
+            BIN_COMPARE(SETP);
         case GTEQ:
-            BIN_COMPARE(CMOVM, 1, 0);
+            BIN_COMPARE(SETNM);
         case EQEQ:
-            BIN_COMPARE(CMOVZ, 0, 1);
+            BIN_COMPARE(SETZ);
         case NOTEQ:
-            BIN_COMPARE(CMOVNZ, 0, 1);
+            BIN_COMPARE(SETNZ);
 
         case LOGAND:
         case LOGOR:
         default:
             errorf("encountered invalid or unsupported binary op kind %d while generating rvalue", node->binary_op.kind);
-            break;
         }
         break;
 
     case AST_UNARY_OP:
         switch (node->unary_op.kind)
         {
+        case '&':
+            T;
+            t1 = generate_rvalue(node->unary_op.operand, 0);
+            emit(0, target, LEA, t1, 0, 0);
+            return target;
+        case PLUSPLUS:
+            T;
+            t1 = generate_lvalue(node->unary_op.operand, &is_direct);
+            emit(0, target, MOV, t1, 0, 0);
+            emit(0, t1, ADD, t1, new_immediate(1), 0);
+            return target;
+        case MINUSMINUS:
+            T;
+            t1 = generate_lvalue(node->unary_op.operand, &is_direct);
+            emit(0, target, MOV, t1, 0, 0);
+            emit(0, t1, SUB, t1, new_immediate(1), 0);
+            return target;
         case '*':
-            if (node->unary_op.operand->kind == AST_VARIABLE && ast_is_array(node->unary_op.operand))
+            if (node->unary_op.operand->kind == AST_VARIABLE && node->unary_op.operand->next->kind == AST_ARRAY)
                 return generate_rvalue(node->unary_op.operand, 0);
             T;
             emit(0, target, LOAD, generate_rvalue(node->unary_op.operand, 0), 0, 0);
             return target;
         case '!':
             T;
-            emit(0, target, MOV, new_immediate(0), 0, 0);
             emit(0, 0, CMP, generate_rvalue(node->unary_op.operand, 0), new_immediate(0), 0);
-            emit(0, target, CMOVZ, new_immediate(1), 0, 0);
+            emit(0, target, SETZ, new_immediate(1), 0, 0);
             return target;
         case '~':
             UN(CPL);
@@ -465,6 +707,8 @@ ast_node_t *generate_rvalue(ast_node_t *node, ast_node_t *target)
         case SIZEOF:
             T;
             return generate_sizeof(node->unary_op.operand, target);
+        default:
+            errorf("encountered invalid or unsupported unary op kind %d while generating rvalue", node->unary_op.kind);
         }
         break;
     case AST_FUNCTION_CALL:
@@ -473,7 +717,6 @@ ast_node_t *generate_rvalue(ast_node_t *node, ast_node_t *target)
     case AST_TYPE_CAST:
     case AST_TERNARY_OP:
     case AST_MEMBER_ACCESS:
-    case AST_STRINGLIT:
     default:
         errorf("can't generate quad for node type %d in expression", node->kind);
         break;
@@ -537,6 +780,7 @@ ast_node_t *generate_lvalue(ast_node_t *node, char *is_direct)
     switch (node->kind)
     {
     case AST_VARIABLE:
+        add_local_variable(node);
         *is_direct = 1;
         return node;
     case AST_UNARY_OP:
@@ -544,7 +788,8 @@ ast_node_t *generate_lvalue(ast_node_t *node, char *is_direct)
         {
             *is_direct = 0;
             ast_node_t *v = generate_rvalue(node->unary_op.operand, 0);
-            if (v->kind == AST_NUMBERLIT)
+
+            if (v->next->kind != AST_POINTER)
                 return 0;
             return v;
         }
@@ -577,7 +822,7 @@ ast_node_t *generate_sizeof(ast_node_t *node, ast_node_t *target)
     case AST_VARIABLE:
         emit(0, target, MOV, new_immediate((int)ast_get_sizeof_value(node->next)), 0, 0);
         return target;
-    case AST_NUMBERLIT:
+    case AST_NUMBER_LITERAL:
         emit(0, target, MOV, new_immediate(4), 0, 0);
         return target;
     case AST_BINARY_OP:
@@ -770,9 +1015,15 @@ void print_quad(bquad_t q)
                 print_storage_class(arg1->variable.storage_class);
                 printf("}");
             }
-            else if (arg1->kind == AST_NUMBERLIT)
+            else if (arg1->kind == AST_NUMBER_LITERAL)
             {
-                printf("%d", arg1->numberlit.integer);
+                printf("$%d", arg1->number_literal.integer);
+            }
+            else if (arg1->kind == AST_STRING_LITERAL)
+            {
+                printf("\"");
+                ast_print_string_literal(arg1);
+                printf("\"");
             }
             else if (arg1->kind == AST_IDENT)
             {
@@ -803,9 +1054,15 @@ void print_quad(bquad_t q)
             print_storage_class(arg2->variable.storage_class);
             printf("}");
         }
-        else if (arg2->kind == AST_NUMBERLIT)
+        else if (arg2->kind == AST_NUMBER_LITERAL)
         {
-            printf("%d", arg2->numberlit.integer);
+            printf("$%d", arg2->number_literal.integer);
+        }
+        else if (arg2->kind == AST_STRING_LITERAL)
+        {
+            printf("\"");
+            ast_print_string_literal(arg2);
+            printf("\"");
         }
         else
         {
@@ -816,6 +1073,10 @@ void print_quad(bquad_t q)
 
 void print_basic_block_list(basic_block_list_t *bbl)
 {
+    printf("total arguments = %ld\n", bbl->argument_count);
+    printf("total local variables = %ld\n", bbl->variable_count);
+    printf("total temp variables = %ld\n", bbl->temp_var_count);
+    printf("total string literals = %ld\n", bbl->string_literal_list->count);
     ENUMERATE(bbl, i, {
         basic_block_t *bb = bbl->items[i];
         if (bb->is_exit)
@@ -826,5 +1087,5 @@ void print_basic_block_list(basic_block_list_t *bbl)
             print_quad(*bb->items[j]);
             printf("\n");
         });
-    });    
+    });
 }

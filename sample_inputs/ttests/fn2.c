@@ -1,7 +1,7 @@
 int g;
 
 // for assignment 4
-int (*y(int a, int b, int c, int n, int *p))(int n)
+int y(int a, int b, int c, int n, int *p)
 {
     1 + 2;
     2 + (n = 1 + 3);
@@ -82,6 +82,11 @@ int (*y(int a, int b, int c, int n, int *p))(int n)
     u + 4;
 
     u - v;
+    b = a++;
+    b = *p++;
+    (*p)++;
 
-    return n + a;
+    &a;
+
+    // return n + a;
 }

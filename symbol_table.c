@@ -122,7 +122,7 @@ ast_node_t *st_pop(void)
 
     ENUMERATE(variables, i, {
         if (!variables->items[i]->variable.used)
-            ast_free_variable(variables->items[i]);
+            ast_free_variable_like_node(variables->items[i]);
     });
     ast_node_list_free(variables);
 
