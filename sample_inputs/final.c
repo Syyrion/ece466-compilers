@@ -1,45 +1,41 @@
-// int printf();
+int printf();
 
-// int u;
+int u;
 
-// int *p;
-// int s;
+int *p;
+int s;
 int h[10];
 
-// int g;
+int g;
 
-int y(int a, int b, int c, int n, int *p, int *p2)
+int y(int a, int b)
 {
-    // printf(1+2, 2+2, 3+3);
-    *(9 + p - 2);
-    p - (p2 + 3);
-    *h = 1;
-    if (p)
-    {
-    }
-    else
-    {
-    }
+    printf("arg %d %d\n", a, b);
+    return 0;
 }
 
-// int main(int r)
-// {
-//     int a;
-//     int b;
+int main()
+{
+    int a;
+    int b;
+    int c;
+    int *d;
 
-//     char *c;
+    // a = sizeof(1 + 2);
+    // b = sizeof(h[0]);
+    // c = sizeof(int [10]);
 
-//     c = "hello world";
-//     a = sizeof(1 + 2);
+    int i;
+    for (i = 0; i < 3; i++)
+        printf("hello world %d, %d\n", i, i * 2);
 
-//     a = 1;
-//     a = 2;
-
-//     a = b;
-
-//     a = r;
-
-//     printf("hello world\n");
-//     printf("B %d\n", a + 9);
-//     printf("A %d\n", u);
-// }
+    printf("ret %d\n", y(10, 4));
+    // if (i == 2)
+    // {
+    //     printf("A %d\n", u);
+    // }
+    // else
+    // {
+    //     printf("B %d\n", a + 9);
+    // }
+}

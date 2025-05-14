@@ -132,6 +132,7 @@ typedef enum
     SC_STATIC,
     SC_AUTO,
     SC_REGISTER,
+    SC_IMPLICIT_EXTERN,
 } storage_class_specifier_t;
 
 // function specifiers

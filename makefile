@@ -8,8 +8,8 @@ run:
 #	gcc -E sample_inputs/ttests/base.c | ./rcc > output/testing_out.txt
 #	gcc -E sample_inputs/ttests/struct1.c | ./rcc > output/testing_out.txt
 #   gcc -E sample_inputs/ttests/fn1.c | ./rcc > output/testing_out.txt
-	gcc -E sample_inputs/ttests/fn2.c | ./rcc > output/testing_out.txt
-#	gcc -E sample_inputs/final.c | ./rcc > output/testing_out.txt
+#	gcc -E sample_inputs/ttests/fn2.c | ./rcc > output/testing_out.txt
+	gcc -E sample_inputs/final.c | ./rcc > output/testing_out.txt
 
 assemble:
 	gcc -m32 output/assembly.s -o output/a.out

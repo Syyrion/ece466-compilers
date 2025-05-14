@@ -197,6 +197,9 @@ void print_storage_class(storage_class_specifier_t storage_class)
     case SC_REGISTER:
         printf("REGISTER ");
         break;
+    case SC_IMPLICIT_EXTERN:
+        printf("REGISTER ");
+        break;
     default:
         printf("unknown ");
         break;

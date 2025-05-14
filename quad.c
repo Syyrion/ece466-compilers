@@ -131,8 +131,6 @@ bquad_t *emit(int prev, ast_node_t *dest, enum quad_op op, ast_node_t *arg1, ast
 
     char p_minus_p = 0;
 
-    log("%s", op_names[op]);
-
     if (dest)
     {
         switch (dest->kind)
@@ -155,8 +153,6 @@ bquad_t *emit(int prev, ast_node_t *dest, enum quad_op op, ast_node_t *arg1, ast
                 dest->next = ast_new_type((type_specifier_t){.scalar = (scalar_t){.full = TS_INT}, .custom = 0}, (type_qualifier_t){0});
                 break;
             case LEA:
-                if (arg1->kind == AST_TEMPORARY)
-                    errorf("LEA doesn't work on temporary variables");
                 dest->next = ast_new_pointer(0);
                 dest->next->next = arg1->next;
                 break;
@@ -800,34 +796,39 @@ ast_node_t *generate_lvalue(ast_node_t *node, char *is_direct)
 
 ast_node_t *generate_function_call(ast_node_t *node, ast_node_t *target)
 {
-    ast_node_t *t1;
     if (node->kind != AST_FUNCTION_CALL)
     {
         errorf("wrong node type for generate_function_call %d", node->kind);
     }
+    ast_node_list_t *params = ast_node_list_new();
     emit(0, 0, ARGBEGIN, 0, 0, 0);
+
     ENUMERATE(node->function_call.args, i, {
-        t1 = generate_rvalue(node->function_call.args->items[i], 0);
-        emit(0, 0, ARG, t1, 0, 0);
+        ast_node_list_add(params, generate_rvalue(node->function_call.args->items[i], 0));
     });
+    for (int i = params->count - 1; i >= 0; i--)
+        emit(0, 0, ARG, params->items[i], 0, 0);
+
     emit(0, target, CALL, node->function_call.name, 0, 0);
     return target;
 }
 
 ast_node_t *generate_sizeof(ast_node_t *node, ast_node_t *target)
 {
+    ast_node_t *t1;
+    log("sizeof %d", node->kind);
     switch (node->kind)
     {
     case AST_TEMPORARY:
+        log("temp");
     case AST_VARIABLE:
+        log("variable");
         emit(0, target, MOV, new_immediate((int)ast_get_sizeof_value(node->next)), 0, 0);
-        return target;
-    case AST_NUMBER_LITERAL:
-        emit(0, target, MOV, new_immediate(4), 0, 0);
         return target;
     case AST_BINARY_OP:
     case AST_UNARY_OP:
-        generate_rvalue(node, 0);
+    case AST_NUMBER_LITERAL:
+        emit(0, target, MOV, new_immediate(4), 0, 0);
         return target;
     default:
         errorf("wrong node type for generate_sizeof %d", node->kind);
@@ -963,112 +964,58 @@ ast_node_t *generate_for_statement(ast_node_t *statement)
 
 // ## Functions for printing
 
-void print_quad(bquad_t q)
+void print_quad_component(ast_node_t *val)
 {
-    if (q.dest)
+    if (!val)
+        return;
+    printf("{ ");
+    switch (val->kind)
     {
-        if (q.dest)
-        {
-            if (q.dest->kind == AST_TEMPORARY)
-            {
-                if (q.dest->temporary.isa)
-                    printf("(%%T%d)", q.dest->temporary.num);
-                else
-                    printf("%%T%d", q.dest->temporary.num);
-            }
-            else if (q.dest->kind == AST_VARIABLE)
-            {
-                printf("%s{ ", q.dest->variable.name);
-                print_storage_class(q.dest->variable.storage_class);
-                printf("}");
-            }
-            else
-            {
-                errorf("invalid quad destination %d", q.dest->kind);
-            }
-        }
+    case AST_TEMPORARY:
+        printf("%%T%d ", val->temporary.num);
+        break;
+    case AST_VARIABLE:
+        printf("%s (%d)", val->variable.name, val->variable.num);
+        if(val->variable.is_argument)
+            printf("arg ");
+        print_storage_class(val->variable.storage_class);
+        break;
+    case AST_NUMBER_LITERAL:
+        printf("$%d ", val->number_literal.integer);
+        break;
+    case AST_STRING_LITERAL:
+        printf("\"");
+        ast_print_string_literal(val);
+        printf("\" (%d)", val->string_literal.num);
+        break;
+    case AST_IDENT:
+        printf("%s (ident)", val->name);
+        return;
+    default:
+        errorf("can't print quad argument/destination %d", val->kind);
     }
 
+    if (val->next)
+        ast_print_compact_declarator(val->next);
+    else
+        printf("(missing type)");
+    printf(" }");
+}
+
+void print_quad(bquad_t q)
+{
+    print_quad_component(q.dest);
     printf("    ");
     printf("%s", op_names[q.op]);
     printf("    ");
-
-    if (q.arg1)
-    {
-        if (q.op >= JP)
-        {
-            printf("BB%d", q.jump_target);
-        }
-        else
-        {
-            ast_node_t *arg1 = (ast_node_t *)q.arg1;
-            if (arg1->kind == AST_TEMPORARY)
-            {
-                if (arg1->temporary.isa)
-                    printf("(%%T%d)", arg1->temporary.num);
-                else
-                    printf("%%T%d", arg1->temporary.num);
-            }
-            else if (arg1->kind == AST_VARIABLE)
-            {
-                printf("%s{ ", arg1->variable.name);
-                print_storage_class(arg1->variable.storage_class);
-                printf("}");
-            }
-            else if (arg1->kind == AST_NUMBER_LITERAL)
-            {
-                printf("$%d", arg1->number_literal.integer);
-            }
-            else if (arg1->kind == AST_STRING_LITERAL)
-            {
-                printf("\"");
-                ast_print_string_literal(arg1);
-                printf("\"");
-            }
-            else if (arg1->kind == AST_IDENT)
-            {
-                printf("%s (ident)", arg1->name);
-            }
-            else
-            {
-                errorf("invalid quad arg1 %d", arg1->kind);
-            }
-        }
-    }
-
+    if (q.op >= JP)
+        printf("BB%d", q.jump_target);
+    else if (q.op == CALL)
+        printf("%s", q.arg1->name);
+    else
+        print_quad_component(q.arg1);
     printf("    ");
-
-    if (q.arg2)
-    {
-        ast_node_t *arg2 = (ast_node_t *)q.arg2;
-        if (arg2->kind == AST_TEMPORARY)
-        {
-            if (arg2->temporary.isa)
-                printf("(%%T%d)", arg2->temporary.num);
-            else
-                printf("%%T%d", arg2->temporary.num);
-        }
-        else if (arg2->kind == AST_VARIABLE)
-        {
-            printf("%s{ ", arg2->variable.name);
-            print_storage_class(arg2->variable.storage_class);
-            printf("}");
-        }
-        else if (arg2->kind == AST_NUMBER_LITERAL)
-        {
-            printf("$%d", arg2->number_literal.integer);
-        }
-        else if (arg2->kind == AST_STRING_LITERAL)
-        {
-            printf("\"");
-            ast_print_string_literal(arg2);
-            printf("\"");
-        }
-        else
-        {
-            errorf("invalid quad arg2");
-        }
-    }
+    print_quad_component(q.arg2);
 }
 
 void print_basic_block_list(basic_block_list_t *bbl)
@@ -1080,7 +1027,7 @@ void print_basic_block_list(basic_block_list_t *bbl)
     ENUMERATE(bbl, i, {
         basic_block_t *bb = bbl->items[i];
         if (bb->is_exit)
-            printf("(exit)");
+            printf("(exit) ");
         printf("BB%d:\n", i);
         ENUMERATE(bb, j, {
             printf("    ");

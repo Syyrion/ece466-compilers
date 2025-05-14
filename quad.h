@@ -113,11 +113,12 @@ typedef struct
 
 #define LIST_NAME basic_block_list
 #define LIST_CONTENT_TYPE basic_block_t *
-#define LIST_ADDITIONAL_MEMBERS   \
-    unsigned long temp_var_count; \
-    unsigned long variable_count; \
-    unsigned long argument_count; \
-    ast_node_list_t *string_literal_list;
+#define LIST_ADDITIONAL_MEMBERS           \
+    unsigned long temp_var_count;         \
+    unsigned long variable_count;         \
+    unsigned long argument_count;         \
+    ast_node_list_t *string_literal_list; \
+    char *name;
 #include "list.inl"
 
 basic_block_list_t *generate_function_quads(ast_node_t *compound);

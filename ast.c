@@ -943,6 +943,43 @@ void ast_print_declarator(ast_node_t *node, unsigned int depth)
     printf("\n");
 }
 
+void ast_print_compact_declarator(ast_node_t *node)
+{
+    char a[256] = "";
+    char b[256] = "";
+    char *pt;
+    char *pa = a;
+    char *pb = b;
+
+    ast_node_t *current_node = node;
+    while (current_node->kind != AST_TYPE)
+    {
+        switch (current_node->kind)
+        {
+        case AST_POINTER:
+            snprintf(pb, 256, "*%s", pa);
+            break;
+        case AST_ARRAY:
+            snprintf(pb, 256, "%s[%d]", pa, ast_evaluate_constant_expression(current_node->array.size));
+            break;
+        case AST_FUNCTION:
+            snprintf(pb, 256, "%s()", pa);
+            break;
+        default:
+            printf("ast_print_compact_declarator unknown %d", current_node->kind);
+            return;
+        }
+
+        // swap buffers
+        pt = pb;
+        pb = pa;
+        pa = pt;
+        current_node = current_node->next;
+    }
+    print_scalar(current_node->type.specifier.scalar);
+    printf(pa);
+}
+
 void ast_print_variable(ast_node_t *node, unsigned int depth)
 {
     TAB_PAD(depth);

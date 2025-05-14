@@ -216,7 +216,7 @@ external_declaration:
 
         // apply extern if needed since this is an external declaration
         if (!ds->storage_class)
-            ds->storage_class = SC_EXTERN;
+            ds->storage_class = SC_IMPLICIT_EXTERN;
 
         ast_node_t *type = ast_new_type(ds->type_specifier, ds->type_qualifier);
 
@@ -313,7 +313,11 @@ function_definition:
         basic_block_list_t *bbl = generate_function_quads($4);
         print_basic_block_list(bbl);
 
-        backend_write_function(bbl, $<node>3->name);
+        bbl->name = $<node>3->name;
+
+        fflush(stdout);
+
+        backend_write_function(bbl);
     }
     // TODO this is just a copy of above for now. It also needs to be fixed.
 /*
@@ -384,6 +388,9 @@ block_item:
         // apply auto if needed
         if (!ds->storage_class)
             ds->storage_class = SC_AUTO;
+
+        if (ds->storage_class == SC_EXTERN)
+            errorf("local variable cannot have storage class extern");
 
         ast_node_t *type = ast_new_type(ds->type_specifier, ds->type_qualifier);
 

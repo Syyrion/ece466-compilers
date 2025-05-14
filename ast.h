@@ -368,5 +368,6 @@ void ast_print_variable(ast_node_t *node, unsigned int depth);
 void ast_print_struct_or_union(ast_node_t *node);
 void ast_print_declarator(ast_node_t *node, unsigned int depth);
 void ast_print_statement(ast_node_t *statement, int depth);
+void ast_print_compact_declarator(ast_node_t *node);
 
 #endif

@@ -1,19 +1,28 @@
-EXTERNAL DECLARATION: The variable `g` has storage class EXTERN and is a(n)
+EXTERNAL DECLARATION: The variable `printf` has storage class REGISTER and is a(n)
+    function with unknown parameters returning
+        INT 
+
+EXTERNAL DECLARATION: The variable `u` has storage class REGISTER and is a(n)
     INT 
 
-DECLARATION: The variable `l` has storage class AUTO and is a(n)
+EXTERNAL DECLARATION: The variable `p` has storage class REGISTER and is a(n)
+    pointer to a(n)
+        INT 
+
+EXTERNAL DECLARATION: The variable `s` has storage class REGISTER and is a(n)
+    INT 
+
+EXTERNAL DECLARATION: The variable `h` has storage class REGISTER and is a(n)
     array with size
     [
         NUMBERLIT    INTEGER    10    INT
     ]
     containing
         INT 
-DECLARATION: The variable `u` has storage class AUTO and is a(n)
-    pointer to a(n)
-        INT 
-DECLARATION: The variable `v` has storage class AUTO and is a(n)
-    pointer to a(n)
-        INT 
+
+EXTERNAL DECLARATION: The variable `g` has storage class REGISTER and is a(n)
+    INT 
+
 FUNCTION DEFINITION: The variable `y` has storage class EXTERN and is a(n)
     function taking parameters
     (
@@ -21,615 +30,129 @@ FUNCTION DEFINITION: The variable `y` has storage class EXTERN and is a(n)
             INT 
         The variable `b` has storage class AUTO and is a(n)
             INT 
-        The variable `c` has storage class AUTO and is a(n)
-            INT 
-        The variable `n` has storage class AUTO and is a(n)
-            INT 
-        The variable `p` has storage class AUTO and is a(n)
-            pointer to a(n)
-                INT 
     )
     returning
         INT 
-0xb60da60 : compound
+0x36549880 : compound
 {
-    0xb607200 : expression
-        BINARY_OP "+"
-        .left
-            NUMBERLIT    INTEGER    1    INT
-        .right
-            NUMBERLIT    INTEGER    2    INT
-    0xb607360 : expression
-        BINARY_OP "+"
-        .left
-            NUMBERLIT    INTEGER    2    INT
-        .right
-            BINARY_OP "="
-            .left
-                VARIABLE (resolved) "n"
-            .right
-                BINARY_OP "+"
-                .left
-                    NUMBERLIT    INTEGER    1    INT
-                .right
-                    NUMBERLIT    INTEGER    3    INT
-    0xb6078c0 : expression
-        BINARY_OP "+"
-        .left
-            NUMBERLIT    INTEGER    1    INT
-        .right
-            BINARY_OP "="
-            .left
-                UNARY_OP "*"
-                .operand
-                    VARIABLE (resolved) "p"
-            .right
-                BINARY_OP "+"
-                .left
-                    NUMBERLIT    INTEGER    1    INT
-                .right
-                    BINARY_OP "="
-                    .left
-                        VARIABLE (resolved) "n"
-                    .right
-                        NUMBERLIT    INTEGER    1    INT
-    0xb608180 : expression
-        BINARY_OP "+"
-        .left
-            NUMBERLIT    INTEGER    1    INT
-        .right
-            BINARY_OP "%"
-            .left
-                BINARY_OP "/"
-                .left
-                    BINARY_OP "*"
-                    .left
-                        NUMBERLIT    INTEGER    2    INT
-                    .right
-                        NUMBERLIT    INTEGER    3    INT
-                .right
-                    NUMBERLIT    INTEGER    4    INT
-            .right
-                NUMBERLIT    INTEGER    5    INT
-    0xb6081e0 : expression
-        BINARY_OP "="
-        .left
-            UNARY_OP "*"
-            .operand
-                VARIABLE (resolved) "p"
-        .right
-            BINARY_OP "+"
-            .left
-                NUMBERLIT    INTEGER    1    INT
-            .right
-                BINARY_OP "%"
-                .left
-                    BINARY_OP "/"
-                    .left
-                        BINARY_OP "*"
-                        .left
-                            NUMBERLIT    INTEGER    2    INT
-                        .right
-                            NUMBERLIT    INTEGER    3    INT
-                    .right
-                        NUMBERLIT    INTEGER    4    INT
-                .right
-                    NUMBERLIT    INTEGER    5    INT
-    0xb608890 : expression
-        BINARY_OP "="
-        .left
-            VARIABLE (resolved) "n"
-        .right
-            BINARY_OP "+"
-            .left
-                UNARY_OP "~"
-                .operand
-                    NUMBERLIT    INTEGER    1    INT
-            .right
-                UNARY_OP "!"
-                .operand
-                    NUMBERLIT    INTEGER    3    INT
-    0xb608bf0 : expression
-        BINARY_OP "="
-        .left
-            VARIABLE (resolved) "g"
-        .right
-            BINARY_OP "+"
-            .left
-                UNARY_OP "+"
-                .operand
-                    UNARY_OP "+"
-                    .operand
-                        NUMBERLIT    INTEGER    1    INT
-            .right
-                UNARY_OP "-"
-                .operand
-                    UNARY_OP "-"
-                    .operand
-                        NUMBERLIT    INTEGER    3    INT
-    0xb609010 : if
-    (
-        BINARY_OP "=="
-        .left
+    0x36549730 : expression
+        FUNCTION_CALL        .name
+            VARIABLE (resolved) "printf"
+        .arg[0]
+            STRINGLIT "arg %d %d\n"
+        .arg[1]
             VARIABLE (resolved) "a"
-        .right
-            NUMBERLIT    INTEGER    8    INT
-    )
-    then
-        0xb609c40 : compound
-        {
-            0xb609230 : expression
-                BINARY_OP "="
-                .left
-                    VARIABLE (resolved) "n"
-                .right
-                    NUMBERLIT    INTEGER    2    INT
-            0xb6093d0 : if
-            (
-                BINARY_OP "<"
-                .left
-                    VARIABLE (resolved) "c"
-                .right
-                    NUMBERLIT    INTEGER    9    INT
-            )
-            then
-                0xb6099c0 : compound
-                {
-                    0xb609630 : expression
-                        BINARY_OP "="
-                        .left
-                            VARIABLE (resolved) "b"
-                        .right
-                            NUMBERLIT    INTEGER    0    INT
-                }
-            else
-                0xb609be0 : compound
-                {
-                    0xb609a60 : expression
-                        BINARY_OP "="
-                        .left
-                            VARIABLE (resolved) "b"
-                        .right
-                            NUMBERLIT    INTEGER    3    INT
-                }
-        }
-    0xb609d00 : while
-    (
-        BINARY_OP ">="
-        .left
+        .arg[2]
             VARIABLE (resolved) "b"
-        .right
-            BINARY_OP "+="
-            .left
-                VARIABLE (resolved) "n"
-            .right
-                NUMBERLIT    INTEGER    1    INT
-    )
-    do
-        0xb609ca0 : compound
-        {
-            0xb609ee0 : expression
-                BINARY_OP "="
-                .left
-                    VARIABLE (resolved) "n"
-                .right
-                    BINARY_OP "+"
-                    .left
-                        VARIABLE (resolved) "n"
-                    .right
-                        NUMBERLIT    INTEGER    1    INT
-        }
-    0xb60a150 : do
-        0xb60a770 : compound
-        {
-            0xb60a210 : expression
-                BINARY_OP "="
-                .left
-                    VARIABLE (resolved) "a"
-                .right
-                    BINARY_OP "+"
-                    .left
-                        VARIABLE (resolved) "a"
-                    .right
-                        NUMBERLIT    INTEGER    2    INT
-            0xb60a1b0 : if
-            (
-                BINARY_OP ">"
-                .left
-                    VARIABLE (resolved) "a"
-                .right
-                    NUMBERLIT    INTEGER    200    INT
-            )
-            then
-                0xb60a610 : compound
-                {
-                    0xb60a590 : break (0xb60a150)
-                }
-            else
-                0xb60a710 : compound
-                {
-                    0xb60a690 : continue (0xb60a150)
-                }
-        }
-    while
-    (
-        BINARY_OP "!="
-        .left
-            BINARY_OP "-="
-            .left
-                VARIABLE (resolved) "a"
-            .right
-                NUMBERLIT    INTEGER    1    INT
-        .right
-            VARIABLE (resolved) "b"
-    )
-    0xb60ac50 : for
+    0x36549820 : return
+        NUMBERLIT    INTEGER    0    INT
+}
+
+total arguments = 2
+total local variables = 0
+total temp variables = 2
+total string literals = 1
+(exit) BB0:
+        ARGBEGIN        
+    { %T1 CHAR *[11] }    LEA    { "arg %d %d\n" (0)CHAR [11] }    
+        ARG    { b (1)arg AUTO INT  }    
+        ARG    { a (0)arg AUTO INT  }    
+        ARG    { %T1 CHAR *[11] }    
+    { %T0 INT  }    CALL    printf    
+        RET    { $0 INT  }    
+DECLARATION: The variable `a` has storage class AUTO and is a(n)
+    INT 
+DECLARATION: The variable `b` has storage class AUTO and is a(n)
+    INT 
+DECLARATION: The variable `c` has storage class AUTO and is a(n)
+    INT 
+DECLARATION: The variable `d` has storage class AUTO and is a(n)
+    pointer to a(n)
+        INT 
+DECLARATION: The variable `i` has storage class AUTO and is a(n)
+    INT 
+FUNCTION DEFINITION: The variable `main` has storage class EXTERN and is a(n)
+    function with unknown parameters returning
+        INT 
+0x3654aa10 : compound
+{
+    0x3654a7b0 : for
     (
         BINARY_OP "="
         .left
-            VARIABLE (resolved) "n"
+            VARIABLE (resolved) "i"
         .right
             NUMBERLIT    INTEGER    0    INT
     ;
         BINARY_OP "<"
         .left
-            VARIABLE (resolved) "n"
-        .right
-            NUMBERLIT    INTEGER    30    INT
-    ;
-        BINARY_OP "+="
-        .left
-            VARIABLE (resolved) "n"
+            VARIABLE (resolved) "i"
         .right
             NUMBERLIT    INTEGER    3    INT
-    )
-    do
-        0xb60b1d0 : compound
-        {
-            0xb60aad0 : if
-            (
-                BINARY_OP ">"
-                .left
-                    VARIABLE (resolved) "a"
-                .right
-                    NUMBERLIT    INTEGER    200    INT
-            )
-            then
-                0xb60af50 : compound
-                {
-                    0xb60aef0 : return
-                        VARIABLE (resolved) "a"
-                }
-            else
-                0xb60b050 : compound
-                {
-                    0xb60afd0 : continue (0xb60ac50)
-                }
-            0xb60b230 : expression
-                BINARY_OP "^="
-                .left
-                    VARIABLE (resolved) "c"
-                .right
-                    BINARY_OP "|="
-                    .left
-                        UNARY_OP "*"
-                        .operand
-                            VARIABLE (resolved) "p"
-                    .right
-                        BINARY_OP "+="
-                        .left
-                            VARIABLE (resolved) "b"
-                        .right
-                            BINARY_OP "*="
-                            .left
-                                VARIABLE (resolved) "a"
-                            .right
-                                NUMBERLIT    INTEGER    7    INT
-        }
-    0xb60b530 : expression
-        BINARY_OP "="
-        .left
-            VARIABLE (resolved) "a"
-        .right
-            FUNCTION_CALL            .name
-                IDENT "f"
-            .arg[0]
-                VARIABLE (resolved) "a"
-            .arg[1]
-                BINARY_OP "+"
-                .left
-                    VARIABLE (resolved) "b"
-                .right
-                    NUMBERLIT    INTEGER    9    INT
-    0xb60b110 : expression
-        BINARY_OP "="
-        .left
-            VARIABLE (resolved) "a"
-        .right
-            BINARY_OP "+"
-            .left
-                UNARY_OP "*"
-                .operand
-                    VARIABLE (resolved) "p"
-            .right
-                NUMBERLIT    INTEGER    4    INT
-    0xb60bad0 : expression
-        UNARY_OP "sizeof"
-        .operand
-            VARIABLE (resolved) "a"
-    0xb60bb90 : expression
-        UNARY_OP "sizeof"
-        .operand
-            VARIABLE (resolved) "p"
-    0xb60be90 : expression
-        UNARY_OP "sizeof"
-        .operand
-            The variable `<no-name>` has storage class unknown and is a(n)
-                array with size
-                [
-                    NUMBERLIT    INTEGER    10    INT
-                ]
-                containing
-                    INT 
-    0xb60c250 : expression
-        UNARY_OP "sizeof"
-        .operand
-            The variable `<no-name>` has storage class unknown and is a(n)
-                array with size
-                [
-                    NUMBERLIT    INTEGER    10    INT
-                ]
-                containing
-                    array with size
-                    [
-                        NUMBERLIT    INTEGER    10    INT
-                    ]
-                    containing
-                        INT 
-    0xb60c4e0 : expression
-        UNARY_OP "sizeof"
-        .operand
-            NUMBERLIT    INTEGER    1    INT
-    0xb60c540 : expression
-        UNARY_OP "sizeof"
-        .operand
-            VARIABLE (resolved) "l"
-    0xb60c600 : expression
-        UNARY_OP "sizeof"
-        .operand
-            BINARY_OP "+"
-            .left
-                VARIABLE (resolved) "l"
-            .right
-                NUMBERLIT    INTEGER    1    INT
-    0xb60c960 : expression
-        UNARY_OP "sizeof"
-        .operand
-            The variable `<no-name>` has storage class unknown and is a(n)
-                pointer to a(n)
-                    INT UNSIGNED 
-    0xb60ca20 : expression
-        BINARY_OP "="
-        .left
-            VARIABLE (resolved) "p"
-        .right
-            VARIABLE (resolved) "l"
-    0xb60c9c0 : expression
-        BINARY_OP "="
-        .left
-            UNARY_OP "*"
-            .operand
-                BINARY_OP "+"
-                .left
-                    VARIABLE (resolved) "l"
-                .right
-                    NUMBERLIT    INTEGER    3    INT
-        .right
-            NUMBERLIT    INTEGER    9    INT
-    0xb60cd80 : expression
-        UNARY_OP "*"
-        .operand
-            VARIABLE (resolved) "l"
-    0xb60ce40 : expression
-        UNARY_OP "*"
-        .operand
-            BINARY_OP "-"
-            .left
-                BINARY_OP "+"
-                .left
-                    VARIABLE (resolved) "l"
-                .right
-                    NUMBERLIT    INTEGER    8    INT
-            .right
-                NUMBERLIT    INTEGER    3    INT
-    0xb60d380 : expression
-        BINARY_OP "+"
-        .left
-            VARIABLE (resolved) "u"
-        .right
-            NUMBERLIT    INTEGER    4    INT
-    0xb60d580 : expression
-        BINARY_OP "-"
-        .left
-            VARIABLE (resolved) "u"
-        .right
-            VARIABLE (resolved) "v"
-    0xb60d640 : expression
-        BINARY_OP "="
-        .left
-            VARIABLE (resolved) "b"
-        .right
-            UNARY_OP "++"
-            .operand
-                VARIABLE (resolved) "a"
-    0xb60d760 : expression
-        BINARY_OP "="
-        .left
-            VARIABLE (resolved) "b"
-        .right
-            UNARY_OP "*"
-            .operand
-                UNARY_OP "++"
-                .operand
-                    VARIABLE (resolved) "p"
-    0xb60d500 : expression
+    ;
         UNARY_OP "++"
         .operand
-            UNARY_OP "*"
-            .operand
-                VARIABLE (resolved) "p"
-    0xb60d9a0 : expression
-        UNARY_OP "&"
-        .operand
-            VARIABLE (resolved) "a"
+            VARIABLE (resolved) "i"
+    )
+    do
+        0x3654aa90 : expression
+            FUNCTION_CALL            .name
+                VARIABLE (resolved) "printf"
+            .arg[0]
+                STRINGLIT "hello world %d, %d\n"
+            .arg[1]
+                VARIABLE (resolved) "i"
+            .arg[2]
+                BINARY_OP "*"
+                .left
+                    VARIABLE (resolved) "i"
+                .right
+                    NUMBERLIT    INTEGER    2    INT
+    0x3654ae70 : expression
+        FUNCTION_CALL        .name
+            VARIABLE (resolved) "printf"
+        .arg[0]
+            STRINGLIT "ret %d\n"
+        .arg[1]
+            FUNCTION_CALL            .name
+                VARIABLE (resolved) "y"
+            .arg[0]
+                NUMBERLIT    INTEGER    10    INT
+            .arg[1]
+                NUMBERLIT    INTEGER    4    INT
 }
 
-total arguments = 5
-total local variables = 4
-total temp variables = 56
-total string literals = 0
+total arguments = 0
+total local variables = 1
+total temp variables = 8
+total string literals = 2
 BB0:
-    %T0    ADD    $1    $2
-    n{ AUTO }    ADD    $1    $3
-    %T1    ADD    $2    n{ AUTO }
-    n{ AUTO }    MOV    $1    
-    p{ AUTO }    ADD    $1    n{ AUTO }
-        STORE    p{ AUTO }    p{ AUTO }
-    %T3    MUL    $1    $4
-    (%T2)    ADD    %T3    p{ AUTO }
-    (%T7)    MUL    $2    $3
-    (%T6)    DIV    (%T7)    $4
-    (%T5)    MOD    (%T6)    $5
-    %T4    ADD    $1    (%T5)
-    (%T10)    MUL    $2    $3
-    (%T9)    DIV    (%T10)    $4
-    (%T8)    MOD    (%T9)    $5
-    p{ AUTO }    ADD    $1    (%T8)
-        STORE    p{ AUTO }    p{ AUTO }
-    (%T11)    CPL    $1    
-        CMP    $3    $0
-    (%T12)    SETZ    $1    
-    n{ AUTO }    ADD    (%T11)    (%T12)
-    (%T14)    NEG    $3    
-    (%T13)    NEG    (%T14)    
-    g{ EXTERN }    ADD    $1    (%T13)
-        CMP    a{ AUTO }    $8
-    (%T15)    SETZ        
-        CMP    (%T15)    $0
-        JPZ    BB5    
+    { i (0)AUTO INT  }    MOV    { $0 INT  }    
+        JP    BB3    
 BB1:
-    n{ AUTO }    MOV    $2    
-        CMP    c{ AUTO }    $9
-    (%T16)    SETM        
-        CMP    (%T16)    $0
-        JPZ    BB3    
-BB2:
-    b{ AUTO }    MOV    $0    
-        JP    BB4    
-BB3:
-    b{ AUTO }    MOV    $3    
-BB4:
-BB5:
-        JP    BB7    
-BB6:
-    n{ AUTO }    ADD    n{ AUTO }    $1
-BB7:
-    n{ AUTO }    ADD    n{ AUTO }    $1
-        CMP    b{ AUTO }    n{ AUTO }
-    (%T17)    SETNM        
-        CMP    (%T17)    $0
-        JPNZ    BB6    
-BB8:
-BB9:
-    a{ AUTO }    ADD    a{ AUTO }    $2
-        CMP    a{ AUTO }    $200
-    (%T18)    SETP        
-        CMP    (%T18)    $0
-        JPZ    BB13    
-BB10:
-        JP    BB16    
-BB11:
-        JP    BB14    
-BB12:
-        JP    BB15    
-BB13:
-BB14:
-BB15:
-    a{ AUTO }    SUB    a{ AUTO }    $1
-        CMP    a{ AUTO }    b{ AUTO }
-    (%T19)    SETNZ        
-        CMP    (%T19)    $0
-        JPNZ    BB9    
-BB16:
-    n{ AUTO }    MOV    $0    
-        JP    BB23    
-BB17:
-        CMP    a{ AUTO }    $200
-    (%T20)    SETP        
-        CMP    (%T20)    $0
-        JPZ    BB20    
-(exit)BB18:
-        RET    a{ AUTO }    
-        JP    BB21    
-BB19:
-        JP    BB22    
-BB20:
-BB21:
-    a{ AUTO }    MUL    a{ AUTO }    $7
-    b{ AUTO }    ADD    b{ AUTO }    a{ AUTO }
-    (%T21)    LOAD    p{ AUTO }    
-    (%T22)    OR    (%T21)    b{ AUTO }
-        STORE    p{ AUTO }    (%T22)
-    c{ AUTO }    XOR    c{ AUTO }    (%T22)
-BB22:
-    n{ AUTO }    ADD    n{ AUTO }    $3
-BB23:
-        CMP    n{ AUTO }    $30
-    (%T23)    SETM        
-        CMP    (%T23)    $0
-        JPNZ    BB17    
-(exit)BB24:
         ARGBEGIN        
-        ARG    a{ AUTO }    
-    %T24    ADD    b{ AUTO }    $9
-        ARG    %T24    
-    a{ AUTO }    CALL    f (ident)    
-    (%T25)    LOAD    p{ AUTO }    
-    a{ AUTO }    ADD    (%T25)    $4
-    (%T26)    MOV    $4    
-    (%T27)    MOV    $4    
-    (%T28)    MOV    $40    
-    (%T29)    MOV    $400    
-    (%T30)    MOV    $4    
-    (%T31)    MOV    $40    
-    (%T34)    LEA    l{ AUTO }    
-    %T35    MUL    $1    $40
-    (%T33)    ADD    (%T34)    %T35
-    (%T36)    MOV    $4    
-    p{ AUTO }    LEA    l{ AUTO }    
-    (%T38)    LEA    l{ AUTO }    
-    %T39    MUL    $3    $40
-    (%T37)    ADD    (%T38)    %T39
-        STORE    (%T37)    $9
-    (%T40)    LEA    l{ AUTO }    
-    (%T44)    LEA    l{ AUTO }    
-    %T45    MUL    $8    $40
-    (%T43)    ADD    (%T44)    %T45
-    %T46    MUL    $3    $40
-    (%T42)    SUB    (%T43)    %T46
-    (%T41)    LOAD    (%T42)    
-    %T48    MUL    $4    $4
-    (%T47)    ADD    u{ AUTO }    %T48
-    %T50    SUB    u{ AUTO }    v{ AUTO }
-    %T49    DIV    %T50    $4
-    b{ AUTO }    MOV    a{ AUTO }    
-    a{ AUTO }    ADD    a{ AUTO }    $1
-    (%T51)    MOV    p{ AUTO }    
-    %T52    MUL    $1    $4
-    p{ AUTO }    ADD    p{ AUTO }    %T52
-    b{ AUTO }    LOAD    (%T51)    
-    (%T53)    MOV    p{ AUTO }    
-    %T54    MUL    $1    $4
-    p{ AUTO }    ADD    p{ AUTO }    %T54
-    (%T55)    LEA    a{ AUTO }    
+    { %T1 CHAR *[20] }    LEA    { "hello world %d, %d\n" (0)CHAR [20] }    
+    { %T2 INT  }    MUL    { i (0)AUTO INT  }    { $2 INT  }
+        ARG    { %T2 INT  }    
+        ARG    { i (0)AUTO INT  }    
+        ARG    { %T1 CHAR *[20] }    
+    { %T0 INT  }    CALL    printf    
+BB2:
+    { %T3 INT  }    MOV    { i (0)AUTO INT  }    
+    { i (0)AUTO INT  }    ADD    { i (0)AUTO INT  }    { $1 INT  }
+BB3:
+        CMP    { i (0)AUTO INT  }    { $3 INT  }
+    { %T4 INT  }    SETM        
+        CMP    { %T4 INT  }    { $0 INT  }
+        JPNZ    BB1    
+(exit) BB4:
+        ARGBEGIN        
+    { %T6 CHAR *[8] }    LEA    { "ret %d\n" (1)CHAR [8] }    
+        ARGBEGIN        
+        ARG    { $4 INT  }    
+        ARG    { $10 INT  }    
+    { %T7 INT  }    CALL    y    
+        ARG    { %T7 INT  }    
+        ARG    { %T6 CHAR *[8] }    
+    { %T5 INT  }    CALL    printf    
         RET        
