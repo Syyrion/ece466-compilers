@@ -115,22 +115,132 @@ void add_new_basic_block_to_function(void)
     current_block_index++;
 }
 
+char allow_quad_addition = 1;
+void disable_quad_addition(void)
+{
+    allow_quad_addition = 0;
+}
+void enable_quad_addition(void)
+{
+    allow_quad_addition = 1;
+}
+void add_quad_to_current_function(int index, bquad_t *q)
+{
+    if (allow_quad_addition)
+        basic_block_add(current_function->items[index], q);
+}
+
+bquad_t *emit_pointer_plus_minus_const(int index, ast_node_t *dest, enum quad_op op, ast_node_t *pvar, ast_node_t *constant)
+{
+    bquad_t *q;
+
+    // this temp var shouldn't need a type assigned to it
+    ast_node_t *t1 = new_temp_var();
+    add_quad_to_current_function(index, new_quad((bquad_t){
+                                            .dest = t1,
+                                            .op = MUL,
+                                            .arg1 = constant,
+                                            .arg2 = new_immediate(ast_get_sizeof_value(pvar->next->next)),
+                                        }));
+    add_quad_to_current_function(index, q = new_quad((bquad_t){
+                                            .dest = dest,
+                                            .op = op,
+                                            .arg1 = pvar,
+                                            .arg2 = t1,
+                                        }));
+
+    if (dest->kind == AST_VARIABLE)
+    {
+        if (dest->next->kind != AST_POINTER)
+            errorf("pointer plus const dest must be a pointer");
+    }
+    else if (dest->kind == AST_TEMPORARY)
+        dest->next = pvar->next;
+    else
+        errorf("dest must be a (temp) variable");
+
+    return q;
+}
+
+bquad_t *emit_pointer_minus_pointer(int index, ast_node_t *dest, ast_node_t *pvar1, ast_node_t *pvar2)
+{
+    unsigned long size;
+
+    if ((size = ast_get_sizeof_value(pvar1->next->next)) != ast_get_sizeof_value(pvar2->next->next))
+        errorf("can't subtract two pointers of different size objects");
+
+    bquad_t *q;
+
+    // this temp var shouldn't need a type assigned to it
+    ast_node_t *t1 = new_temp_var();
+    add_quad_to_current_function(index, new_quad((bquad_t){
+                                            .dest = t1,
+                                            .op = SUB,
+                                            .arg1 = pvar1,
+                                            .arg2 = pvar2,
+                                        }));
+    add_quad_to_current_function(index, q = new_quad((bquad_t){
+                                            .dest = dest,
+                                            .op = DIV,
+                                            .arg1 = t1,
+                                            .arg2 = new_immediate(size),
+                                        }));
+    if (dest->kind == AST_VARIABLE)
+    {
+        if (dest->next->kind != AST_TYPE)
+            errorf("pointer minus pointer dest must be an integer");
+    }
+    else if (dest->kind == AST_TEMPORARY)
+        dest->next = ast_new_type((type_specifier_t){.scalar = (scalar_t){.full = TS_INT}, .custom = 0}, (type_qualifier_t){0});
+    else
+        errorf("dest must be a (temp) variable");
+
+    return q;
+}
+
 // emits a new quad to a basic block
 // prev == 0: emit to latest created block
 // prev < 0: emit to previous created blocks
 // returns a pointer to the emitted quad
 bquad_t *emit(int prev, ast_node_t *dest, enum quad_op op, ast_node_t *arg1, ast_node_t *arg2, int jump_target)
 {
+    int index;
+
+#define DEST_ADD_METHOD                                                         \
+    do                                                                          \
+    {                                                                           \
+        if (arg1->next->kind == AST_POINTER && arg2->next->kind == AST_POINTER) \
+            errorf("ADD can't be done on 2 pointers");                          \
+                                                                                \
+        if (arg1->next->kind == AST_POINTER && arg2->next->kind == AST_TYPE)    \
+            return emit_pointer_plus_minus_const(index, dest, ADD, arg1, arg2); \
+                                                                                \
+        if (arg1->next->kind == AST_TYPE && arg2->next->kind == AST_POINTER)    \
+            return emit_pointer_plus_minus_const(index, dest, ADD, arg2, arg1); \
+    } while (0)
+
+#define DEST_SUB_METHOD                                                         \
+    do                                                                          \
+    {                                                                           \
+        if (arg1->next->kind == AST_POINTER && arg2->next->kind == AST_POINTER) \
+            return emit_pointer_minus_pointer(index, dest, arg1, arg2);         \
+                                                                                \
+        if (arg1->next->kind == AST_POINTER && arg2->next->kind == AST_TYPE)    \
+            return emit_pointer_plus_minus_const(index, dest, SUB, arg1, arg2); \
+                                                                                \
+        if (arg1->next->kind == AST_TYPE && arg2->next->kind == AST_POINTER)    \
+            errorf("can't do constant minus pointer");                          \
+    } while (0)
+
     if (!current_function)
         errorf("there is no available basic block");
 
-    if (prev > 0 || current_block_index + prev < 0)
+    if (prev > 0 || (index = current_block_index + prev) < 0)
         errorf("cannot emit quad to block at index %d", prev);
 
     ast_node_t *t1;
 
-    char p_minus_p = 0;
-
+    // do type propagation/checking to destination
     if (dest)
     {
         switch (dest->kind)
@@ -144,6 +254,7 @@ bquad_t *emit(int prev, ast_node_t *dest, enum quad_op op, ast_node_t *arg1, ast
             case MOV:
                 dest->next = arg1->next;
                 break;
+
             case SETP:
             case SETNP:
             case SETM:
@@ -152,84 +263,31 @@ bquad_t *emit(int prev, ast_node_t *dest, enum quad_op op, ast_node_t *arg1, ast
             case SETNZ:
                 dest->next = ast_new_type((type_specifier_t){.scalar = (scalar_t){.full = TS_INT}, .custom = 0}, (type_qualifier_t){0});
                 break;
+
             case LEA:
-                dest->next = ast_new_pointer(0);
-                dest->next->next = arg1->next;
+                if (arg1->next->kind == AST_ARRAY)
+                {
+                    dest->next = ast_new_pointer(0);
+                    dest->next->next = arg1->next->next;
+                }
+                else
+                {
+                    dest->next = ast_new_pointer(0);
+                    dest->next->next = arg1->next;
+                }
                 break;
             case LOAD:
                 if (arg1->next->kind != AST_POINTER)
-                    errorf("must load from pointer");
+                    errorf("[temp] must load from pointer");
                 dest->next = arg1->next->next;
                 break;
-            case STORE:
-                break;
-            case ADD:
-                if (arg1->next->kind == AST_POINTER && arg2->next->kind == AST_POINTER)
-                    errorf("ADD can't be done on 2 pointers");
 
-                if (arg1->next->kind == AST_POINTER && arg2->next->kind == AST_TYPE)
-                {
-                    t1 = new_temp_var();
-                    basic_block_add(current_function->items[current_block_index + prev],
-                                    new_quad((bquad_t){
-                                        .dest = t1,
-                                        .op = MUL,
-                                        .arg1 = arg2,
-                                        .arg2 = new_immediate((int)ast_get_sizeof_value(arg1->next->next)),
-                                    }));
-                    dest->next = arg1->next;
-                    arg2 = t1;
-                }
-                else if (arg1->next->kind == AST_TYPE && arg2->next->kind == AST_POINTER)
-                {
-                    t1 = new_temp_var();
-                    basic_block_add(current_function->items[current_block_index + prev],
-                                    new_quad((bquad_t){
-                                        .dest = t1,
-                                        .op = MUL,
-                                        .arg1 = arg1,
-                                        .arg2 = new_immediate((int)ast_get_sizeof_value(arg2->next->next)),
-                                    }));
-                    dest->next = arg2->next;
-                    arg1 = t1;
-                }
-                break;
+            case ADD:
+                DEST_ADD_METHOD;
+                goto pm1;
             case SUB:
-                if (arg1->next->kind == AST_POINTER && arg2->next->kind == AST_POINTER)
-                {
-                    if (ast_get_sizeof_value(arg1->next->next) != ast_get_sizeof_value(arg2->next->next))
-                        errorf("can't subtract two pointers of different size objects");
-                    p_minus_p = 1;
-                    t1 = dest;
-                    dest = new_temp_var();
-                }
-                if (arg1->next->kind == AST_POINTER && arg2->next->kind == AST_TYPE)
-                {
-                    t1 = new_temp_var();
-                    basic_block_add(current_function->items[current_block_index + prev],
-                                    new_quad((bquad_t){
-                                        .dest = t1,
-                                        .op = MUL,
-                                        .arg1 = arg2,
-                                        .arg2 = new_immediate((int)ast_get_sizeof_value(arg1->next->next)),
-                                    }));
-                    dest->next = arg1->next;
-                    arg2 = t1;
-                }
-                else if (arg1->next->kind == AST_TYPE && arg2->next->kind == AST_POINTER)
-                {
-                    t1 = new_temp_var();
-                    basic_block_add(current_function->items[current_block_index + prev],
-                                    new_quad((bquad_t){
-                                        .dest = t1,
-                                        .op = MUL,
-                                        .arg1 = arg1,
-                                        .arg2 = new_immediate((int)ast_get_sizeof_value(arg2->next->next)),
-                                    }));
-                    dest->next = arg2->next;
-                    arg1 = t1;
-                }
-                break;
+                DEST_SUB_METHOD;
+                goto pm1;
             case MUL:
             case DIV:
             case MOD:
@@ -238,6 +296,7 @@ bquad_t *emit(int prev, ast_node_t *dest, enum quad_op op, ast_node_t *arg1, ast
             case XOR:
                 if (arg1->next->kind != AST_TYPE || arg2->next->kind != AST_TYPE)
                     errorf("can only perform MUL/DIV/MOD/AND/OR/XOR on integers");
+            pm1:
                 dest->next = ast_new_type((type_specifier_t){.scalar = (scalar_t){.full = TS_INT}, .custom = 0}, (type_qualifier_t){0});
                 break;
 
@@ -255,7 +314,7 @@ bquad_t *emit(int prev, ast_node_t *dest, enum quad_op op, ast_node_t *arg1, ast
                 break;
 
             default:
-                errorf("type promotion failed for temp variable");
+                errorf("unknown instruction while transferring type to temp variable");
                 break;
             }
             break;
@@ -279,79 +338,19 @@ bquad_t *emit(int prev, ast_node_t *dest, enum quad_op op, ast_node_t *arg1, ast
                 break;
 
             case LEA:
-                if (dest->next->kind != AST_POINTER)
+                if (dest->next->kind != AST_POINTER || dest->next->kind != AST_ARRAY)
                     errorf("variable destination of LEA isn't a pointer");
                 break;
             case LOAD:
                 if (arg1->next->kind != AST_POINTER)
-                    errorf("must load from pointer");
-                if (dest->next->kind != AST_TYPE)
-                    errorf("can't load to variable of type other than integer");
-            case STORE:
-                break;
-            case ADD:
-                if (arg1->next->kind == AST_POINTER && arg2->next->kind == AST_POINTER)
-                    errorf("ADD can't be done on 2 pointers");
-                else if (arg1->next->kind == AST_POINTER && arg2->next->kind == AST_TYPE)
-                {
-                    t1 = new_temp_var();
-                    basic_block_add(current_function->items[current_block_index + prev],
-                                    new_quad((bquad_t){
-                                        .dest = t1,
-                                        .op = MUL,
-                                        .arg1 = arg2,
-                                        .arg2 = new_immediate((int)ast_get_sizeof_value(arg1->next->next)),
-                                    }));
-                    arg2 = t1;
-                }
-                else if (arg1->next->kind == AST_TYPE && arg2->next->kind == AST_POINTER)
-                {
-                    t1 = new_temp_var();
-                    basic_block_add(current_function->items[current_block_index + prev],
-                                    new_quad((bquad_t){
-                                        .dest = t1,
-                                        .op = MUL,
-                                        .arg1 = arg1,
-                                        .arg2 = new_immediate((int)ast_get_sizeof_value(arg2->next->next)),
-                                    }));
-                    arg1 = t1;
-                }
-                break;
+                    errorf("[var] must load from pointer");
 
+            case ADD:
+                DEST_ADD_METHOD;
+                goto pm2;
             case SUB:
-                if (arg1->next->kind == AST_POINTER && arg2->next->kind == AST_POINTER)
-                {
-                    if (ast_get_sizeof_value(arg1->next->next) != ast_get_sizeof_value(arg2->next->next))
-                        errorf("can't subtract two pointers of different size objects");
-                    p_minus_p = 1;
-                    t1 = dest;
-                    dest = new_temp_var();
-                }
-                else if (arg1->next->kind == AST_POINTER && arg2->next->kind == AST_TYPE)
-                {
-                    t1 = new_temp_var();
-                    basic_block_add(current_function->items[current_block_index + prev],
-                                    new_quad((bquad_t){
-                                        .dest = t1,
-                                        .op = MUL,
-                                        .arg1 = arg2,
-                                        .arg2 = new_immediate((int)ast_get_sizeof_value(arg1->next->next)),
-                                    }));
-                    arg2 = t1;
-                }
-                else if (arg1->next->kind == AST_TYPE && arg2->next->kind == AST_POINTER)
-                {
-                    t1 = new_temp_var();
-                    basic_block_add(current_function->items[current_block_index + prev],
-                                    new_quad((bquad_t){
-                                        .dest = t1,
-                                        .op = MUL,
-                                        .arg1 = arg1,
-                                        .arg2 = new_immediate((int)ast_get_sizeof_value(arg2->next->next)),
-                                    }));
-                    arg1 = t1;
-                }
-                break;
+                DEST_SUB_METHOD;
+                goto pm2;
             case MUL:
             case DIV:
             case MOD:
@@ -360,6 +359,7 @@ bquad_t *emit(int prev, ast_node_t *dest, enum quad_op op, ast_node_t *arg1, ast
             case XOR:
                 if (arg1->next->kind != AST_TYPE || arg2->next->kind != AST_TYPE)
                     errorf("can only perform MUL/DIV/MOD/AND/OR/XOR on integers");
+            pm2:
                 if (dest->next->kind != AST_TYPE)
                     errorf("MUL/DIV/MOD/AND/OR/XOR can only store to integers");
                 break;
@@ -373,14 +373,15 @@ bquad_t *emit(int prev, ast_node_t *dest, enum quad_op op, ast_node_t *arg1, ast
                 if (dest->next->kind != AST_TYPE)
                     errorf("NEG/SL/SR/CPL can only store to integers");
                 break;
+
             case CALL:
                 break;
+
             default:
-                errorf("destination variable is not compatible");
+                errorf("unknown instruction while checking destination variable compatibility");
                 break;
             }
             break;
-
         default:
             errorf("destination can only be a temporary or variable");
             break;
@@ -408,21 +409,11 @@ bquad_t *emit(int prev, ast_node_t *dest, enum quad_op op, ast_node_t *arg1, ast
         });
     }
 
-    basic_block_add(current_function->items[current_block_index + prev], q);
+    add_quad_to_current_function(index, q);
 
-    if (p_minus_p)
-    {
-        basic_block_add(current_function->items[current_block_index + prev],
-                        q = new_quad((bquad_t){
-                            .dest = t1,
-                            .op = DIV,
-                            .arg1 = dest,
-                            .arg2 = new_immediate((int)ast_get_sizeof_value(arg1->next->next)),
-                        }));
-    }
-
+    // mark this block as exit if there's a return
     if (op == RET)
-        current_function->items[current_block_index + prev]->is_exit = 1;
+        current_function->items[index]->is_exit = 1;
 
     return q;
 }
@@ -670,6 +661,25 @@ ast_node_t *generate_rvalue(ast_node_t *node, ast_node_t *target)
             t1 = generate_rvalue(node->unary_op.operand, 0);
             emit(0, target, LEA, t1, 0, 0);
             return target;
+        case '*':
+            t1 = new_temp_var();
+            t1 = generate_rvalue(node->unary_op.operand, 0);
+
+            if (t1->next->kind == AST_POINTER && t1->next->next->kind == AST_ARRAY)
+            {
+                t1->next->next = t1->next->next->next;
+                printf("# %%T%d's type changed to (", t1->temporary.num);
+                ast_print_compact_declarator(t1->next);
+                printf(")\n");
+
+                if (target)
+                    emit(0, target, MOV, t1, 0, 0);
+
+                return t1;
+            }
+            T;
+            emit(0, target, LOAD, t1, 0, 0);
+            return target;
         case PLUSPLUS:
             T;
             t1 = generate_lvalue(node->unary_op.operand, &is_direct);
@@ -681,12 +691,6 @@ ast_node_t *generate_rvalue(ast_node_t *node, ast_node_t *target)
             t1 = generate_lvalue(node->unary_op.operand, &is_direct);
             emit(0, target, MOV, t1, 0, 0);
             emit(0, t1, SUB, t1, new_immediate(1), 0);
-            return target;
-        case '*':
-            if (node->unary_op.operand->kind == AST_VARIABLE && node->unary_op.operand->next->kind == AST_ARRAY)
-                return generate_rvalue(node->unary_op.operand, 0);
-            T;
-            emit(0, target, LOAD, generate_rvalue(node->unary_op.operand, 0), 0, 0);
             return target;
         case '!':
             T;
@@ -739,7 +743,7 @@ ast_node_t *generate_assignment(ast_node_t *node)
     }
     else
     {
-        emit(0, 0, STORE, dest, value, 0);
+        emit(0, 0, STORE, value, dest, 0);
         return value;
     }
 }
@@ -765,7 +769,7 @@ ast_node_t *generate_compound_assignment(ast_node_t *node, int kind)
         ast_node_t *t2 = new_temp_var();
         emit(0, t1, LOAD, dest, 0, 0);
         emit(0, t2, kind, t1, value, 0);
-        emit(0, 0, STORE, dest, t2, 0);
+        emit(0, 0, STORE, t2, dest, 0);
         return t2;
     }
 }
@@ -816,24 +820,27 @@ ast_node_t *generate_function_call(ast_node_t *node, ast_node_t *target)
 ast_node_t *generate_sizeof(ast_node_t *node, ast_node_t *target)
 {
     ast_node_t *t1;
-    log("sizeof %d", node->kind);
     switch (node->kind)
     {
     case AST_TEMPORARY:
-        log("temp");
     case AST_VARIABLE:
-        log("variable");
         emit(0, target, MOV, new_immediate((int)ast_get_sizeof_value(node->next)), 0, 0);
-        return target;
+        break;
     case AST_BINARY_OP:
     case AST_UNARY_OP:
+        // this temporary is only used for it's type
+        disable_quad_addition();
+        t1 = generate_rvalue(node, 0);
+        enable_quad_addition();
+        emit(0, target, MOV, new_immediate((int)ast_get_sizeof_value(t1->next)), 0, 0);
+        break;
     case AST_NUMBER_LITERAL:
         emit(0, target, MOV, new_immediate(4), 0, 0);
-        return target;
+        break;
     default:
         errorf("wrong node type for generate_sizeof %d", node->kind);
-        break;
     }
+    return target;
 }
 
 ast_node_t *generate_if_statement(ast_node_t *statement)
@@ -975,8 +982,8 @@ void print_quad_component(ast_node_t *val)
         printf("%%T%d ", val->temporary.num);
         break;
     case AST_VARIABLE:
-        printf("%s (%d)", val->variable.name, val->variable.num);
-        if(val->variable.is_argument)
+        printf("%s (%d) ", val->variable.name, val->variable.num);
+        if (val->variable.is_argument)
             printf("arg ");
         print_storage_class(val->variable.storage_class);
         break;
@@ -986,7 +993,7 @@ void print_quad_component(ast_node_t *val)
     case AST_STRING_LITERAL:
         printf("\"");
         ast_print_string_literal(val);
-        printf("\" (%d)", val->string_literal.num);
+        printf("\" (%d) ", val->string_literal.num);
         break;
     case AST_IDENT:
         printf("%s (ident)", val->name);

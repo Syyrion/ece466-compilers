@@ -10,6 +10,7 @@
 #define errorf(...)         \
     do                      \
     {                       \
+        fflush(stdout);     \
         log(__VA_ARGS__);   \
         exit(EXIT_FAILURE); \
     } while (0)

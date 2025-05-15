@@ -23,8 +23,8 @@ g:
 y:
 	pushl   %ebp
 	movl    %esp, %ebp
-	subl $8, %esp
-# temp: 2, local: 0, args: 2
+	subl $12, %esp
+# temp: 3, local: 0, args: 2
 __y_BB0:
 # ARGBEGIN
 # LEA
@@ -37,92 +37,97 @@ __y_BB0:
 	pushl -8(%ebp)
 # CALL
 	call printf
+	addl $12, %esp
 	movl %eax, -4(%ebp)
+# DIV
+	movl 8(%ebp), %eax
+	movl 12(%ebp), %ecx
+	cltd
+	idivl %ecx
+	movl %eax, -12(%ebp)
 # RET
-	movl $0, %eax
+	movl -12(%ebp), %eax
 	leave
 	ret
 	.section	.rodata
 .LC_main_0:
-	.string "hello world %d, %d\n"
-.LC_main_1:
-	.string "ret %d\n"
+	.string "%d, %d\n"
 	.text
 	.globl	main
 	.type	main, @function
 main:
 	pushl   %ebp
 	movl    %esp, %ebp
-	subl $36, %esp
-# temp: 8, local: 1, args: 0
+	subl $64, %esp
+# temp: 16, local: 0, args: 0
 __main_BB0:
-# MOV
-	movl $0, %eax
-	movl %eax, -36(%ebp)
-# JP
-	jmp __main_BB3
-
-__main_BB1:
-# ARGBEGIN
 # LEA
-	movl $.LC_main_0, -8(%ebp)
+	movl $h, -8(%ebp)
 # MUL
-	movl -36(%ebp), %edx
-	movl $2, %eax
+	movl $3, %edx
+	movl $4, %eax
 	imull %edx, %eax
 	movl %eax, -12(%ebp)
-# ARG
-	pushl -12(%ebp)
-# ARG
-	pushl -36(%ebp)
-# ARG
-	pushl -8(%ebp)
-# CALL
-	call printf
-	movl %eax, -4(%ebp)
-__main_BB2:
-# MOV
-	movl -36(%ebp), %eax
-	movl %eax, -16(%ebp)
 # ADD
-	movl -36(%ebp), %eax
-	addl $1, %eax
-	movl %eax, -36(%ebp)
-__main_BB3:
-# CMP
-	movl -36(%ebp), %eax
-	movl $3, %ecx
-	cmp %ecx, %eax
-# SETM
-	movl $0, %eax
-	setl %al
-	movl %eax, -20(%ebp)
-# CMP
-	movl -20(%ebp), %eax
-	movl $0, %ecx
-	cmp %ecx, %eax
-# JPNZ
-	jnz __main_BB1
-
-__main_BB4:
+	movl -8(%ebp), %eax
+	addl -12(%ebp), %eax
+	movl %eax, -4(%ebp)
+# STORE
+	movl $9, %eax
+	movl -4(%ebp), %ecx
+	movl %eax, (%ecx)
 # ARGBEGIN
 # LEA
-	movl $.LC_main_1, -28(%ebp)
-# ARGBEGIN
+	movl $.LC_main_0, -20(%ebp)
+# LEA
+	movl $h, -32(%ebp)
+# MUL
+	movl $3, %edx
+	movl $4, %eax
+	imull %edx, %eax
+	movl %eax, -36(%ebp)
+# ADD
+	movl -32(%ebp), %eax
+	addl -36(%ebp), %eax
+	movl %eax, -28(%ebp)
+# LOAD
+	movl -28(%ebp), %eax
+	movl (%eax), %ecx
+	movl %ecx, -40(%ebp)
+# LEA
+	movl $h, -48(%ebp)
+# LEA
+	movl $h, -56(%ebp)
+# MUL
+	movl $3, %edx
+	movl $4, %eax
+	imull %edx, %eax
+	movl %eax, -60(%ebp)
+# ADD
+	movl -56(%ebp), %eax
+	addl -60(%ebp), %eax
+	movl %eax, -52(%ebp)
+# SUB
+	movl -48(%ebp), %eax
+	subl -52(%ebp), %eax
+	movl %eax, -64(%ebp)
+# DIV
+	movl -64(%ebp), %eax
+	movl $4, %ecx
+	cltd
+	idivl %ecx
+	movl %eax, -44(%ebp)
 # ARG
-	pushl $4
+	pushl -44(%ebp)
 # ARG
-	pushl $10
-# CALL
-	call y
-	movl %eax, -32(%ebp)
+	pushl -40(%ebp)
 # ARG
-	pushl -32(%ebp)
-# ARG
-	pushl -28(%ebp)
+	pushl -20(%ebp)
 # CALL
 	call printf
-	movl %eax, -24(%ebp)
+	addl $12, %esp
+	movl %eax, -16(%ebp)
 # RET
+	movl $0, %eax
 	leave
 	ret

@@ -33,9 +33,9 @@ FUNCTION DEFINITION: The variable `y` has storage class EXTERN and is a(n)
     )
     returning
         INT 
-0x36549880 : compound
+0x219e66b0 : compound
 {
-    0x36549730 : expression
+    0x219e6730 : expression
         FUNCTION_CALL        .name
             VARIABLE (resolved) "printf"
         .arg[0]
@@ -44,22 +44,27 @@ FUNCTION DEFINITION: The variable `y` has storage class EXTERN and is a(n)
             VARIABLE (resolved) "a"
         .arg[2]
             VARIABLE (resolved) "b"
-    0x36549820 : return
-        NUMBERLIT    INTEGER    0    INT
+    0x219e6410 : return
+        BINARY_OP "/"
+        .left
+            VARIABLE (resolved) "a"
+        .right
+            VARIABLE (resolved) "b"
 }
 
 total arguments = 2
 total local variables = 0
-total temp variables = 2
+total temp variables = 3
 total string literals = 1
 (exit) BB0:
         ARGBEGIN        
-    { %T1 CHAR *[11] }    LEA    { "arg %d %d\n" (0)CHAR [11] }    
-        ARG    { b (1)arg AUTO INT  }    
-        ARG    { a (0)arg AUTO INT  }    
-        ARG    { %T1 CHAR *[11] }    
+    { %T1 CHAR * }    LEA    { "arg %d %d\n" (0) CHAR [11] }    
+        ARG    { b (1) arg AUTO INT  }    
+        ARG    { a (0) arg AUTO INT  }    
+        ARG    { %T1 CHAR * }    
     { %T0 INT  }    CALL    printf    
-        RET    { $0 INT  }    
+    { %T2 INT  }    DIV    { a (0) arg AUTO INT  }    { b (1) arg AUTO INT  }
+        RET    { %T2 INT  }    
 DECLARATION: The variable `a` has storage class AUTO and is a(n)
     INT 
 DECLARATION: The variable `b` has storage class AUTO and is a(n)
@@ -67,92 +72,74 @@ DECLARATION: The variable `b` has storage class AUTO and is a(n)
 DECLARATION: The variable `c` has storage class AUTO and is a(n)
     INT 
 DECLARATION: The variable `d` has storage class AUTO and is a(n)
-    pointer to a(n)
-        INT 
-DECLARATION: The variable `i` has storage class AUTO and is a(n)
     INT 
 FUNCTION DEFINITION: The variable `main` has storage class EXTERN and is a(n)
     function with unknown parameters returning
         INT 
-0x3654aa10 : compound
+0x219e7e60 : compound
 {
-    0x3654a7b0 : for
-    (
+    0x219e7350 : expression
         BINARY_OP "="
         .left
-            VARIABLE (resolved) "i"
-        .right
-            NUMBERLIT    INTEGER    0    INT
-    ;
-        BINARY_OP "<"
-        .left
-            VARIABLE (resolved) "i"
-        .right
-            NUMBERLIT    INTEGER    3    INT
-    ;
-        UNARY_OP "++"
-        .operand
-            VARIABLE (resolved) "i"
-    )
-    do
-        0x3654aa90 : expression
-            FUNCTION_CALL            .name
-                VARIABLE (resolved) "printf"
-            .arg[0]
-                STRINGLIT "hello world %d, %d\n"
-            .arg[1]
-                VARIABLE (resolved) "i"
-            .arg[2]
-                BINARY_OP "*"
+            UNARY_OP "*"
+            .operand
+                BINARY_OP "+"
                 .left
-                    VARIABLE (resolved) "i"
+                    VARIABLE (resolved) "h"
                 .right
-                    NUMBERLIT    INTEGER    2    INT
-    0x3654ae70 : expression
+                    NUMBERLIT    INTEGER    3    INT
+        .right
+            NUMBERLIT    INTEGER    9    INT
+    0x219e7bc0 : expression
         FUNCTION_CALL        .name
             VARIABLE (resolved) "printf"
         .arg[0]
-            STRINGLIT "ret %d\n"
+            STRINGLIT "%d, %d\n"
         .arg[1]
-            FUNCTION_CALL            .name
-                VARIABLE (resolved) "y"
-            .arg[0]
-                NUMBERLIT    INTEGER    10    INT
-            .arg[1]
-                NUMBERLIT    INTEGER    4    INT
+            UNARY_OP "*"
+            .operand
+                BINARY_OP "+"
+                .left
+                    VARIABLE (resolved) "h"
+                .right
+                    NUMBERLIT    INTEGER    3    INT
+        .arg[2]
+            BINARY_OP "-"
+            .left
+                VARIABLE (resolved) "h"
+            .right
+                BINARY_OP "+"
+                .left
+                    VARIABLE (resolved) "h"
+                .right
+                    NUMBERLIT    INTEGER    3    INT
+    0x219e7670 : return
+        NUMBERLIT    INTEGER    0    INT
 }
 
 total arguments = 0
-total local variables = 1
-total temp variables = 8
-total string literals = 2
-BB0:
-    { i (0)AUTO INT  }    MOV    { $0 INT  }    
-        JP    BB3    
-BB1:
+total local variables = 0
+total temp variables = 16
+total string literals = 1
+(exit) BB0:
+    { %T1 INT * }    LEA    { h (0) REGISTER INT [10] }    
+    { %T2 (missing type) }    MUL    { $3 INT  }    { $4 INT  }
+    { %T0 INT * }    ADD    { %T1 INT * }    { %T2 (missing type) }
+        STORE    { $9 INT  }    { %T0 INT * }
         ARGBEGIN        
-    { %T1 CHAR *[20] }    LEA    { "hello world %d, %d\n" (0)CHAR [20] }    
-    { %T2 INT  }    MUL    { i (0)AUTO INT  }    { $2 INT  }
-        ARG    { %T2 INT  }    
-        ARG    { i (0)AUTO INT  }    
-        ARG    { %T1 CHAR *[20] }    
-    { %T0 INT  }    CALL    printf    
-BB2:
-    { %T3 INT  }    MOV    { i (0)AUTO INT  }    
-    { i (0)AUTO INT  }    ADD    { i (0)AUTO INT  }    { $1 INT  }
-BB3:
-        CMP    { i (0)AUTO INT  }    { $3 INT  }
-    { %T4 INT  }    SETM        
-        CMP    { %T4 INT  }    { $0 INT  }
-        JPNZ    BB1    
-(exit) BB4:
-        ARGBEGIN        
-    { %T6 CHAR *[8] }    LEA    { "ret %d\n" (1)CHAR [8] }    
-        ARGBEGIN        
-        ARG    { $4 INT  }    
-        ARG    { $10 INT  }    
-    { %T7 INT  }    CALL    y    
-        ARG    { %T7 INT  }    
-        ARG    { %T6 CHAR *[8] }    
-    { %T5 INT  }    CALL    printf    
-        RET        
+    { %T4 CHAR * }    LEA    { "%d, %d\n" (0) CHAR [8] }    
+    { %T7 INT * }    LEA    { h (0) REGISTER INT [10] }    
+    { %T8 (missing type) }    MUL    { $3 INT  }    { $4 INT  }
+    { %T6 INT * }    ADD    { %T7 INT * }    { %T8 (missing type) }
+    { %T9 INT  }    LOAD    { %T6 INT * }    
+    { %T11 INT * }    LEA    { h (0) REGISTER INT [10] }    
+    { %T13 INT * }    LEA    { h (0) REGISTER INT [10] }    
+    { %T14 (missing type) }    MUL    { $3 INT  }    { $4 INT  }
+    { %T12 INT * }    ADD    { %T13 INT * }    { %T14 (missing type) }
+    { %T15 (missing type) }    SUB    { %T11 INT * }    { %T12 INT * }
+    { %T10 INT  }    DIV    { %T15 (missing type) }    { $4 INT  }
+        ARG    { %T10 INT  }    
+        ARG    { %T9 INT  }    
+        ARG    { %T4 CHAR * }    
+    { %T3 INT  }    CALL    printf    
+        RET    { $0 INT  }    

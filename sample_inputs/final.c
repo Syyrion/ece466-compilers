@@ -1,17 +1,15 @@
 int printf();
 
 int u;
-
 int *p;
 int s;
 int h[10];
-
 int g;
 
 int y(int a, int b)
 {
     printf("arg %d %d\n", a, b);
-    return 0;
+    return a / b;
 }
 
 int main()
@@ -19,23 +17,37 @@ int main()
     int a;
     int b;
     int c;
-    int *d;
+    int d;
 
-    // a = sizeof(1 + 2);
-    // b = sizeof(h[0]);
-    // c = sizeof(int [10]);
+    // arrays, pointer minus pointer
+    h[3] = 9;
+    printf("%d, %d\n", h[3], h - (h + 3));
+
+    a = b = c = d = 6;
+    printf("%d, %d, %d, %d\n", a, b, c, d);
+
+    a ^= b |= c += d *= 2;
+
+    printf("%d, %d, %d, %d\n", a, b, c, d);
+
+    // weird
+    printf("%d\n", a += a += 1);
 
     int i;
-    for (i = 0; i < 3; i++)
+    for (i = 0; i < 4; i++)
+    {
         printf("hello world %d, %d\n", i, i * 2);
+        if (i % 2)
+        {
+            printf("odd\n");
+        }
+        else
+        {
+            printf("even\n");
+        }
+    }
 
     printf("ret %d\n", y(10, 4));
-    // if (i == 2)
-    // {
-    //     printf("A %d\n", u);
-    // }
-    // else
-    // {
-    //     printf("B %d\n", a + 9);
-    // }
+
+    return 0;
 }

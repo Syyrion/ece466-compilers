@@ -162,6 +162,7 @@ void backend_write_function(basic_block_list_t *fn)
 
     fprintf(backend_file, "# temp: %d, local: %d, args: %d\n", fn->temp_var_count, fn->variable_count, fn->argument_count);
 
+    int call_stack_size;
     char source1[128];
     char source2[128];
     char dest[128];
@@ -193,37 +194,37 @@ void backend_write_function(basic_block_list_t *fn)
                 break;
             case SETP:
                 LD;
-                fprintf(backend_file, "\tmovl $0, %%eax\n");
+                fprintf(backend_file, "\txorl %%eax, %%eax\n");
                 fprintf(backend_file, "\tsetg %%al\n");
                 fprintf(backend_file, "\tmovl %%eax, %s\n", dest);
                 break;
             case SETNP:
                 LD;
-                fprintf(backend_file, "\tmovl $0, %%eax\n");
+                fprintf(backend_file, "\txorl %%eax, %%eax\n");
                 fprintf(backend_file, "\tsetle %%al\n");
                 fprintf(backend_file, "\tmovl %%eax, %s\n", dest);
                 break;
             case SETM:
                 LD;
-                fprintf(backend_file, "\tmovl $0, %%eax\n");
+                fprintf(backend_file, "\txorl %%eax, %%eax\n");
                 fprintf(backend_file, "\tsetl %%al\n");
                 fprintf(backend_file, "\tmovl %%eax, %s\n", dest);
                 break;
             case SETNM:
                 LD;
-                fprintf(backend_file, "\tmovl $0, %%eax\n");
+                fprintf(backend_file, "\txorl %%eax, %%eax\n");
                 fprintf(backend_file, "\tsetge %%al\n");
                 fprintf(backend_file, "\tmovl %%eax, %s\n", dest);
                 break;
             case SETZ:
                 LD;
-                fprintf(backend_file, "\tmovl $0, %%eax\n");
+                fprintf(backend_file, "\txorl %%eax, %%eax\n");
                 fprintf(backend_file, "\tsetz %%al\n");
                 fprintf(backend_file, "\tmovl %%eax, %s\n", dest);
                 break;
             case SETNZ:
                 LD;
-                fprintf(backend_file, "\tmovl $0, %%eax\n");
+                fprintf(backend_file, "\txorl %%eax, %%eax\n");
                 fprintf(backend_file, "\tsetnz %%al\n");
                 fprintf(backend_file, "\tmovl %%eax, %s\n", dest);
                 break;
@@ -266,6 +267,9 @@ void backend_write_function(basic_block_list_t *fn)
             case STORE:
                 LS1;
                 LS2;
+                fprintf(backend_file, "\tmovl %s, %%eax\n", source1);
+                fprintf(backend_file, "\tmovl %s, %%ecx\n", source2);
+                fprintf(backend_file, "\tmovl %%eax, (%%ecx)\n");
                 break;
             case ADD:
                 LD;
@@ -376,9 +380,11 @@ void backend_write_function(basic_block_list_t *fn)
                 fprintf(backend_file, "\tcmp %%ecx, %%eax\n");
                 break;
             case ARGBEGIN:
+                call_stack_size = 0;
                 break;
             case ARG:
                 LS1;
+                call_stack_size += 4;
                 fprintf(backend_file, "\tpushl %s\n", source1);
                 break;
             case CALL:
@@ -390,6 +396,8 @@ void backend_write_function(basic_block_list_t *fn)
 
                 fprintf(backend_file, "\tcall %s\n", source1);
                 LD;
+                if (call_stack_size > 0)
+                    fprintf(backend_file, "\taddl $%d, %%esp\n", call_stack_size); // drop the stack pointer
                 fprintf(backend_file, "\tmovl %%eax, %s\n", dest);
                 break;
             case RET:
